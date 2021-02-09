@@ -11,4 +11,7 @@
 
 ## Dev Environment Setup
 
-Coming soon
+DB info:
+Web access: http://web.ics.purdue.edu/software/phpMyAdmin/?_ga=2.261829517.125188418.1612816247-752467662.1554262665
+Username: david22
+Password: Hunter123
