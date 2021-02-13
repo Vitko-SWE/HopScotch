@@ -1,22 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './UserProfile.css';
 import DefaultHead from "./default_head.jpg";
+import app from "./base.js";
 import axios from 'axios';
 //https://github.com/bradtraversy/react_file_uploader
 
+
 class UserProfile extends React.Component {
     state = {
-        selectedFile: null
-    }
-    fileSelectedHandler = event => {
-        this.setState({
-            selectedFile: event.target.files[0]
-        })
+        selectedFile: null,
+        userImage: null
     }
 
-    //For later... save photo into DB somehow
+    checkPicOnLoad = () => {
+        var storageref = app.storage()
+        storageref.ref('TESTING' + `/Profile Picture/picture`).getDownloadURL().then((url) => {
+            this.setState({ userImage: url })
+            //console.log("On load pic: " + this.state.userImage);
+        });
+    }
+
+    //upload a photo
+    fileSelectedHandler = event => {
+        if (event.target.files[0]) {
+            this.setState({
+                selectedFile: event.target.files[0]
+            })
+        }
+    }
+
+    //save photo into DB
     fileUploadHandler = () => {
-        axios.post('');
+        var storageref = app.storage()
+        console.log(this.state.selectedFile)
+        const uploadTask = storageref.ref('TESTING' + `/Profile Picture/picture`).put(this.state.selectedFile);
+        uploadTask.on('state_changed', (snapshot) => {
+            console.log(snapshot)
+        },
+            (error) => {
+                console.log("Photo upload error")
+            },
+            () => {
+                uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+                    this.setState({ userImage: url })
+                    console.log("New pic here: " + this.state.userImage);
+                });
+            });
+
     }
 
     openTab(evt, cityName) {
@@ -33,11 +63,17 @@ class UserProfile extends React.Component {
         evt.currentTarget.className += " active";
     }
 
+
+    //check if profile pic exists in Firebase, otherwise load DefaultHead
+    componentDidMount() {
+        this.checkPicOnLoad()
+    }
+
     render() {
         return (
             <div className="container">
                 <div className="circular-pic">
-                    <img src={DefaultHead} alt="profile pic" height="150" width="150" />
+                    <img src={this.state.userImage || DefaultHead} alt="profile pic" height="150" width="150" />
                 </div>
                 <button className="hbtn hb-border-top-br3" onClick={() => window.location.href = '/'}>Home</button>
                 <h2>Dude Dudeson</h2>
@@ -61,30 +97,30 @@ class UserProfile extends React.Component {
                     <h3>Change email address</h3>
                     <form>
                         <div class="input-container">
-                                <i class="fa fa-envelope icon"></i>
-                                <input class="input-field" type="email" placeholder="Old Email" name="email"/>
+                            <i class="fa fa-envelope icon"></i>
+                            <input class="input-field" type="email" placeholder="Old Email" name="email" />
                         </div>
                         <div class="input-container">
                             <i class="fa fa-envelope icon"></i>
-                            <input class="input-field" type="email" placeholder="New Email" name="email"/>
+                            <input class="input-field" type="email" placeholder="New Email" name="email" />
                         </div>
-                        
+
                     </form>
                     <button className="hbtn hb-border-top-br3" type="submit">Submit</button>
                 </div>
 
                 <div id="Password" class="tabcontent">
-                    <h3>Change password</h3> 
+                    <h3>Change password</h3>
                     <form>
                         <div class="input-container">
-                                <i class="fa fa-key icon"></i>
-                                <input class="input-field" type="password" placeholder="Old Password" name="password"/>
+                            <i class="fa fa-key icon"></i>
+                            <input class="input-field" type="password" placeholder="Old Password" name="password" />
                         </div>
                         <div class="input-container">
                             <i class="fa fa-key icon"></i>
-                            <input class="input-field" type="password" placeholder="New Password" name="password"/>
+                            <input class="input-field" type="password" placeholder="New Password" name="password" />
                         </div>
-                        
+
                     </form>
                     <button className="hbtn hb-border-top-br3" type="submit">Submit</button>
                 </div>
