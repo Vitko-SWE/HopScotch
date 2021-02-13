@@ -2,7 +2,7 @@ import React from 'react';
 import './UserProfile.css';
 import DefaultHead from "./default_head.jpg";
 import axios from 'axios';
-
+//https://github.com/bradtraversy/react_file_uploader
 
 class UserProfile extends React.Component {
     state = {
@@ -39,6 +39,7 @@ class UserProfile extends React.Component {
                 <div className="circular-pic">
                     <img src={DefaultHead} alt="profile pic" height="150" width="150" />
                 </div>
+                <button className="hbtn hb-border-top-br3" onClick={() => window.location.href = '/'}>Home</button>
                 <h2>Dude Dudeson</h2>
                 <h3>About Dude</h3>
                 <p>October arrived, spreading a damp chill over the grounds and into the castle. Madam Pomfrey, the nurse, was kept busy by a sudden spate of colds...</p>
@@ -47,6 +48,7 @@ class UserProfile extends React.Component {
                     <button class="tablinks" id="defaultOpen" onClick={(e) => this.openTab(e, 'Picture')}>Profile Pic</button>
                     <button class="tablinks" onClick={(e) => this.openTab(e, 'Email')}>Email</button>
                     <button class="tablinks" onClick={(e) => this.openTab(e, 'Password')}>Password</button>
+                    <button class="tablinks" onClick={(e) => this.openTab(e, 'Something')}>Other</button>
                 </div>
 
                 <div id="Picture" class="tabcontent">
@@ -57,13 +59,39 @@ class UserProfile extends React.Component {
 
                 <div id="Email" class="tabcontent">
                     <h3>Change email address</h3>
+                    <form>
+                        <div class="input-container">
+                                <i class="fa fa-envelope icon"></i>
+                                <input class="input-field" type="email" placeholder="Old Email" name="email"/>
+                        </div>
+                        <div class="input-container">
+                            <i class="fa fa-envelope icon"></i>
+                            <input class="input-field" type="email" placeholder="New Email" name="email"/>
+                        </div>
+                        
+                    </form>
+                    <button className="hbtn hb-border-top-br3" type="submit">Submit</button>
                 </div>
 
                 <div id="Password" class="tabcontent">
-                    <h3>Change password</h3>
+                    <h3>Change password</h3> 
+                    <form>
+                        <div class="input-container">
+                                <i class="fa fa-key icon"></i>
+                                <input class="input-field" type="password" placeholder="Old Password" name="password"/>
+                        </div>
+                        <div class="input-container">
+                            <i class="fa fa-key icon"></i>
+                            <input class="input-field" type="password" placeholder="New Password" name="password"/>
+                        </div>
+                        
+                    </form>
+                    <button className="hbtn hb-border-top-br3" type="submit">Submit</button>
                 </div>
-                
-                <button className="hbtn hb-border-top-br3" onClick={() => window.location.href = '/'}>Home</button>
+
+                <div id="Something" class="tabcontent">
+                    <h3>SOMETHING HERE</h3>
+                </div>
 
             </div>
         );

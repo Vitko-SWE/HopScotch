@@ -1,4 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:900,300);
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
 
 body {
   background-color: #f0f0f0;
@@ -30,17 +31,44 @@ body {
   -webkit-box-shadow: 0 0 0 13px #f0f0f0;
   -moz-box-shadow: 0 0 0 13px #f0f0f0;
 }
+
+.input-container {
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.icon {
+  padding: 12px;
+  background: darkslateblue;
+  color: white;
+  min-width: 40px;
+  text-align: center;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  outline: none;
+}
+
+.input-field:focus {
+  border: 2px solid darkslateblue;
+}
+
+
 .hbtn {
     position: relative;
     box-sizing: border-box;
     display: inline-block;
     overflow: hidden;
     padding: 8px 20px;
-    margin: 20px 3px 0px;
+    margin: 10px 3px 0px;
     text-align: center;
-    border: 2px solid black;
+    border: 2px solid darkslateblue;
     text-decoration: none;
-    color: black;
+    color: darkslateblue;
     white-space: nowrap;
     z-index: 0;
 } 
@@ -67,7 +95,7 @@ body {
     width: 100%;
     height: 100%;
     content: "";
-    border: 2px solid black;
+    border: 2px solid darkslateblue;
     z-index: 2;
     margin: 0px;
     top: 0px;
@@ -95,13 +123,14 @@ body {
   /* Style the buttons inside the tab */
   .tab button {
     background-color: inherit;
-    float: left;
+    float:inherit;
     border: none;
     outline: none;
     cursor: pointer;
     padding: 14px 16px;
     transition: 0.3s;
     font-size: 17px;
+    font-weight: 600;
   }
   
   /* Change background color of buttons on hover */
