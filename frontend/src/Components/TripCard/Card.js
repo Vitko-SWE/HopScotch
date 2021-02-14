@@ -3,10 +3,13 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import "../TripCard/Card.css"
 
-
+/*
+ * This component will receive props from Trip class
+ * And and populate the page will all trip cards
+ */
 const MakeCard = (props) => {
   return (
-      <div className="custom_container">
+    <div className="custom_container">
         {props.trips.map((trip) =>
         <Card className="custom_card">
           <Card.Img variant="top" src={trip.trip_image} />
@@ -27,7 +30,7 @@ const MakeCard = (props) => {
           </Card.Footer>
         </Card>
         )}
-        </div>
+    </div>
   );
 }
 
