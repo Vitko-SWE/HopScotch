@@ -1,6 +1,6 @@
 const express = require("express");
 const db = require('./db.js');
-const { auth } = require('express-openid-connect');
+const { auth, requiresAuth } = require('express-openid-connect');
 require('dotenv').config();
 
 const config = {
@@ -35,6 +35,10 @@ app.use(auth(config));
 // req.isAuthenticated is provided from the auth router
 app.get('/', (req, res) => {
     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+});
+
+app.get('/profile', requiresAuth(), (req, res) => {
+    res.send(JSON.stringify(req.oidc.user));
 });
 
 app.listen(port, () => console.log(`Server up and running on port ${port} !`));
