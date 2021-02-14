@@ -1,15 +1,15 @@
 const express = require("express");
 const db = require('./db.js');
-const { auth, requiresAuth } = require('express-openid-connect');
-require('dotenv').config();
+// const { auth, requiresAuth } = require('express-openid-connect');
+// require('dotenv').config();
 
-const config = {
-    authRequired: false,
-    auth0Logout: true,
-    secret: process.env.AUTH0_SECRET,
-    clientID: process.env.AUTH0_CLIENT_ID,
-    issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL
-};
+// const config = {
+//     authRequired: false,
+//     auth0Logout: true,
+//     secret: process.env.AUTH0_SECRET,
+//     clientID: process.env.AUTH0_CLIENT_ID,
+//     issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL
+// };
 
 const app = express();
 
@@ -23,22 +23,22 @@ if (process.env.NODE_ENV == "production") {
 }
 
 const port = process.env.PORT || 5000; // process.env.port is Heroku's port if you choose to deploy the app there\
-if (!config.baseURL && !process.env.BASE_URL && process.env.NODE_ENV !== 'production') {
-    config.baseURL = `http://localhost:5000`;
-} else {
-    //TODO: implement production case for Auth0 base url
-}
+// if (!config.baseURL && !process.env.BASE_URL && process.env.NODE_ENV !== 'production') {
+//     config.baseURL = `http://localhost:5000`;
+// } else {
+//     //TODO: implement production case for Auth0 base url
+// }
 
-// auth router attaches /login, /logout, and /callback routes to the baseURL
-app.use(auth(config));
+// // auth router attaches /login, /logout, and /callback routes to the baseURL
+// app.use(auth(config));
 
-// req.isAuthenticated is provided from the auth router
-app.get('/', (req, res) => {
-    res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
-});
+// // req.isAuthenticated is provided from the auth router
+// app.get('/', (req, res) => {
+//     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+// });
 
-app.get('/profile', requiresAuth(), (req, res) => {
-    res.send(JSON.stringify(req.oidc.user));
-});
+// app.get('/profile', requiresAuth(), (req, res) => {
+//     res.send(JSON.stringify(req.oidc.user));
+// });
 
 app.listen(port, () => console.log(`Server up and running on port ${port} !`));
