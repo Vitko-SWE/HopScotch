@@ -6,6 +6,7 @@ import {
   Link
 } from "react-router-dom";
 import MenuBar from './Components/MenuBar/MenuBar.js';
+import Landing from './Components/Landing/Landing.js';
 import Homepage from './Components/Homepage/Homepage.js';
 
 function App() {
@@ -15,13 +16,11 @@ function App() {
         <MenuBar />
 
         <Switch>
-          <Route path="/example">
-            <div style={{marginTop: 100+"px"}}>
-              Hello World!
-            </div>
+          <Route path="/homepage">
+            <Homepage />
           </Route>
           <Route path="/">
-            <Homepage />
+            <Landing />
           </Route>
         </Switch>
       </div>
