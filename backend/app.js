@@ -1,9 +1,15 @@
 const express = require("express");
+const db = require("./db")
+const myTrips = require("./routes/homepage")
+const cors = require("cors")
 
 const app = express();
 
 app.use(express.urlencoded());
 app.use(express.json());
+app.use(cors())
+
+app.use("/homepage", myTrips)
 
 if (process.env.NODE_ENV == "production") {
     const publicPath = path.join(__dirname, './frontend');
