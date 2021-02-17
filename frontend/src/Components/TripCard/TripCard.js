@@ -48,7 +48,7 @@ class TripCards extends Component {
     if (this.state.trips.length > 0) {
       my_trips = (
         <div className="custom_container">
-          {this.state.trips.map((trip) =>
+          {this.state.trips.map((trip, index) =>
             <Card className="custom_card">
               <Card.Img variant="top" src={pic} />
               <Card.Body>
