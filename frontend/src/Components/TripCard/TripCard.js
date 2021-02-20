@@ -11,11 +11,13 @@ const api = axios.create({
     userID: "1"
   }
 })
+
+
 class TripCards extends Component {
 
-  state = {
-    trips:  [] 
-  }
+  // state = {
+  //   trips:  [] 
+  // }
 
   constructor(props) {
     super (props);
@@ -43,34 +45,38 @@ class TripCards extends Component {
   }
 
   render() {
-    let my_trips = <h1>You do not have any trips at this moment</h1>
+    let my_trips = null
 
-    if (this.state.trips.length > 0) {
-      my_trips = (
-        <div className="custom_container">
-          {this.state.trips.map((trip, index) =>
-            <Card className="custom_card">
-              <Card.Img variant="top" src={pic} />
-              <Card.Body>
-                <Card.Title>{trip.Name}</Card.Title>
-                <Card.Text>
-                  Days Remaining: 365
-                </Card.Text>
-                <Card.Text>
-                  Trip Organizer: {trip.trip_owner}
-                </Card.Text>
-              </Card.Body>
-              <Card.Footer>
-                <small className="text-muted">
-                <Button  variant="primary" size="lg" block>Edit</Button>
-                <Button  variant="danger" size="lg" block>Exit Trip</Button>
-                </small>
-              </Card.Footer>
-            </Card>
-          )}
-        </div>
-      )
+    my_trips = (
+      <div className="custom_container">
+        {this.state.trips.map((trip, index) =>
+          <Card className="custom_card">
+            <Card.Img variant="top" src={pic} />
+            <Card.Body>
+              <Card.Title>{trip.Name}</Card.Title>
+              <Card.Text>
+                Days Remaining: 365
+              </Card.Text>
+              <Card.Text>
+                Trip Organizer: {trip.trip_owner}
+              </Card.Text>
+            </Card.Body>
+            <Card.Footer>
+              <small className="text-muted">
+              <Button  variant="primary" size="lg" block>Edit</Button>
+              <Button  variant="danger" size="lg" block>Exit Trip</Button>
+              </small>
+            </Card.Footer>
+          </Card>
+        )}
+      </div>
+    )
+
+    if (this.state.trips.length === 0) {
+      console.log("trips == 0")
+      my_trips = <h1>You do not have any trips at this moment</h1>
     }
+    
     console.log(this.state.trips)
     return (
       <div>
