@@ -8,20 +8,24 @@ import {
 import MenuBar from './Components/MenuBar/MenuBar.js';
 import Landing from './Components/Landing/Landing.js';
 import Homepage from './Components/Homepage/Homepage.js';
+import { createBrowserHistory } from 'history';
+import { withAuthenticationRequired } from '@auth0/auth0-react';
+
+export const history = createBrowserHistory();
+
+const ProtectedRoute = ({ component, ...args }) => (
+  <Route component={withAuthenticationRequired(component)} {...args} />
+);
 
 function App() {
   return (
-    <Router>
+    <Router history={history}>
       <div className="App">
         <MenuBar />
 
         <Switch>
-          <Route path="/homepage">
-            <Homepage />
-          </Route>
-          <Route path="/">
-            <Landing />
-          </Route>
+          <Route path="/" component={Landing} exact />
+          <ProtectedRoute path="/homepage" component={Homepage} />
         </Switch>
       </div>
     </Router>
