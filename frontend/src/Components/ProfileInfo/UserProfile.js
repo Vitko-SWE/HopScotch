@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import './UserProfile.css';
 import DefaultHead from "./default_head.jpg";
-import app from "./base.js";
+import app from "../../base.js";
 import axios from 'axios';
-//https://github.com/bradtraversy/react_file_uploader
 
 
 class UserProfile extends React.Component {

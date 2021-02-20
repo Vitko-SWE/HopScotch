@@ -18,6 +18,7 @@ import {
 } from "react-router-dom";
 import Profile from './Components/ProfileInfo/Profile';
 import MenuBar from './Components/MenuBar/MenuBar'
+import UserProfile from './Components/ProfileInfo/UserProfile'
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Switch>
           <Route path="/" exact component={Homepage}/>
           <Route path="/Account" exact component={Profile} />
+          <Route path="/UserProfile" exact component={UserProfile} />
         </Switch>
       </div>
     </Router>
