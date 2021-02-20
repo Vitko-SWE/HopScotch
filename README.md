@@ -25,7 +25,14 @@ Password: Hunter123
 
     To get the values for these parameters. Contact Jack.
 
-2. Edit your hosts file to add the following line:
+2. Make sure you have a `backend/.env` file set up with the following parameters (list will be updated as needed):
+
+    - AUTH0_AUDIENCE
+    - AUTH0_ISSUER
+
+    To get the values for these parameters. Contact Jack.
+
+3. Edit your hosts file to add the following line:
     `127.0.0.1 myapp.example`
     If you are using a UNIX based system, this can be found in `/etc/hosts`.
 
