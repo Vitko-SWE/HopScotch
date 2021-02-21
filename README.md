@@ -12,9 +12,9 @@
 ## Dev Environment Setup
 
 ### DB info
-Web access: http://web.ics.purdue.edu/software/phpMyAdmin/?_ga=2.261829517.125188418.1612816247-752467662.1554262665
-Username: david22
-Password: Hunter123
+Web access: https://east1-phpmyadmin.dreamhost.com/index.php?hostname=tuffin.abderus.dreamhost.com
+Username: HopscotchAdmin
+Password: Hopscotch123
 
 ### Environment Prep
 
