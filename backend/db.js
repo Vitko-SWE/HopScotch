@@ -16,4 +16,4 @@ var mysql  = mysql.createConnection({
       }
   })
 
-  module.exports = mysql;
+module.exports = mysql;
