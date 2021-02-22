@@ -15,7 +15,12 @@ router.route("/getbyuserid/:userId")
 
 router.route("/postnewuser")
     .post((req, res) => {
-        var query_string = `INSERT INTO User VALUES ()`
-        console.log("I am in post new user!");
-    })
+        var query_string = `INSERT INTO User VALUES ("${req.body.userId}", "${req.body.name}", "${req.body.email}", null)`;
+        db.query(query_string, (err, data) => {
+            if(err)
+                return err;
+            res.send(data);
+        })
+    });
+
 module.exports = router
