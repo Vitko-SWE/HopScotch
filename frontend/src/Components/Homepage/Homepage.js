@@ -5,7 +5,7 @@ class homepage extends Component {
     render() {  
         return (
             <div style={{height: '100%'}}>
-                <MenuBar/>
+                {/* <MenuBar/> */}
                 <main style={{marginTop: '64px'}}>
                     <TripCards/>
                 </main>

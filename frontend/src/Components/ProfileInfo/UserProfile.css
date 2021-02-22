@@ -19,18 +19,18 @@ body {
   text-align: center;
 }
 
-.circular-pic {
-  border-radius: 100px;
+/* .circular-pic {
+  border-radius: 150px;
   overflow: hidden;
-  height: 150px;
-  width: 150px;
+  height: 350px;
+  width: 350px;
   position: relative;
   margin: auto;
   top: -20px;
   box-shadow: 0 0 0 13px #f0f0f0;
   -webkit-box-shadow: 0 0 0 13px #f0f0f0;
   -moz-box-shadow: 0 0 0 13px #f0f0f0;
-}
+} */
 
 .input-container {
   display: -ms-flexbox;

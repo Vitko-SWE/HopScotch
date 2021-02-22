@@ -10,8 +10,8 @@ router.route("/myTrips")
         query_string += 'IN (SELECT TripUser.TripId FROM TripUser WHERE TripUser.UserId = ' + req.headers.userid + ')'
         db.query(query_string, (err,data) => {
             if(err) {
-                console.log(err)
-                return -1
+                console.log("sql error" + err)
+                return 
             };
             console.log('Data received from Db:');
             console.log(data);

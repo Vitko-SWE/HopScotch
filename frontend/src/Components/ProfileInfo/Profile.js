@@ -9,6 +9,9 @@ import {
 
 import MenuBar from '../MenuBar/MenuBar'
 import '../ProfileInfo/Profile.css'
+import {Card, Image, ListGroup, ListGroupItem} from 'react-bootstrap'
+import DefaultHead from "./default_head.jpg";
+import app from "../../base.js";
 
 
 class AccountInformation extends Component {
@@ -19,13 +22,20 @@ class AccountInformation extends Component {
             Name: "",
             Email: "",
             profilePicture: "",
+            about_me: "",
+            selectedFile: null,
+            userImage: null
         }
 
         this.handleShow = this.handleShow.bind(this)
         this.handleClose = this.handleClose.bind(this)
         this.handleNamechange = this.handleNamechange.bind(this)
         this.handleEmailChange = this.handleEmailChange.bind(this)
+        this.handleAboutMeChange = this.handleAboutMeChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.checkPicOnLoad = this.checkPicOnLoad.bind(this)
+        this.fileSelectedHandler = this.fileSelectedHandler.bind(this)
+        this.fileUploadHandler = this.fileUploadHandler.bind(this)
     }
 
 
@@ -40,6 +50,7 @@ class AccountInformation extends Component {
     handleSubmit () {
         console.log(this.state.Name)
         console.log(this.state.Email)
+        this.fileUploadHandler()
         this.handleClose()
     }
 
@@ -53,144 +64,140 @@ class AccountInformation extends Component {
         this.setState({Email: event.target.value})
     }
 
-    handlePictureChange (event) {
+    handleAboutMeChange (event) {
+        this.setState({about_me: event.target.value})
+    }
 
+    checkPicOnLoad() {
+        var storageref = app.storage()
+        storageref.ref('TESTING' + `/Profile Picture/picture`).getDownloadURL().then((url) => {
+            this.setState({ userImage: url })
+            //console.log("On load pic: " + this.state.userImage);
+        });
+    }
+
+    //upload a photo
+    fileSelectedHandler (event){
+        if (event.target.files[0]) {
+            this.setState({
+                selectedFile: event.target.files[0]
+            })
+        }
+    }
+
+    // //save photo into DB
+    fileUploadHandler () {
+        var storageref = app.storage()
+        console.log("image file: " +  this.state.selectedFile)
+        if (this.state.selectedFile === null) {
+            return
+        }
+        const uploadTask = storageref.ref('TESTING' + `/Profile Picture/picture`).put(this.state.selectedFile);
+        uploadTask.on('state_changed', (snapshot) => {
+            console.log(snapshot)
+        },
+            (error) => {
+                console.log("Photo upload error")
+            },
+            () => {
+                uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+                    this.setState({ userImage: url })
+                    console.log("New pic here: " + this.state.userImage);
+                });
+            });
+
+    }
+
+    componentDidMount() {
+        this.checkPicOnLoad();
     }
 
     render () {
         return (
             <div className="AccountInfo">
-              <h1>Account Info</h1>
-              <p>name: {this.state.Name}</p>
-              <p>email: {this.state.Email}</p>
-              <p>profile pic</p>
-              <div className="EditInfo">
-                  <Button variant="primary" onClick={this.handleShow.bind()}>
-                  Edit Account Information
-                  </Button>
-          
-                  <Modal
-                  show={this.state.show}
-                  onHide={this.handleClose}
-                  backdrop="static"
-                  keyboard={false}
-                  >
-                  <Modal.Header closeButton>
-                      <Modal.Title>Edit My Account Infomation</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                      <Form>
-                          <Form.Group controlId="formBasicName">
-                                  <Form.Label>Name</Form.Label>
-                                  <Form.Control type="Name" placeholder="New Name" value={this.state.Name} onChange={this.handleNamechange.bind()}/>
-                          </Form.Group>
-                          <Form.Group>
-                              <Form.Label>Email address</Form.Label>
-                                  <Form.Control type="email" placeholder="Enter email" value={this.state.Email} onChange={this.handleEmailChange.bind()}/>
-                                  <Form.Text className="text-muted">
-                                      We'll never share your email with anyone else.
-                                  </Form.Text>
-                          </Form.Group>
-      
-                              <Form.Group controlId="formBasicPassword">
-                                  <Form.Label>Password</Form.Label>
-                                  <Form.Control type="password" placeholder="Password" />
-                              </Form.Group>
-                          <Form.Group>
-                              <Form.File id="exampleFormControlFile1" label="Example file input" />
-                          </Form.Group>
-                          
-                      </Form>
-                  </Modal.Body>
-                  <Modal.Footer>
-                      <Button variant="secondary" onClick={this.handleClose.bind()}>
-                      Cancel
-                      </Button>
-                      <Button variant="primary" onClick={this.handleSubmit.bind()}>Save</Button>
-                  </Modal.Footer>
-                  </Modal>
-              </div>
+                <div className="Profile_Card">
+                <Card >
+                    <Image className="circular-pic" src={this.state.userImage || DefaultHead} roundedCircle/>
+                    <Card.Body>
+                        <Card.Title>{this.state.Name}</Card.Title>
+                        <Card.Text>
+                            {this.state.about_me}
+                        </Card.Text>
+                        <Card.Body>
+                        <ListGroup className="list-group-flush">
+                            <ListGroupItem/>
+                            <ListGroupItem><li>Email: {this.state.Email}</li></ListGroupItem>
+                            <ListGroupItem/>
+                        </ListGroup>
+                        </Card.Body>
+                        <Button variant="primary" onClick={this.handleShow.bind()}>
+                            Edit Account Information
+                        </Button>
+                        <Modal
+                            show={this.state.show}
+                            onHide={this.handleClose}
+                            backdrop="static"
+                            keyboard={false}
+                            >
+                            <Modal.Header closeButton>
+                                <Modal.Title>Edit My Account Infomation</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <Form>
+                                    <Form.Text className="text-muted">
+                                        Please enter new information in the following fields.
+                                    </Form.Text>
+                                    <Form.Group controlId="formBasicName">
+                                            <Form.Label>Name</Form.Label>
+                                            <Form.Control 
+                                                type="Name" 
+                                                placeholder="Enter New Name" 
+                                                value={this.state.Name} 
+                                                onChange={this.handleNamechange.bind()}
+                                            />
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Form.Label>Email address</Form.Label>
+                                            <Form.Control 
+                                                type="email" 
+                                                placeholder="Enter New Email" 
+                                                value={this.state.Email} 
+                                                onChange={this.handleEmailChange.bind()}
+                                            />
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Form.Label>About Me</Form.Label>
+                                            <Form.Control
+                                                as="textarea" rows={3} 
+                                                type="about_me" placeholder="Information About Me" 
+                                                value={this.state.about_me} 
+                                                onChange={this.handleAboutMeChange.bind()}
+                                            />
+                                    </Form.Group>
+                
+                                    <Form.Group controlId="formBasicPassword">
+                                        <Form.Label>Password</Form.Label>
+                                        <Form.Control type="password" placeholder="Enter New Password" />
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Form.File variant="primary" id="exampleFormControlFile1" label="Change Profile Picture" onChange={this.fileSelectedHandler.bind()}/>
+                                    </Form.Group>
+                                    
+                                </Form>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={this.handleClose.bind()}>
+                                Cancel
+                                </Button>
+                                <Button variant="primary" onClick={this.handleSubmit.bind()}>Save</Button>
+                            </Modal.Footer>
+                        </Modal>
+                    </Card.Body>
+                </Card>
+                </div>
             </div>
           );
     }
 }
-
-// const EditInfo = () => {
-//     const [show, setShow] = useState(false);
-  
-//     const handleClose = () => setShow(false);
-//     const handleShow = () => setShow(true);
-
-//     const handleSubmit = () => {
-//         alert("Success")
-//         handleClose()
-//     }
-
-//     onchange = (event) => {
-
-//     }
-
-//     const handlePictureUpload = () => {
-
-//     }
-
-  
-//     return (
-//       <div className="AccountInfo">
-//         <h1>Account Info</h1>
-//         <p>name: jon doe</p>
-//         <p>email: jon@gmail.com</p>
-//         <p>profile pic</p>
-//         <div className="EditInfo">
-//             <Button variant="primary" onClick={handleShow}>
-//             Edit Account Information
-//             </Button>
-    
-//             <Modal
-//             show={show}
-//             onHide={handleClose}
-//             backdrop="static"
-//             keyboard={false}
-//             >
-//             <Modal.Header closeButton>
-//                 <Modal.Title>Edit My Account Infomation</Modal.Title>
-//             </Modal.Header>
-//             <Modal.Body>
-//                 <Form>
-//                     <Form.Group controlId="formBasicName">
-//                             <Form.Label>Name</Form.Label>
-//                             <Form.Control type="Name" placeholder="New Name" />
-//                     </Form.Group>
-//                     <Form.Group>
-//                         <Form.Label>Email address</Form.Label>
-//                             <Form.Control type="email" placeholder="Enter email" />
-//                             <Form.Text className="text-muted">
-//                                 We'll never share your email with anyone else.
-//                             </Form.Text>
-//                     </Form.Group>
-
-//                         <Form.Group controlId="formBasicPassword">
-//                             <Form.Label>Password</Form.Label>
-//                             <Form.Control type="password" placeholder="Password" />
-//                         </Form.Group>
-//                     <Form.Group>
-//                         <Form.File id="exampleFormControlFile1" label="Example file input" />
-//                     </Form.Group>
-                    
-//                 </Form>
-//             </Modal.Body>
-//             <Modal.Footer>
-//                 <Button variant="secondary" onClick={handleClose}>
-//                 Cancel
-//                 </Button>
-//                 <Button variant="primary" onClick={handleSubmit}>Save</Button>
-//             </Modal.Footer>
-//             </Modal>
-//         </div>
-//       </div>
-//     );
-//   }
-
-
 
 export default AccountInformation
