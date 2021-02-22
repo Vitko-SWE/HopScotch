@@ -15,3 +15,5 @@ var mysql  = mysql.createConnection({
           console.log('DB connection successful');
       }
   })
+
+module.exports = mysql

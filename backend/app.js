@@ -1,7 +1,10 @@
 const express = require("express");
 const db = require('./db.js');
+const userService = require('./routes/users');
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
+const cors = require('cors');
+
 require('dotenv').config()
 
 const app = express();
@@ -22,6 +25,9 @@ app.use(jwtCheck);
 
 app.use(express.urlencoded());
 app.use(express.json());
+app.use(cors());
+
+app.use("/user", userService);
 
 if (process.env.NODE_ENV == "production") {
     const publicPath = path.join(__dirname, './frontend');
