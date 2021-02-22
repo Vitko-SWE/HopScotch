@@ -25,7 +25,7 @@ function App() {
 
         <Switch>
           <Route path="/" component={Landing} exact />
-          <ProtectedRoute path="/homepage" component={Homepage} />
+          <ProtectedRoute path="/homepage" component={Homepage} exact/>
         </Switch>
       </div>
     </Router>
