@@ -23,9 +23,9 @@ class TripCards extends Component {
 
   }
   
-  componentDidMount () {
-    this.getTrips()
-  }
+  // componentDidMount () {
+  //   this.getTrips()
+  // }
 
 
   getTrips = async () => {

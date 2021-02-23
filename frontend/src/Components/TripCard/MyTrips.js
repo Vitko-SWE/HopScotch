@@ -8,12 +8,11 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 
 
+
 const MyTrips = () => {
     const { user, getAccessTokenSilently } = useAuth0();
-    let trips = [{
-        Name: "Banff",
-        trip_owner: "dudson"
-    }]
+    var trips = null
+    var result = null
 
     console.log(user)
 
@@ -36,52 +35,50 @@ const MyTrips = () => {
         })
 
         try {
-            let data = api.get('/').then(({data}) => data)
-            console.log(data)
-            trips = data.data
+            let data = api.get('/').then(res => {
+              trips = res.data
+              console.log(trips)
+              if (res.data.length > 0) {
+                console.log(">0 jjjjjjjj")
+                result = (
+                    <div className="custom_container">
+                      {trips.map((trip, index) =>
+                        <Card className="custom_card">
+                          <Card.Img variant="top" src={pic} />
+                          <Card.Body>
+                            <Card.Title>{trip.Name}</Card.Title>
+                            <Card.Text>
+                              Days Remaining: 365
+                            </Card.Text>
+                            <Card.Text>
+                              Trip Organizer: {trip.trip_owner}
+                            </Card.Text>
+                          </Card.Body>
+                          <Card.Footer>
+                            <small className="text-muted">
+                            <Button  variant="primary" size="lg" block>Edit</Button>
+                            <Button  variant="danger" size="lg" block>Exit Trip</Button>
+                            </small>
+                          </Card.Footer>
+                        </Card>
+                      )}
+                    </div>
+                  )
+            }
+            })
         } catch (err) {
             console.log(err)
-            trips = []
+            result =  (
+              <h1>You do not have any trips at this moment</h1>
+          )
         }
     })
 
-    console.log(trips)
-
-    if (trips != null && trips.length !== 0) {
-        return (
-            <div className="custom_container">
-              {trips.map((trip, index) =>
-                <Card className="custom_card">
-                  <Card.Img variant="top" src={pic} />
-                  <Card.Body>
-                    <Card.Title>{trip.Name}</Card.Title>
-                    <Card.Text>
-                      Days Remaining: 365
-                    </Card.Text>
-                    <Card.Text>
-                      Trip Organizer: {trip.trip_owner}
-                    </Card.Text>
-                  </Card.Body>
-                  <Card.Footer>
-                    <small className="text-muted">
-                    <Button  variant="primary" size="lg" block>Edit</Button>
-                    <Button  variant="danger" size="lg" block>Exit Trip</Button>
-                    </small>
-                  </Card.Footer>
-                </Card>
-              )}
-            </div>
-          )
-    
-    }
-    else {
-        return (
-            <h1>You do not have any trips at this moment</h1>
-        )
-    }
-
-
-
+    return (
+      <div>
+        {trips}
+      </div>
+    )
 
 }
 
