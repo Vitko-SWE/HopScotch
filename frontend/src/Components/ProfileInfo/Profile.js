@@ -1,6 +1,7 @@
 import React, { useState, Component } from 'react'
 import { Button, Modal, Form } from 'react-bootstrap';
 import { withAuth0 } from "@auth0/auth0-react";
+import axios from 'axios'
 import {
     BrowserRouter as Router,
     Switch,
@@ -26,7 +27,8 @@ class AccountInformation extends Component {
             about_me: "",
             selectedFile: null,
             userImage: null,
-            userId: this.props.auth0
+            user_object: this.props.auth0,
+            stuff: []
         }
 
         this.handleShow1 = this.handleShow1.bind(this)
@@ -39,6 +41,7 @@ class AccountInformation extends Component {
         this.checkPicOnLoad = this.checkPicOnLoad.bind(this)
         this.fileSelectedHandler = this.fileSelectedHandler.bind(this)
         this.fileUploadHandler = this.fileUploadHandler.bind(this)
+        this.getUser = this.getUser.bind(this)
     }
 
 
@@ -77,8 +80,8 @@ class AccountInformation extends Component {
 
     checkPicOnLoad() {
         var storageref = app.storage()
-        console.log(this.state.userId)
-        storageref.ref(this.state.userId.user.sub + `/Profile Picture/picture`).getDownloadURL().then((url) => {
+        console.log(this.state.user_object)
+        storageref.ref(this.state.user_object.user.sub + `/Profile Picture/picture`).getDownloadURL().then((url) => {
             this.setState({ userImage: url })
             //console.log("On load pic: " + this.state.userImage);
         });
@@ -100,7 +103,7 @@ class AccountInformation extends Component {
         if (this.state.selectedFile === null) {
             return
         }
-        const uploadTask = storageref.ref(this.state.userId.user.sub + `/Profile Picture/picture`).put(this.state.selectedFile);
+        const uploadTask = storageref.ref(this.state.user_object.user.sub + `/Profile Picture/picture`).put(this.state.selectedFile);
         uploadTask.on('state_changed', (snapshot) => {
             console.log(snapshot)
         },
@@ -116,8 +119,28 @@ class AccountInformation extends Component {
 
     }
 
+    getUser = async () => {
+        const api = axios.create({
+          baseURL: 'http://localhost:5000/profile',
+          headers: {
+            userID: this.state.user_object.user.sub
+          }
+        })
+    
+        try {
+          let data = await api.get('/').then(({data}) => data)
+          console.log(data)
+          this.setState({stuff: data})
+        } catch (err) {
+          console.log(err)
+        }
+      }
+
+
     componentDidMount() {
+        this.getUser();
         this.checkPicOnLoad();
+        console.log(this.state.user)
     }
 
     render() {
@@ -161,7 +184,7 @@ class AccountInformation extends Component {
                                     <Form>
                                         <Form.Text className="text-muted">
                                             Please enter new information in the following fields.
-                                    </Form.Text>
+                                        </Form.Text><br></br>
                                         <Form.Group controlId="formBasicName">
                                             <Form.Label>Name</Form.Label>
                                             <Form.Control
@@ -208,7 +231,9 @@ class AccountInformation extends Component {
                                 <Modal.Body>
                                 <Form>
                                     <Form.Group controlId="formBasicPassword">
-                                        <Form.Label>To change password, please logout and reset your password from the landing page.</Form.Label>
+                                        <Form.Text className="text-muted">
+                                            To change password, please logout and reset your password from the landing page.
+                                        </Form.Text><br></br>
                                         <Button onClick={() => logout()}>Log out</Button>
                                     </Form.Group>
                                     </Form>
