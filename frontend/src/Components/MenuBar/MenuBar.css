@@ -1,4 +1,4 @@
-.menubar {
+/* .menubar {
     position: fixed;
     top: 0;
     left: 0;
@@ -48,4 +48,26 @@
 .menubar_nav_items a:hover,
 .menubar_nav_items a:active {
     color: tomato;
+} */
+
+.link {
+    color: #FFF;
+  }
+.link:hover {
+    color: rgb(155, 155, 161)
 }
+
+.mytrips-link {
+    color: rgb(192, 187, 187);
+  }
+.mytrips-link:hover {
+    color: rgb(255, 255, 255)
+}
+
+.account-details {
+    color: rgb(192, 187, 187);
+  }
+.account-details:hover {
+    color: rgb(255, 255, 255)
+}
+

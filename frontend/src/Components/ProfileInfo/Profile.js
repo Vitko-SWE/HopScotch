@@ -12,7 +12,8 @@ import '../ProfileInfo/Profile.css'
 import {Card, Image, ListGroup, ListGroupItem} from 'react-bootstrap'
 import DefaultHead from "./default_head.jpg";
 import app from "../../base.js";
-
+import { withAuth0 } from "@auth0/auth0-react";
+import Homepage from "../Homepage/Homepage"
 
 class AccountInformation extends Component {
     constructor(props){
@@ -24,7 +25,8 @@ class AccountInformation extends Component {
             profilePicture: "",
             about_me: "",
             selectedFile: null,
-            userImage: null
+            userImage: null,
+            user: this.props.auth0
         }
 
         this.handleShow = this.handleShow.bind(this)
@@ -108,11 +110,14 @@ class AccountInformation extends Component {
 
     }
 
+
     componentDidMount() {
         this.checkPicOnLoad();
+        console.log(this.state.user)
     }
 
     render () {
+
         return (
             <div className="AccountInfo">
                 <div className="Profile_Card">
@@ -200,4 +205,4 @@ class AccountInformation extends Component {
     }
 }
 
-export default AccountInformation
+export default withAuth0(AccountInformation)
