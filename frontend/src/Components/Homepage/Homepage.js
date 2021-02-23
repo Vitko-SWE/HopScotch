@@ -14,14 +14,9 @@ export default function Homepage() {
         audience: "https://hopscotch/api"
 
     }).then(res => {
-
-        console.log("token: " + res);
         const headers = {
             "Authorization" : "Bearer " + res,
-            // "Authorization" : "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjI2WXUzbjRKOEVvNnFWU2EyRk9YNSJ9.eyJpc3MiOiJodHRwczovL2ZseWhvcHNjb3RjaC1kZXYudXMuYXV0aDAuY29tLyIsInN1YiI6IkVIenljdVBVbm9vQzNnOVF6UDZoNnlaYjhiZkNqNTJGQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2hvcHNjb3RjaC9hcGkiLCJpYXQiOjE2MTM5NjY0NTIsImV4cCI6MTYxNDA1Mjg1MiwiYXpwIjoiRUh6eWN1UFVub29DM2c5UXpQNmg2eVpiOGJmQ2o1MkYiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.TT3ftAJBPuU3z-58E8GHgEQrOFj3MW3wopDpeo9IlkWMGzvO4_l-OFeT7Ztap4bRnraf03yYZJLQY7UhO0-EKTNAksiU0BACIaXXiviE0O5w8mHnuGsbsm8dEXpM78O9BG5CUuRjXC98mOeM6NKnbW3XnR4G44lBBV5KOvMNBvEld5nZQeFOYeaNxfghO0m0WiA4PaVWss78moLI09hSdxKALCLOzxN9wTtYBdmxGVvc1bsD1JCvVG3IPIFy1EOQK95ZeovrAxrFy6SZJzcyh6-UquDakKaSCBi3pAc848cCLltTQAVOfXCXvT4Og9MDuzH20KxXfPndEHc1AnCJng"
         };
-            
-
         axios.get(`http://localhost:5000/user/getbyuserid/${user.sub}`, {"headers":headers})
         .then( function(res, err) {
             if (err)

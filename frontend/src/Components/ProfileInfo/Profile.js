@@ -26,7 +26,7 @@ class AccountInformation extends Component {
             about_me: "",
             selectedFile: null,
             userImage: null,
-            user: this.props.auth0
+            user_object: this.props.auth0
         }
 
         this.handleShow = this.handleShow.bind(this)
@@ -72,7 +72,7 @@ class AccountInformation extends Component {
 
     checkPicOnLoad() {
         var storageref = app.storage()
-        storageref.ref('TESTING' + `/Profile Picture/picture`).getDownloadURL().then((url) => {
+        storageref.ref(this.state.user_object.user.sub + `/Profile Picture/picture`).getDownloadURL().then((url) => {
             this.setState({ userImage: url })
             //console.log("On load pic: " + this.state.userImage);
         });
@@ -94,7 +94,7 @@ class AccountInformation extends Component {
         if (this.state.selectedFile === null) {
             return
         }
-        const uploadTask = storageref.ref('TESTING' + `/Profile Picture/picture`).put(this.state.selectedFile);
+        const uploadTask = storageref.ref(this.state.user_object.user.sub + `/Profile Picture/picture`).put(this.state.selectedFile);
         uploadTask.on('state_changed', (snapshot) => {
             console.log(snapshot)
         },
@@ -113,7 +113,6 @@ class AccountInformation extends Component {
 
     componentDidMount() {
         this.checkPicOnLoad();
-        console.log(this.state.user)
     }
 
     render () {
