@@ -3,7 +3,7 @@ import './MenuBar.css'
 
 
 const menubar = props => (
-    <header className="menubar">
+    <header className="menubar sticky-nav">
         <nav className="menubar_navigation">
             <div className="menubar_logo"><a href="/">Hopscotch | My Trips</a></div>
             <div className="spacer" />

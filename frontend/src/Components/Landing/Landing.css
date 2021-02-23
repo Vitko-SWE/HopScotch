@@ -1,0 +1,20 @@
+.para-center {
+  width: 50%;
+  margin: auto;
+}
+
+.container::after {
+  content: "";
+  opacity: 0.75;
+  /* background: url("./37d.jpg") no-repeat fixed top;
+  background-blend-mode: normal; */
+  background: rgb(34,193,195);
+  background: linear-gradient(90deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%);
+  background-size: cover;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  z-index: -1;
+}

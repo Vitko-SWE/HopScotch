@@ -49,3 +49,8 @@
 .menubar_nav_items a:active {
     color: tomato;
 }
+
+.sticky-nav {
+  position: sticky;
+  top: 0;
+}
