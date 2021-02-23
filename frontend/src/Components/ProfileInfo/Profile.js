@@ -24,7 +24,7 @@ class AccountInformation extends Component {
             Name: "",
             Email: "",
             profilePicture: "",
-            about_me: "",
+            AboutMe: "",
             selectedFile: null,
             userImage: null,
             user_object: this.props.auth0,
@@ -40,6 +40,7 @@ class AccountInformation extends Component {
         this.checkPicOnLoad = this.checkPicOnLoad.bind(this)
         this.fileSelectedHandler = this.fileSelectedHandler.bind(this)
         this.fileUploadHandler = this.fileUploadHandler.bind(this)
+        this.getUser = this.getUser.bind(this)
     }
 
 
@@ -63,6 +64,8 @@ class AccountInformation extends Component {
         console.log(this.state.Name)
         console.log(this.state.Email)
         this.fileUploadHandler()
+        this.updateName()
+        this.updateAboutMe()
         this.handleClose1()
     }
 
@@ -73,12 +76,11 @@ class AccountInformation extends Component {
     }
 
     handleAboutMeChange(event) {
-        this.setState({ about_me: event.target.value })
+        this.setState({ AboutMe: event.target.value })
     }
 
     checkPicOnLoad() {
         var storageref = app.storage()
-        console.log(this.state.user_object)
         storageref.ref(this.state.user_object.user.sub + `/Profile Picture/picture`).getDownloadURL().then((url) => {
             this.setState({ userImage: url })
             //console.log("On load pic: " + this.state.userImage);
@@ -118,9 +120,79 @@ class AccountInformation extends Component {
     }
 
 
+    getUser = async () => {
+        this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
+          const token = `Bearer ${res}`
+    
+          const api = axios.create({
+            baseURL: `http://localhost:5000/user/getbyuserid/${this.state.user_object.user.sub}`,
+            headers: {
+              Authorization: token
+            }
+          })
+    
+          try {
+            api.get('/').then(response => {
+              console.log(response.data[0])
+              this.setState({Name: response.data[0]['Name']})
+              this.setState({Email: response.data[0]['EmailAddress']})
+              this.setState({AboutMe: response.data[0]['AboutMe']})
+            })
+          } catch (err) {
+            console.log(err)
+          }
+        })
+      }
+
+      updateName = async () => {
+        this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
+          const token = `Bearer ${res}`
+          const api = axios.create({
+            baseURL: `http://localhost:5000/user/updateName`,
+            headers: {
+              userid: this.state.user_object.user.sub,
+              name: this.state.Name,
+              Authorization: token
+            }
+          })
+    
+          try {
+            api.post(`http://localhost:5000/user/updateName`).then(response => {
+              console.log(response)
+            })
+          } catch (err) {
+            console.log(err)
+          }
+        })
+      }
+
+
+      updateAboutMe = async () => {
+        this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
+          const token = `Bearer ${res}`
+          const api = axios.create({
+            baseURL: `http://localhost:5000/user/updateAboutMe`,
+            headers: {
+              userid: this.state.user_object.user.sub,
+              aboutme: this.state.AboutMe,
+              Authorization: token
+            }
+          })
+    
+          try {
+            api.post(`http://localhost:5000/user/updateAboutMe`).then(response => {
+              console.log(response)
+            })
+          } catch (err) {
+            console.log(err)
+          }
+        })
+      }
+
+
     componentDidMount() {
+        this.getUser();
         this.checkPicOnLoad();
-        console.log(this.state.user)
     }
 
     render() {
@@ -133,12 +205,12 @@ class AccountInformation extends Component {
                         <Card.Body>
                             <Card.Title>{this.state.Name}</Card.Title>
                             <Card.Text>
-                                {this.state.about_me}
+                                Email: {this.state.Email}
                             </Card.Text>
                             <Card.Body>
                                 <ListGroup className="list-group-flush">
                                     <ListGroupItem />
-                                    <ListGroupItem><li>Email: {this.state.Email}</li></ListGroupItem>
+                                    <ListGroupItem>{this.state.AboutMe}</ListGroupItem>
                                     <ListGroupItem />
                                 </ListGroup>
                             </Card.Body>
@@ -178,8 +250,9 @@ class AccountInformation extends Component {
                                             <Form.Label>About Me</Form.Label>
                                             <Form.Control
                                                 as="textarea" rows={3}
-                                                type="about_me" placeholder="Information About Me"
-                                                value={this.state.about_me}
+                                                type="AboutMe" placeholder="Information About Me"
+                                                maxlength="200"
+                                                value={this.state.AboutMe}
                                                 onChange={this.handleAboutMeChange.bind()}
                                             />
                                         </Form.Group>

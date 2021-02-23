@@ -21,22 +21,4 @@ export default function Landing() {
       </div>
     )
   }
-
-  // return (
-  //   <div>
-  //     <br />
-  //     <br />
-  //     <br />
-  //     <p>Welcome to Hopscotch!</p>
-  //     <LoginButton />
-  //     <br />
-  //     {isAuthenticated && (
-  //       <div>
-  //         <img src={user.picture} alt={user.name} />
-  //         <h2>{user.name}</h2>
-  //         <p>{user.email}</p>
-  //       </div>
-  //     )}
-  //   </div>
-  // )
 }
