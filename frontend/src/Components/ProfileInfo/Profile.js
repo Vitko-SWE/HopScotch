@@ -28,7 +28,6 @@ class AccountInformation extends Component {
             selectedFile: null,
             userImage: null,
             user_object: this.props.auth0,
-            stuff: []
         }
 
         this.handleShow1 = this.handleShow1.bind(this)
@@ -41,7 +40,6 @@ class AccountInformation extends Component {
         this.checkPicOnLoad = this.checkPicOnLoad.bind(this)
         this.fileSelectedHandler = this.fileSelectedHandler.bind(this)
         this.fileUploadHandler = this.fileUploadHandler.bind(this)
-        this.getUser = this.getUser.bind(this)
     }
 
 
@@ -119,26 +117,8 @@ class AccountInformation extends Component {
 
     }
 
-    getUser = async () => {
-        const api = axios.create({
-          baseURL: 'http://localhost:5000/profile',
-          headers: {
-            userID: this.state.user_object.user.sub
-          }
-        })
-    
-        try {
-          let data = await api.get('/').then(({data}) => data)
-          console.log(data)
-          this.setState({stuff: data})
-        } catch (err) {
-          console.log(err)
-        }
-      }
-
 
     componentDidMount() {
-        this.getUser();
         this.checkPicOnLoad();
         console.log(this.state.user)
     }
