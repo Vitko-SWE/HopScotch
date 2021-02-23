@@ -7,7 +7,7 @@ router.route("/myTrips")
     .get((req, res) => {
         console.log(req.headers.userid)
         var query_string = 'SELECT * FROM Trip WHERE TripId '
-        query_string += 'IN (SELECT TripUser.TripId FROM TripUser WHERE TripUser.UserId = ' + req.headers.userid + ')'
+        query_string += `IN (SELECT TripUser.TripId FROM TripUser WHERE TripUser.UserId = "${req.headers.userid}")`
         db.query(query_string, (err,data) => {
             if(err) {
                 console.log("sql error" + err)
