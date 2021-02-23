@@ -13,8 +13,12 @@ export default function Landing() {
       <br />
       <br />
       <p>Welcome to Hopscotch!</p>
-      <LoginButton />
-      <LogoutButton />
+      {!isAuthenticated && (
+        <LoginButton />
+      )}
+      {isAuthenticated && (
+        <LogoutButton />
+      )}
       <br />
       {isAuthenticated && (
         <div>

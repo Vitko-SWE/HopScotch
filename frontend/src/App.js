@@ -8,7 +8,6 @@ import {
 
 import Profile from './Components/ProfileInfo/Profile';
 import MenuBar from './Components/MenuBar/MenuBar'
-import UserProfile from './Components/ProfileInfo/UserProfile'
 import Landing from './Components/Landing/Landing.js';
 import Homepage from './Components/Homepage/Homepage.js';
 import { createBrowserHistory } from 'history';
@@ -29,8 +28,7 @@ function App() {
         <Switch>
           <Route path="/" component={Landing} exact />
           <ProtectedRoute path="/homepage" component={Homepage} exact/>
-          <Route path="/Account" exact component={Profile} />
-          <Route path="/UserProfile" exact component={UserProfile} />
+          <ProtectedRoute path="/Account" exact component={Profile} />
         </Switch>
       </div>
     </Router>
