@@ -1,0 +1,29 @@
+.AccountInfo {
+    margin-top: 3cm;
+}
+
+.Profile_Card {
+    width: 32rem;
+    margin-left: 43rem;
+    /* margin-bottom: 5cm; */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
+    transition: 0.3s;
+    /* margin-top: 3cm; */
+    /* margin-left: 15rem;
+    margin-right: 15rem; */
+    
+}
+
+.circular-pic {
+    border-radius: 150px;
+    overflow: hidden;
+    height: 350px;
+    width: 350px;
+    position: relative;
+    margin: auto;
+    top: -20px;
+    box-shadow: 0 0 0 13px #f0f0f0;
+    -webkit-box-shadow: 0 0 0 13px #f0f0f0;
+    -moz-box-shadow: 0 0 0 13px #f0f0f0;
+  }
+

@@ -1,5 +1,6 @@
 const express = require("express");
-const db = require('./db.js');
+const db = require('./db');
+const myTrips = require("./routes/homepage");
 const userService = require('./routes/users');
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
@@ -8,6 +9,9 @@ const cors = require('cors');
 require('dotenv').config()
 
 const app = express();
+app.use(express.urlencoded());
+app.use(express.json());
+app.use(cors())
 
 const jwtCheck = jwt({
     secret: jwks.expressJwtSecret({
@@ -23,10 +27,11 @@ const jwtCheck = jwt({
 
 app.use(jwtCheck);
 
-app.use(express.urlencoded());
-app.use(express.json());
-app.use(cors());
+// app.use(express.urlencoded());
+// app.use(express.json());
+// app.use(cors())
 
+app.use("/homepage", myTrips)
 app.use("/user", userService);
 
 if (process.env.NODE_ENV == "production") {

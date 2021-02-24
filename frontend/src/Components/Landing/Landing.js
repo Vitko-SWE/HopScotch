@@ -5,6 +5,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import LoginButton from "../LoginButton";
 import LogoutButton from "../LogoutButton"
 import "./Landing.css";
+import { Link } from 'react-router-dom'
 
 export default function Landing() {
   const { user, isAuthenticated } = useAuth0();
@@ -21,10 +22,8 @@ export default function Landing() {
         )}
         {isAuthenticated && (
           <div class="mt-5">
-            <img src={user.picture} alt={user.name} />
-            <h2>{user.name}</h2>
-            <p>{user.email}</p>
-            <LogoutButton />
+            <h2>Hi {user.name}!</h2>
+            <Link to="homepage"/>
           </div>
         )}
       </div>
