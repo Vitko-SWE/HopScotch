@@ -1,5 +1,6 @@
 import React from 'react'
 import './MenuBar.css'
+import LogoutButton from "../LogoutButton";
 import {
     BrowserRouter as Router,
     Switch,
@@ -12,7 +13,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 
 const Menubar = (props) => {
-  const {user, isAuthenticated, logout } = useAuth0();
+  const {user, isAuthenticated } = useAuth0();
   if (isAuthenticated) {
     return (
       <Navbar bg="dark" variant="dark" expand="lg">
@@ -22,7 +23,7 @@ const Menubar = (props) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link> 
+            <Nav.Link>
               <Link className="mytrips-link" to="homepage" >My Trips</Link>
             </Nav.Link>
             <NavDropdown  title="Search Options" id="basic-nav-dropdown">
@@ -37,7 +38,7 @@ const Menubar = (props) => {
             <Nav.Link >
               <Link className="account-details" to="Account" >Account Details</Link>
             </Nav.Link>
-            <Button variant="outline-light" onClick={() => logout()}>Logout</Button>
+            <LogoutButton />
           </Nav>
         </Navbar.Collapse>
       </Navbar>
@@ -50,18 +51,6 @@ const Menubar = (props) => {
       </Navbar>
     )
   }
-    // <header className="menubar">
-    //     <nav className="menubar_navigation">
-    //         <div className="menubar_logo"><Link to="/">Hopscotch | My Trips</Link></div>
-    //         <div className="spacer" />
-    //         <div className="menubar_nav_items">
-    //             <ul>
-    //                 {/* <li><a href="/">Search</a></li> */}
-    //                 <Link to="/Account">Account</Link>
-    //             </ul>
-    //         </div>
-    //     </nav>
-    // </header>
 }
 
-export default Menubar
+export default Menubar;
