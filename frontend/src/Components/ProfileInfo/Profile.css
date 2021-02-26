@@ -1,4 +1,6 @@
 .AccountInfo {
+    display: flex;
+    flex-flow: wrap;
     margin-top: 3cm;
 }
 
@@ -25,5 +27,13 @@
     box-shadow: 0 0 0 13px #f0f0f0;
     -webkit-box-shadow: 0 0 0 13px #f0f0f0;
     -moz-box-shadow: 0 0 0 13px #f0f0f0;
+  }
+
+  .change-pass-btn {
+      margin: 0.5cm;
+  }
+
+  .delete-btn {
+      margin: 0.5cm;
   }
 

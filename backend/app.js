@@ -5,6 +5,7 @@ const userService = require('./routes/users');
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 const cors = require('cors');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 require('dotenv').config()
 
@@ -31,6 +32,7 @@ app.use(jwtCheck);
 // app.use(express.json());
 // app.use(cors())
 
+
 app.use("/homepage", myTrips)
 app.use("/user", userService);
 
@@ -39,6 +41,7 @@ if (process.env.NODE_ENV == "production") {
     app.use(express.static(publicPath));
     app.use('*', express.static(publicPath));
 }
+
 
 app.get('/authorized', (req, res) => {
     res.send('Secured Resource');

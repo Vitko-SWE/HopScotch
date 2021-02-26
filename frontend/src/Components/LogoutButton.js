@@ -5,5 +5,5 @@ import { Button } from 'react-bootstrap';
 export default function LogoutButton() {
     const { logout } = useAuth0();
 
-    return <Button onClick={() => logout()}>Log Out</Button>
+    return <Button variant="outline-light" onClick={() => logout()}>Log Out</Button>
 }
