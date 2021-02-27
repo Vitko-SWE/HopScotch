@@ -208,7 +208,7 @@ class AccountInformation extends Component {
             console.log(err)
           }
         })
-        window.confirm("A password reset link has been sent to your email at: " + this.state.user_object.user.email);
+        window.alert("A password reset link has been sent to your email at: " + this.state.user_object.user.email);
         this.handleClose2();
       }
 
