@@ -33,7 +33,7 @@ router.route("/createtrip").post((req, res) => {
     }
     else {
       if (data2.length === req.body.editors.length) {
-        const query_string = `insert into Trip(Name, Origin, Destination, StartDate, EndDate, InboundFlightId, OutboundFlightId, Features, IsLocked) values('${req.body.title}', '${req.body.origin}', '${req.body.destination}', '${req.body.startdate}', '${req.body.enddate}', ${req.body.inboundflightid}, ${req.body.outboundflightid}, '${req.body.features}', 0);`;
+        const query_string = `insert into Trip(Name, Origin, Destination, StartDate, EndDate, InboundFlightId, OutboundFlightId, Features, IsLocked) values('${req.body.title.split("'").join("\\'")}', '${req.body.origin.split("'").join("\\'")}', '${req.body.destination.split("'").join("\\'")}', '${req.body.startdate}', '${req.body.enddate}', ${req.body.inboundflightid}, ${req.body.outboundflightid}, '${req.body.features.split("'").join("\\'")}', 0);`;
         db.query(query_string, (err, data) => {
           if (err) {
             console.log(err);

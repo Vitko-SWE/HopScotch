@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import "./CreateTrip.css";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import { Link, useHistory } from "react-router-dom";
@@ -32,7 +32,10 @@ export default function CreateTrip() {
         errors += "Please make sure all editor emails are valid.\n";
       }
     }
-    if (startDate >= endDate) {
+    if (startDate === null || endDate === null) {
+      errors += "Please enter a start date and an end date.\n";
+    }
+    else if (startDate >= endDate) {
       errors += "Please make sure the end date is after the start date.\n";
     }
     if (isNaN(results.tripInboundFlightID.value)) {
@@ -76,46 +79,55 @@ export default function CreateTrip() {
     <div>
       <h1>Create Trip</h1>
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="tripTitle">
-          <Form.Label>Title</Form.Label>
-          <Form.Control required />
-        </Form.Group>
-        <Form.Group controlId="tripOrigin">
-          <Form.Label>Origin</Form.Label>
-          <Form.Control required />
-        </Form.Group>
-        <Form.Group controlId="tripDestination">
-          <Form.Label>Destination</Form.Label>
-          <Form.Control required />
-        </Form.Group>
-        <Form.Group controlId="tripStartDate">
-          <Form.Label>Start Date</Form.Label><br />
-          <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
-        </Form.Group>
-        <Form.Group controlId="tripEndDate">
-          <Form.Label>End Date</Form.Label><br />
-          <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
-        </Form.Group>
-        <Form.Group controlId="tripInboundFlightID">
-          <Form.Label>Inbound Flight ID</Form.Label>
-          <Form.Control required />
-        </Form.Group>
-        <Form.Group controlId="tripOutboundFlightID">
-          <Form.Label>Outbound Flight ID</Form.Label>
-          <Form.Control required />
-        </Form.Group>
-        <Form.Group controlId="tripFeatures">
-          <Form.Label>Features</Form.Label>
-          <Form.Control required />
-        </Form.Group>
-        <Form.Group controlId="tripEditors">
-          <Form.Label>Editors</Form.Label>
-          <Form.Text className="text-muted">
-            Enter email addresses separated by commas.
-          </Form.Text>
-          <Form.Control />
-        </Form.Group>
+        <Container>
+          <Row>
+            <Col>
+              <Form.Group controlId="tripTitle">
+                <Form.Label>Title</Form.Label>
+                <Form.Control required />
+              </Form.Group>
+              <Form.Group controlId="tripOrigin">
+                <Form.Label>Origin</Form.Label>
+                <Form.Control required />
+              </Form.Group>
+              <Form.Group controlId="tripDestination">
+                <Form.Label>Destination</Form.Label>
+                <Form.Control required />
+              </Form.Group>
+              <Form.Group controlId="tripStartDate">
+                <Form.Label>Start Date</Form.Label><br />
+                <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
+              </Form.Group>
+              <Form.Group controlId="tripEndDate">
+                <Form.Label>End Date</Form.Label><br />
+                <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group controlId="tripInboundFlightID">
+                <Form.Label>Inbound Flight ID</Form.Label>
+                <Form.Control required />
+              </Form.Group>
+              <Form.Group controlId="tripOutboundFlightID">
+                <Form.Label>Outbound Flight ID</Form.Label>
+                <Form.Control required />
+              </Form.Group>
+              <Form.Group controlId="tripFeatures">
+                <Form.Label>Features</Form.Label>
+                <Form.Control required />
+              </Form.Group>
+              <Form.Group controlId="tripEditors">
+                <Form.Label>Editors</Form.Label>
+                <Form.Text className="text-muted">
+                  Enter email addresses separated by commas.
+                </Form.Text>
+                <Form.Control />
+              </Form.Group>
+            </Col>
+          </Row>
+        </Container>
         <Button variant="primary" type="submit">Submit</Button>
+        {" "}
         <Link to="/homepage"><Button variant="outline-secondary">Cancel</Button></Link>
       </Form>
     </div>
