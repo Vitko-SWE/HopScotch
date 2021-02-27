@@ -1,6 +1,7 @@
 const express = require("express");
 const db = require('../db');
 let router = express.Router()
+const axios = require('axios')
 
 router.route("/getbyuserid/:userId")
     .get((req, res) => {
@@ -37,10 +38,26 @@ router.route("/updateAboutMe")
     .post((req, res) => {
         var query_string = `UPDATE User SET AboutMe = "${req.headers.aboutme}" WHERE UserId = "${req.headers.userid}"`;
         db.query(query_string, (err, data) => {
-            if(err)
+            if (err)
                 return err;
             res.send(data);
         })
     });
+
+
+router.route("/changePassword")
+    .post((req, res) => {
+        axios
+            .post('https://flyhopscotch-dev.us.auth0.com/dbconnections/change_password', {
+                email: req.headers.email,
+                connection: 'Username-Password-Authentication'
+            })
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => {
+                console.error(error)
+            })
+});
 
 module.exports = router

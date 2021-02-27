@@ -41,6 +41,7 @@ class AccountInformation extends Component {
         this.fileSelectedHandler = this.fileSelectedHandler.bind(this)
         this.fileUploadHandler = this.fileUploadHandler.bind(this)
         this.getUser = this.getUser.bind(this)
+        this.changePassword = this.changePassword.bind(this)
     }
 
 
@@ -189,6 +190,28 @@ class AccountInformation extends Component {
         })
       }
 
+      changePassword = async () => {
+        this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
+          const token = `Bearer ${res}`
+          const api = axios.create({
+            headers: {
+              email: this.state.user_object.user.email,
+              Authorization: token
+            }
+          })
+    
+          try {
+            api.post(`http://localhost:5000/user/changePassword`).then(response => {
+              console.log(response)
+            })
+          } catch (err) {
+            console.log(err)
+          }
+        })
+        window.confirm("A password reset link has been sent to your email at: " + this.state.user_object.user.email);
+        this.handleClose2();
+      }
+
 
     componentDidMount() {
         this.getUser();
@@ -196,7 +219,6 @@ class AccountInformation extends Component {
     }
 
     render() {
-        const { logout } = this.props.auth0;
         return (
             <div className="AccountInfo">
                 <div className="Profile_Card">
@@ -285,9 +307,9 @@ class AccountInformation extends Component {
                                 <Form>
                                     <Form.Group controlId="formBasicPassword">
                                         <Form.Text className="text-muted">
-                                            To change password, please logout and reset your password from the landing page.
+                                            To change password, please click the button below and access the link sent to your email. Enter your new password at the link provided.
                                         </Form.Text><br></br>
-                                        <Button onClick={() => logout()}>Log out</Button>
+                                        <Button onClick={() => this.changePassword()}>Send Password Reset Link</Button>
                                     </Form.Group>
                                     </Form>
                                 </Modal.Body>
