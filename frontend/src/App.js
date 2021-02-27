@@ -8,7 +8,8 @@ import {
 import MenuBar from './Components/MenuBar/MenuBar.js';
 import Landing from './Components/Landing/Landing.js';
 import Homepage from './Components/Homepage/Homepage.js';
-import Profile from './Components/ProfileInfo/Profile'
+import Profile from './Components/ProfileInfo/Profile';
+import CreateTrip from './Components/CreateTrip/CreateTrip';
 import { createBrowserHistory } from 'history';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 
@@ -27,6 +28,7 @@ function App() {
           <Route path="/" component={Landing} exact />
           <ProtectedRoute path="/homepage" component={Homepage} exact/>
           <ProtectedRoute path="/Account"  component={Profile} exact/>
+          <ProtectedRoute path="/createtrip"  component={CreateTrip} exact/>
         </Switch>
       </div>
     </Router>

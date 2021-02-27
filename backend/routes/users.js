@@ -16,7 +16,7 @@ router.route("/getbyuserid/:userId")
 
 router.route("/postnewuser")
     .post((req, res) => {
-        var query_string = `INSERT INTO User VALUES ("${req.body.userId}", "${req.body.name}", "${req.body.email}", null)`;
+        var query_string = `INSERT INTO User VALUES ("${req.body.userId}", "${req.body.name}", "${req.body.email}", null, null)`;
         db.query(query_string, (err, data) => {
             if (err)
                 return err;
@@ -60,4 +60,4 @@ router.route("/changePassword")
             })
 });
 
-module.exports = router
+module.exports = router;
