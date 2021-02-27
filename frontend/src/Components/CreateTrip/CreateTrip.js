@@ -4,7 +4,7 @@ import "./CreateTrip.css";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
 import DatePicker from "react-datepicker";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -12,12 +12,26 @@ export default function CreateTrip() {
   const { user, getAccessTokenSilently } = useAuth0();
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const results = e.currentTarget;
+    const emails = results.tripEditors.value.replace(/\s/g,'').split(",");
 
     let errors = "";
+    if (results.tripEditors.value !== "") {
+      let valid = true;
+      const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      for (let i = 0; i < emails.length; i++) {
+        if (emails[i] === "" || emails[i] === user.email || !regex.test(emails[i])){
+          valid = false;
+        }
+      }
+      if (!valid) {
+        errors += "Please make sure all editor emails are valid.\n";
+      }
+    }
     if (startDate >= endDate) {
       errors += "Please make sure the end date is after the start date.\n";
     }
@@ -42,6 +56,7 @@ export default function CreateTrip() {
           inboundflightid: results.tripInboundFlightID.value,
           outboundflightid: results.tripOutboundFlightID.value,
           features: results.tripFeatures.value,
+          editors: emails,
         }, {
           headers: {
             userid: user.sub,
@@ -49,8 +64,9 @@ export default function CreateTrip() {
           },
         }).then((res) => {
           console.log(res);
+          history.push("/homepage");
         }).catch((err) => {
-          console.log(err);
+          alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
         });
       });
     }
@@ -91,6 +107,13 @@ export default function CreateTrip() {
         <Form.Group controlId="tripFeatures">
           <Form.Label>Features</Form.Label>
           <Form.Control required />
+        </Form.Group>
+        <Form.Group controlId="tripEditors">
+          <Form.Label>Editors</Form.Label>
+          <Form.Text className="text-muted">
+            Enter email addresses separated by commas.
+          </Form.Text>
+          <Form.Control />
         </Form.Group>
         <Button variant="primary" type="submit">Submit</Button>
         <Link to="/homepage"><Button variant="outline-secondary">Cancel</Button></Link>
