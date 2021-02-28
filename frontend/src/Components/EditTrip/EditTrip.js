@@ -142,7 +142,7 @@ export default function EditTrip(props) {
           console.log(res.data);
           history.push(`/edittrip/${props.match.params.tripid}`);
         }).catch((err) => {
-          console.log(err);
+          alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
         });
       });
     }
@@ -181,7 +181,7 @@ export default function EditTrip(props) {
           console.log(res.data);
           history.push(`/edittrip/${props.match.params.tripid}`);
         }).catch((err) => {
-          console.log(err);
+          alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
         });
       });
     }
@@ -220,7 +220,7 @@ export default function EditTrip(props) {
           console.log(res.data);
           history.push(`/edittrip/${props.match.params.tripid}`);
         }).catch((err) => {
-          console.log(err);
+          alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
         });
       });
     }
@@ -245,7 +245,7 @@ export default function EditTrip(props) {
             console.log(res);
             history.push(`/edittrip/${props.match.params.tripid}`);
           }).catch((err) => {
-            console.log(err);
+            alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
           });
         });
       }
@@ -259,7 +259,7 @@ export default function EditTrip(props) {
             console.log(res);
             history.push(`/edittrip/${props.match.params.tripid}`);
           }).catch((err) => {
-            console.log(err);
+            alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
           });
         });
       }

@@ -118,20 +118,25 @@ router.route("/addtripusers/:tripid/:role").post((req, res) => {
       res.send(err);
     }
     else {
-      let query = `insert into TripUser(UserId, TripId, Role) values`;
-      for (const editor of data2) {
-        query += ` ('${editor.UserId}', ${req.params.tripid}, '${req.params.role}'),`;
+      if (data2.length === req.body.users.length || req.body.users[0] === "") {
+        let query = `insert into TripUser(UserId, TripId, Role) values`;
+        for (const editor of data2) {
+          query += ` ('${editor.UserId}', ${req.params.tripid}, '${req.params.role}'),`;
+        }
+        query = query.slice(0, -1) + ";";
+        db.query(query, (err, data) => {
+          if (err) {
+            console.log(err);
+            res.send(err);
+          }
+          else {
+            res.send(data);
+          }
+        });
       }
-      query = query.slice(0, -1) + ";";
-      db.query(query, (err, data) => {
-        if (err) {
-          console.log(err);
-          res.send(err);
-        }
-        else {
-          res.send(data);
-        }
-      });
+      else {
+        res.status(404).send("Given email addresses do not all represent existing users.");
+      }
     }
   });
 });
