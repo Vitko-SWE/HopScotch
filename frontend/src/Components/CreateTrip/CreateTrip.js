@@ -50,14 +50,14 @@ export default function CreateTrip() {
     }
     else {
       getAccessTokenSilently({audience: "https://hopscotch/api"}).then((res) => {
-        axios.post("http://localhost:5000/homepage/createtrip", {
+        axios.post("http://localhost:5000/trips/createtrip", {
           title: results.tripTitle.value,
           origin: results.tripOrigin.value,
           destination: results.tripDestination.value,
           startdate: `${startDate.getFullYear()}-${("00" + (startDate.getMonth() + 1)).slice(-2)}-${("00" + startDate.getDate()).slice(-2)}`,
           enddate: `${endDate.getFullYear()}-${("00" + (endDate.getMonth() + 1)).slice(-2)}-${("00" + endDate.getDate()).slice(-2)}`,
-          inboundflightid: results.tripInboundFlightID.value,
           outboundflightid: results.tripOutboundFlightID.value,
+          inboundflightid: results.tripInboundFlightID.value,
           features: results.tripFeatures.value,
           editors: emails,
         }, {
@@ -104,12 +104,12 @@ export default function CreateTrip() {
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group controlId="tripInboundFlightID">
-                <Form.Label>Inbound Flight ID</Form.Label>
-                <Form.Control required />
-              </Form.Group>
               <Form.Group controlId="tripOutboundFlightID">
                 <Form.Label>Outbound Flight ID</Form.Label>
+                <Form.Control required />
+              </Form.Group>
+              <Form.Group controlId="tripInboundFlightID">
+                <Form.Label>Inbound Flight ID</Form.Label>
                 <Form.Control required />
               </Form.Group>
               <Form.Group controlId="tripFeatures">

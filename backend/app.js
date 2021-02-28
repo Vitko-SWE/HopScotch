@@ -2,6 +2,7 @@ const express = require("express");
 const db = require('./db');
 const myTrips = require("./routes/homepage");
 const userService = require('./routes/users');
+const tripsService = require('./routes/trips');
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 const cors = require('cors');
@@ -33,6 +34,7 @@ app.use(jwtCheck);
 
 app.use("/homepage", myTrips)
 app.use("/user", userService);
+app.use("/trips", tripsService);
 
 if (process.env.NODE_ENV == "production") {
     const publicPath = path.join(__dirname, './frontend');
