@@ -10,6 +10,7 @@ export default function EditTrip(props) {
   const { user, getAccessTokenSilently } = useAuth0();
   const [tripInfo, getTripInfo] = useState({});
   const [userRole, getUserRole] = useState("");
+  const [tripUsers, getTripUsers] = useState([]);
   const [tripOwners, getTripOwners] = useState([]);
   const [tripEditors, getTripEditors] = useState([]);
   const [tripViewers, getTripViewers] = useState([]);
@@ -20,6 +21,7 @@ export default function EditTrip(props) {
   useEffect(() => {
     updateTripInfo();
     updateUserRole();
+    updateTripUsers();
     updateTripOwners();
     updateTripEditors();
     updateTripViewers();
@@ -53,9 +55,22 @@ export default function EditTrip(props) {
       });
     });
   };
+  const updateTripUsers = () => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.get(`http://localhost:5000/trips/gettripusers/${props.match.params.tripid}/all`, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        getTripUsers(res.data);
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
+  };
   const updateTripOwners = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get(`http://localhost:5000/trips/gettripowners/${props.match.params.tripid}`, {
+      axios.get(`http://localhost:5000/trips/gettripusers/${props.match.params.tripid}/Owner`, {
         headers: {
           Authorization: `Bearer ${res}`,
         },
@@ -68,7 +83,7 @@ export default function EditTrip(props) {
   };
   const updateTripEditors = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get(`http://localhost:5000/trips/gettripeditors/${props.match.params.tripid}`, {
+      axios.get(`http://localhost:5000/trips/gettripusers/${props.match.params.tripid}/Editor`, {
         headers: {
           Authorization: `Bearer ${res}`,
         },
@@ -81,7 +96,7 @@ export default function EditTrip(props) {
   };
   const updateTripViewers = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get(`http://localhost:5000/trips/gettripviewers/${props.match.params.tripid}`, {
+      axios.get(`http://localhost:5000/trips/gettripusers/${props.match.params.tripid}/Viewer`, {
         headers: {
           Authorization: `Bearer ${res}`,
         },
@@ -91,6 +106,164 @@ export default function EditTrip(props) {
         console.log(err);
       });
     });
+  };
+
+  const handleAddOwners = (e) => {
+    e.preventDefault();
+    const results = e.currentTarget;
+    const emails = results.addOwners.value.replace(/\s/g,'').split(",");
+
+    let errors = "";
+    if (results.addOwners.value !== "") {
+      let valid = true;
+      const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      for (let i = 0; i < emails.length; i++) {
+        if (emails[i] === "" || emails[i] === user.email || !regex.test(emails[i])){
+          valid = false;
+        }
+      }
+      if (!valid) {
+        errors += "Please make sure all emails are valid.\n";
+      }
+    }
+
+    if (errors !== "") {
+      alert(errors);
+    }
+    else {
+      getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+        axios.post(`http://localhost:5000/trips/addtripusers/${props.match.params.tripid}/Owner`, {
+          users: emails,
+        }, {
+          headers: {
+            Authorization: `Bearer ${res}`,
+          },
+        }).then((res) => {
+          console.log(res.data);
+          history.push(`/edittrip/${props.match.params.tripid}`);
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    }
+  };
+  const handleAddEditors = (e) => {
+    e.preventDefault();
+    const results = e.currentTarget;
+    const emails = results.addEditors.value.replace(/\s/g,'').split(",");
+
+    let errors = "";
+    if (results.addEditors.value !== "") {
+      let valid = true;
+      const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      for (let i = 0; i < emails.length; i++) {
+        if (emails[i] === "" || emails[i] === user.email || !regex.test(emails[i])){
+          valid = false;
+        }
+      }
+      if (!valid) {
+        errors += "Please make sure all emails are valid.\n";
+      }
+    }
+
+    if (errors !== "") {
+      alert(errors);
+    }
+    else {
+      getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+        axios.post(`http://localhost:5000/trips/addtripusers/${props.match.params.tripid}/Editor`, {
+          users: emails,
+        }, {
+          headers: {
+            Authorization: `Bearer ${res}`,
+          },
+        }).then((res) => {
+          console.log(res.data);
+          history.push(`/edittrip/${props.match.params.tripid}`);
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    }
+  };
+  const handleAddViewers = (e) => {
+    e.preventDefault();
+    const results = e.currentTarget;
+    const emails = results.addViewers.value.replace(/\s/g,'').split(",");
+
+    let errors = "";
+    if (results.addViewers.value !== "") {
+      let valid = true;
+      const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      for (let i = 0; i < emails.length; i++) {
+        if (emails[i] === "" || emails[i] === user.email || !regex.test(emails[i])){
+          valid = false;
+        }
+      }
+      if (!valid) {
+        errors += "Please make sure all emails are valid.\n";
+      }
+    }
+
+    if (errors !== "") {
+      alert(errors);
+    }
+    else {
+      getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+        axios.post(`http://localhost:5000/trips/addtripusers/${props.match.params.tripid}/Viewer`, {
+          users: emails,
+        }, {
+          headers: {
+            Authorization: `Bearer ${res}`,
+          },
+        }).then((res) => {
+          console.log(res.data);
+          history.push(`/edittrip/${props.match.params.tripid}`);
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    }
+  };
+  const handleEditUsers = (e) => {
+    e.preventDefault();
+    const results = e.currentTarget;
+    console.log(results.roleSelectUser.value, results.roleSelectRole.value);
+    if (results.roleSelectUser.value === user.sub && userRole === "Owner" && results.roleSelectRole.value !== "Owner" && tripOwners.length === 1) {
+      alert("This change cannot be done since you are the sole owner of this trip and all trips must have at least one owner.");
+    }
+    else {
+      if (results.roleSelectRole.value !== "Remove user from trip") {
+        getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+          axios.post(`http://localhost:5000/trips/edituserrole/${props.match.params.tripid}/${results.roleSelectUser.value}`, {
+            newrole: results.roleSelectRole.value,
+          }, {
+            headers: {
+              Authorization: `Bearer ${res}`,
+            },
+          }).then((res) => {
+            console.log(res);
+            history.push(`/edittrip/${props.match.params.tripid}`);
+          }).catch((err) => {
+            console.log(err);
+          });
+        });
+      }
+      else {
+        getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+          axios.delete(`http://localhost:5000/trips/removeuser/${props.match.params.tripid}/${results.roleSelectUser.value}`, {
+            headers: {
+              Authorization: `Bearer ${res}`,
+            },
+          }).then((res) => {
+            console.log(res);
+            history.push(`/edittrip/${props.match.params.tripid}`);
+          }).catch((err) => {
+            console.log(err);
+          });
+        });
+      }
+    }
   };
 
   const handleEditDetails = (e) => {
@@ -133,7 +306,7 @@ export default function EditTrip(props) {
           },
         }).then((res) => {
           console.log(res);
-          history.push(`/edittrip/${props.match.params.tripid}}`);
+          history.push(`/edittrip/${props.match.params.tripid}`);
         }).catch((err) => {
           alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
         });
@@ -185,59 +358,115 @@ export default function EditTrip(props) {
         <h3 class="pb-3">Actions</h3>
         <Container>
           <Row>
-            Add Collaborators
-          </Row>
-          <Row>
-            <div>
-              <h5>Edit Trip Details</h5>
-              <Form onSubmit={handleEditDetails}>
-                <Container>
-                  <Row>
-                    <Col>
-                      <Form.Group controlId="tripTitle">
-                        <Form.Label>Title</Form.Label>
-                        <Form.Control required defaultValue={tripInfo.Name} />
-                      </Form.Group>
-                      <Form.Group controlId="tripOrigin">
-                        <Form.Label>Origin</Form.Label>
-                        <Form.Control required defaultValue={tripInfo.Origin} />
-                      </Form.Group>
-                      <Form.Group controlId="tripDestination">
-                        <Form.Label>Destination</Form.Label>
-                        <Form.Control required defaultValue={tripInfo.Destination} />
-                      </Form.Group>
-                      <Form.Group controlId="tripStartDate">
-                        <Form.Label>Start Date</Form.Label><br />
-                        <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
-                      </Form.Group>
-                    </Col>
-                    <Col>
-                      <Form.Group controlId="tripOutboundFlightID">
-                        <Form.Label>Outbound Flight ID</Form.Label>
-                        <Form.Control required defaultValue={tripInfo.OutboundFlightId} />
-                      </Form.Group>
-                      <Form.Group controlId="tripInboundFlightID">
-                        <Form.Label>Inbound Flight ID</Form.Label>
-                        <Form.Control required defaultValue={tripInfo.InboundFlightId} />
-                      </Form.Group>
-                      <Form.Group controlId="tripFeatures">
-                        <Form.Label>Features</Form.Label>
-                        <Form.Control required defaultValue={tripInfo.Features} />
-                      </Form.Group>
-                      <Form.Group controlId="tripEndDate">
-                        <Form.Label>End Date</Form.Label><br />
-                        <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                </Container>
+            <Col>
+              <h5>Add Owners</h5>
+              <Form onSubmit={handleAddOwners}>
+                <Form.Group controlId="addOwners">
+                  <Form.Text className="text-muted">
+                    Enter email addresses separated by commas.
+                  </Form.Text>
+                  <Form.Control required />
+                </Form.Group>
                 <Button variant="primary" type="submit">Submit</Button>
-                {" "}
-                <Link to={`/edittrip/${props.match.params.tripid}}`}><Button variant="outline-secondary">Cancel</Button></Link>
               </Form>
-            </div>
+              <h5>Add Editors</h5>
+              <Form onSubmit={handleAddEditors}>
+                <Form.Group controlId="addEditors">
+                  <Form.Text className="text-muted">
+                    Enter email addresses separated by commas.
+                  </Form.Text>
+                  <Form.Control required />
+                </Form.Group>
+                <Button variant="primary" type="submit">Submit</Button>
+              </Form>
+              <h5>Add Viewers</h5>
+              <Form onSubmit={handleAddViewers}>
+                <Form.Group controlId="addViewers">
+                  <Form.Text className="text-muted">
+                    Enter email addresses separated by commas.
+                  </Form.Text>
+                  <Form.Control required />
+                </Form.Group>
+                <Button variant="primary" type="submit">Submit</Button>
+              </Form>
+            </Col>
+            <Col>
+              <h5>Edit User Roles</h5>
+              <Form onSubmit={handleEditUsers}>
+                <Form.Group controlId="roleSelectUser">
+                  <Form.Text className="text-muted">
+                    Select the user that needs to be edited.
+                  </Form.Text>
+                  <Form.Control as="select">
+                    {tripUsers.map((user) => (
+                      <option value={user.UserId}>{`${user.Name} (${user.EmailAddress})`}</option>
+                    ))}
+                  </Form.Control>
+                </Form.Group>
+                <Form.Group controlId="roleSelectRole">
+                  <Form.Text className="text-muted">
+                    Select the role the user should be set to.
+                  </Form.Text>
+                  <Form.Control as="select">
+                    <option>Owner</option>
+                    <option>Editor</option>
+                    <option>Viewer</option>
+                    <option>Remove user from trip</option>
+                  </Form.Control>
+                </Form.Group>
+                <Button variant="primary" type="submit">Submit</Button>
+              </Form>
+            </Col>
           </Row>
         </Container>
+        <div>
+          <h5>Edit Trip Details</h5>
+          <Form onSubmit={handleEditDetails}>
+            <Container>
+              <Row>
+                <Col>
+                  <Form.Group controlId="tripTitle">
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control required defaultValue={tripInfo.Name} />
+                  </Form.Group>
+                  <Form.Group controlId="tripOrigin">
+                    <Form.Label>Origin</Form.Label>
+                    <Form.Control required defaultValue={tripInfo.Origin} />
+                  </Form.Group>
+                  <Form.Group controlId="tripDestination">
+                    <Form.Label>Destination</Form.Label>
+                    <Form.Control required defaultValue={tripInfo.Destination} />
+                  </Form.Group>
+                  <Form.Group controlId="tripStartDate">
+                    <Form.Label>Start Date</Form.Label><br />
+                    <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group controlId="tripOutboundFlightID">
+                    <Form.Label>Outbound Flight ID</Form.Label>
+                    <Form.Control required defaultValue={tripInfo.OutboundFlightId} />
+                  </Form.Group>
+                  <Form.Group controlId="tripInboundFlightID">
+                    <Form.Label>Inbound Flight ID</Form.Label>
+                    <Form.Control required defaultValue={tripInfo.InboundFlightId} />
+                  </Form.Group>
+                  <Form.Group controlId="tripFeatures">
+                    <Form.Label>Features</Form.Label>
+                    <Form.Control required defaultValue={tripInfo.Features} />
+                  </Form.Group>
+                  <Form.Group controlId="tripEndDate">
+                    <Form.Label>End Date</Form.Label><br />
+                    <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Container>
+            <Button variant="primary" type="submit">Submit</Button>
+            {" "}
+            <Link to={`/edittrip/${props.match.params.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
+          </Form>
+        </div>
       </div>
     </div>
   );
