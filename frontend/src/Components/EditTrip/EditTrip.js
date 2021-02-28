@@ -354,120 +354,124 @@ export default function EditTrip(props) {
           </Row>
         </Container>
       </div>
-      <div class="pt-5 pb-5">
-        <h3 class="pb-3">Actions</h3>
-        <Container>
-          <Row>
-            <Col>
-              <h5>Add Owners</h5>
-              <Form onSubmit={handleAddOwners}>
-                <Form.Group controlId="addOwners">
-                  <Form.Text className="text-muted">
-                    Enter email addresses separated by commas.
-                  </Form.Text>
-                  <Form.Control required />
-                </Form.Group>
-                <Button variant="primary" type="submit">Submit</Button>
-              </Form>
-              <h5>Add Editors</h5>
-              <Form onSubmit={handleAddEditors}>
-                <Form.Group controlId="addEditors">
-                  <Form.Text className="text-muted">
-                    Enter email addresses separated by commas.
-                  </Form.Text>
-                  <Form.Control required />
-                </Form.Group>
-                <Button variant="primary" type="submit">Submit</Button>
-              </Form>
-              <h5>Add Viewers</h5>
-              <Form onSubmit={handleAddViewers}>
-                <Form.Group controlId="addViewers">
-                  <Form.Text className="text-muted">
-                    Enter email addresses separated by commas.
-                  </Form.Text>
-                  <Form.Control required />
-                </Form.Group>
-                <Button variant="primary" type="submit">Submit</Button>
-              </Form>
-            </Col>
-            <Col>
-              <h5>Edit User Roles</h5>
-              <Form onSubmit={handleEditUsers}>
-                <Form.Group controlId="roleSelectUser">
-                  <Form.Text className="text-muted">
-                    Select the user that needs to be edited.
-                  </Form.Text>
-                  <Form.Control as="select">
-                    {tripUsers.map((user) => (
-                      <option value={user.UserId}>{`${user.Name} (${user.EmailAddress})`}</option>
-                    ))}
-                  </Form.Control>
-                </Form.Group>
-                <Form.Group controlId="roleSelectRole">
-                  <Form.Text className="text-muted">
-                    Select the role the user should be set to.
-                  </Form.Text>
-                  <Form.Control as="select">
-                    <option>Owner</option>
-                    <option>Editor</option>
-                    <option>Viewer</option>
-                    <option>Remove user from trip</option>
-                  </Form.Control>
-                </Form.Group>
-                <Button variant="primary" type="submit">Submit</Button>
-              </Form>
-            </Col>
-          </Row>
-        </Container>
-        <div>
-          <h5>Edit Trip Details</h5>
-          <Form onSubmit={handleEditDetails}>
+      {userRole !== "Viewer" && (
+        <div class="pt-5 pb-5">
+          <h3 class="pb-3">Actions</h3>
+          {userRole === "Owner" && (
             <Container>
               <Row>
                 <Col>
-                  <Form.Group controlId="tripTitle">
-                    <Form.Label>Title</Form.Label>
-                    <Form.Control required defaultValue={tripInfo.Name} />
-                  </Form.Group>
-                  <Form.Group controlId="tripOrigin">
-                    <Form.Label>Origin</Form.Label>
-                    <Form.Control required defaultValue={tripInfo.Origin} />
-                  </Form.Group>
-                  <Form.Group controlId="tripDestination">
-                    <Form.Label>Destination</Form.Label>
-                    <Form.Control required defaultValue={tripInfo.Destination} />
-                  </Form.Group>
-                  <Form.Group controlId="tripStartDate">
-                    <Form.Label>Start Date</Form.Label><br />
-                    <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
-                  </Form.Group>
+                  <h5>Add Owners</h5>
+                  <Form onSubmit={handleAddOwners}>
+                    <Form.Group controlId="addOwners">
+                      <Form.Text className="text-muted">
+                        Enter email addresses separated by commas.
+                      </Form.Text>
+                      <Form.Control required />
+                    </Form.Group>
+                    <Button variant="primary" type="submit">Submit</Button>
+                  </Form>
+                  <h5>Add Editors</h5>
+                  <Form onSubmit={handleAddEditors}>
+                    <Form.Group controlId="addEditors">
+                      <Form.Text className="text-muted">
+                        Enter email addresses separated by commas.
+                      </Form.Text>
+                      <Form.Control required />
+                    </Form.Group>
+                    <Button variant="primary" type="submit">Submit</Button>
+                  </Form>
+                  <h5>Add Viewers</h5>
+                  <Form onSubmit={handleAddViewers}>
+                    <Form.Group controlId="addViewers">
+                      <Form.Text className="text-muted">
+                        Enter email addresses separated by commas.
+                      </Form.Text>
+                      <Form.Control required />
+                    </Form.Group>
+                    <Button variant="primary" type="submit">Submit</Button>
+                  </Form>
                 </Col>
                 <Col>
-                  <Form.Group controlId="tripOutboundFlightID">
-                    <Form.Label>Outbound Flight ID</Form.Label>
-                    <Form.Control required defaultValue={tripInfo.OutboundFlightId} />
-                  </Form.Group>
-                  <Form.Group controlId="tripInboundFlightID">
-                    <Form.Label>Inbound Flight ID</Form.Label>
-                    <Form.Control required defaultValue={tripInfo.InboundFlightId} />
-                  </Form.Group>
-                  <Form.Group controlId="tripFeatures">
-                    <Form.Label>Features</Form.Label>
-                    <Form.Control required defaultValue={tripInfo.Features} />
-                  </Form.Group>
-                  <Form.Group controlId="tripEndDate">
-                    <Form.Label>End Date</Form.Label><br />
-                    <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
-                  </Form.Group>
+                  <h5>Edit User Roles</h5>
+                  <Form onSubmit={handleEditUsers}>
+                    <Form.Group controlId="roleSelectUser">
+                      <Form.Text className="text-muted">
+                        Select the user that needs to be edited.
+                      </Form.Text>
+                      <Form.Control as="select">
+                        {tripUsers.map((user) => (
+                          <option value={user.UserId}>{`${user.Name} (${user.EmailAddress})`}</option>
+                        ))}
+                      </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="roleSelectRole">
+                      <Form.Text className="text-muted">
+                        Select the role the user should be set to.
+                      </Form.Text>
+                      <Form.Control as="select">
+                        <option>Owner</option>
+                        <option>Editor</option>
+                        <option>Viewer</option>
+                        <option>Remove user from trip</option>
+                      </Form.Control>
+                    </Form.Group>
+                    <Button variant="primary" type="submit">Submit</Button>
+                  </Form>
                 </Col>
               </Row>
             </Container>
-            <Button variant="primary" type="submit">Submit</Button>
-            {" "}
-            <Link to={`/edittrip/${props.match.params.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
-          </Form>
+          )}
+          <div>
+            <h5>Edit Trip Details</h5>
+            <Form onSubmit={handleEditDetails}>
+              <Container>
+                <Row>
+                  <Col>
+                    <Form.Group controlId="tripTitle">
+                      <Form.Label>Title</Form.Label>
+                      <Form.Control required defaultValue={tripInfo.Name} />
+                    </Form.Group>
+                    <Form.Group controlId="tripOrigin">
+                      <Form.Label>Origin</Form.Label>
+                      <Form.Control required defaultValue={tripInfo.Origin} />
+                    </Form.Group>
+                    <Form.Group controlId="tripDestination">
+                      <Form.Label>Destination</Form.Label>
+                      <Form.Control required defaultValue={tripInfo.Destination} />
+                    </Form.Group>
+                    <Form.Group controlId="tripStartDate">
+                      <Form.Label>Start Date</Form.Label><br />
+                      <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group controlId="tripOutboundFlightID">
+                      <Form.Label>Outbound Flight ID</Form.Label>
+                      <Form.Control required defaultValue={tripInfo.OutboundFlightId} />
+                    </Form.Group>
+                    <Form.Group controlId="tripInboundFlightID">
+                      <Form.Label>Inbound Flight ID</Form.Label>
+                      <Form.Control required defaultValue={tripInfo.InboundFlightId} />
+                    </Form.Group>
+                    <Form.Group controlId="tripFeatures">
+                      <Form.Label>Features</Form.Label>
+                      <Form.Control required defaultValue={tripInfo.Features} />
+                    </Form.Group>
+                    <Form.Group controlId="tripEndDate">
+                      <Form.Label>End Date</Form.Label><br />
+                      <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </Container>
+              <Button variant="primary" type="submit">Submit</Button>
+              {" "}
+              <Link to={`/edittrip/${props.match.params.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
+            </Form>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
