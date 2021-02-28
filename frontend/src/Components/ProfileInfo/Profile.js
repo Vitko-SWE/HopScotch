@@ -196,32 +196,32 @@ class AccountInformation extends Component {
       }
 
     deleteUser () {
-        console.log(this.state.user_object)
-        this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
-            const token = `Bearer ${res}`
+        var message = "Your account and all of your trips will be deleted! Are you sure you want to delete your account? "
+        if (window.confirm(message)) {
+            console.log("confirmed") 
+            this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
+                const token = `Bearer ${res}`
 
-            
-            // console.log("tk ==== " + token)
-            const api = axios.create({
-                baseURL: "http://localhost:5000/user/deleteUser",
-                headers: {
-                    url: 'https://' + process.env.REACT_APP_AUTH0_DOMAIN +'/api/v2/users/' + this.state.user_object.user.sub,
-                    user_ID: this.state.user_object.user.sub,
-                    Authorization: token,
+                const api = axios.create({
+                    baseURL: "http://localhost:5000/user/deleteUser",
+                    headers: {
+                        user_ID: this.state.user_object.user.sub,
+                        Authorization: token,
+                    }
+                })
+
+                try {
+                    api.delete('/').then(response => {
+                        console.log("delete response: "  + response)
+
+                    })
+                } catch (err) {
+                    console.log(err)
                 }
             })
 
-            try {
-                api.delete('/').then(response => {
-                    console.log("delete response: "  + response)
-
-                })
-            } catch (err) {
-                console.log(err)
-            }
-        })
-
-        this.state.user_object.logout()
+            this.state.user_object.logout()
+        }
     }
 
 

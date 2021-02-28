@@ -5,7 +5,7 @@ var ManagementClient = require('auth0').ManagementClient;
 var request = require("request");
 require('dotenv').config()
 
-// This an object to retrieve token
+// This is an object to retrieve managment api token
 var options = { 
     method: 'POST',
     url: 'https://flyhopscotch-dev.us.auth0.com/oauth/token',
@@ -42,7 +42,7 @@ router.route("/postnewuser")
 router.route("/deleteUser")
     .delete((req, res) => {
 
-        //Delete users in auth0
+        //Delete users from auth0
         request(options, function (error, response, body) {
             if (error) throw new Error(error);
           
@@ -59,24 +59,43 @@ router.route("/deleteUser")
                 scope: "delete:users"
             });
 
+            var deleted = false
+
             management.users.delete({ id: req.headers.user_id }, function (err) {
                 if (err) {
                 // Handle error.
-                console.log(err)
+                    console.log(err)
+                    return err
                 }
                 else {
+                    deleted = true
+                    console.log("User was deleted from auth0")
+                    
                     // Delete user from database
-                    var query_string = `"DELETE FROM User WHERE User.UserId=("${req.body.user_id}")`;
+                    var query_string = `DELETE FROM User WHERE User.UserId="${req.headers.user_id}"`;
                     db.query(query_string, (err, data) => {
-                        if (err)
+                        if (err) {
+                            console.log( err)
                             return err;
-                        res.send(data);
+                        }
+                        console.log("User was succefully delted from DB")
                     })
-                    console.log("user deleted")
+            
+                    query_string = `DELETE FROM TripUser WHERE TripUser.UserId="${req.headers.user_id}"`;
+            
+                    //Delete all user trips
+                    db.query(query_string, (err, data) => {
+                        if (err) {
+                            console.log(err)
+                            return err;
+                        }
+            
+                        res.send(data);
+                        console.log("All user trips were succefully deleted")
+                    })
                 }
             });
         })
-
     });
 
 router.route("/updateName")
