@@ -67,7 +67,7 @@ router.route("/updatetrip/:tripid").post((req, res) => {
 });
 
 router.route("/gettrip/:tripid").get((req, res) => {
-  let query = `select * from Trip where TripId = '${req.params.tripid}';`;
+  const query = `select * from Trip where TripId = '${req.params.tripid}';`;
   db.query(query, (err, data) => {
     if (err) {
       console.log(err);
@@ -80,7 +80,7 @@ router.route("/gettrip/:tripid").get((req, res) => {
 });
 
 router.route("/gettripowners/:tripid").get((req, res) => {
-  let query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}' and Role = 'Owner');`;
+  const query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}' and Role = 'Owner');`;
   db.query(query, (err, data) => {
     if (err) {
       console.log(err);
@@ -93,7 +93,7 @@ router.route("/gettripowners/:tripid").get((req, res) => {
 });
 
 router.route("/gettripeditors/:tripid").get((req, res) => {
-  let query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}' and Role = 'Editor');`;
+  const query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}' and Role = 'Editor');`;
   db.query(query, (err, data) => {
     if (err) {
       console.log(err);
@@ -106,7 +106,7 @@ router.route("/gettripeditors/:tripid").get((req, res) => {
 });
 
 router.route("/gettripviewers/:tripid").get((req, res) => {
-  let query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}' and Role = 'Viewer');`;
+  const query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}' and Role = 'Viewer');`;
   db.query(query, (err, data) => {
     if (err) {
       console.log(err);
@@ -116,6 +116,24 @@ router.route("/gettripviewers/:tripid").get((req, res) => {
       res.send(data);
     }
   });
+});
+
+router.route("/getuserrole/:tripid/:userid").get((req, res) => {
+  const query = `select Role from TripUser where TripId = '${req.params.tripid}' and UserId = '${req.params.userid}';`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      if (data.length === 0) {
+        res.status(404).send("User not found for given trip.");
+      }
+      else {
+        res.send(data);
+      }
+    }
+  })
 });
 
 module.exports = router;

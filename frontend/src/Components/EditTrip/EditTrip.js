@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 export default function EditTrip(props) {
   const { user, getAccessTokenSilently } = useAuth0();
   const [tripInfo, getTripInfo] = useState({});
+  const [userRole, getUserRole] = useState("");
   const [tripOwners, getTripOwners] = useState([]);
   const [tripEditors, getTripEditors] = useState([]);
   const [tripViewers, getTripViewers] = useState([]);
@@ -18,6 +19,7 @@ export default function EditTrip(props) {
 
   useEffect(() => {
     updateTripInfo();
+    updateUserRole();
     updateTripOwners();
     updateTripEditors();
     updateTripViewers();
@@ -33,6 +35,19 @@ export default function EditTrip(props) {
         getTripInfo(res.data);
         setStartDate(new Date(res.data.StartDate.toString()));
         setEndDate(new Date(res.data.EndDate.toString()));
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
+  };
+  const updateUserRole = () => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.get(`http://localhost:5000/trips/getuserrole/${props.match.params.tripid}/${user.sub}`, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        getUserRole(res.data[0].Role);
       }).catch((err) => {
         console.log(err);
       });
@@ -129,7 +144,8 @@ export default function EditTrip(props) {
   return (
     <div>
       <div class="intro pt-5 pb-5">
-        <h1 class="pb-5">{tripInfo.Name}</h1>
+        <h1 class="pb-3">{tripInfo.Name}</h1>
+        <h3 class="pb-3">Your role: <strong>{userRole}</strong></h3>
         <Container>
           <Row>
             <Col>
