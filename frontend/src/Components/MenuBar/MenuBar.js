@@ -18,13 +18,13 @@ const Menubar = (props) => {
     return (
       <Navbar bg="dark" variant="dark" expand="lg">
         <Navbar.Brand >
-          <Link className="link" to="homepage" >Hopscotch</Link>
+          <Link className="link" to="/homepage" >Hopscotch</Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link>
-              <Link className="mytrips-link" to="homepage" >My Trips</Link>
+              <Link className="mytrips-link" to="/homepage" >My Trips</Link>
             </Nav.Link>
             <NavDropdown  title="Search Options" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Search Flights</NavDropdown.Item>
@@ -36,7 +36,7 @@ const Menubar = (props) => {
           </Nav>
           <Nav>
             <Nav.Link >
-              <Link className="account-details" to="Account" >Account Details</Link>
+              <Link className="account-details" to="/Account" >Account Details</Link>
             </Nav.Link>
               <LogoutButton/>
           </Nav>

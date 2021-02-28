@@ -5,6 +5,7 @@ import "../TripCard/Card.css"
 import pic from '../TripCard/canada_banff.jpg'
 import axios from 'axios'
 import { withAuth0 } from "@auth0/auth0-react";
+import { Link } from 'react-router-dom';
 
 class TripCards extends Component {
 
@@ -18,7 +19,7 @@ class TripCards extends Component {
 
 
   }
-  
+
   componentDidMount () {
     this.getTrips()
   }
@@ -28,7 +29,7 @@ class TripCards extends Component {
     this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
       const token = `Bearer ${res}`
 
-    
+
       // console.log("tk ==== " + token)
       const api = axios.create({
         baseURL: 'http://localhost:5000/homepage/myTrips',
@@ -67,7 +68,7 @@ class TripCards extends Component {
             </Card.Body>
             <Card.Footer>
               <small className="text-muted">
-              <Button  variant="primary" size="lg" block>Edit</Button>
+              <Link to={`/edittrip/${trip.TripId}`}><Button  variant="primary" size="lg" block>Edit</Button></Link>
               <Button  variant="danger" size="lg" block>Exit Trip</Button>
               </small>
             </Card.Footer>
@@ -79,12 +80,12 @@ class TripCards extends Component {
     if (this.state.trips.length === 0) {
       my_trips = <h1>You do not have any trips at this moment</h1>
     }
-    
+
     return (
       <div>
         {my_trips}
       </div>
-  
+
     )
   }
 }

@@ -1,13 +1,15 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import React from 'react'
-import TripCards from '../TripCard/TripCard'
+import React from 'react';
+import TripCards from '../TripCard/TripCard';
 import axios from "axios";
-import Profile from "../ProfileInfo/Profile"
+import Profile from "../ProfileInfo/Profile";
+import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 export default function Homepage() {
     const { user, getAccessTokenSilently } = useAuth0();
 
-    
+
     //If a new user is made, we add them to the database
 
     getAccessTokenSilently({
@@ -27,11 +29,14 @@ export default function Homepage() {
             }
         });
     });
-    
+
 
 
     return (
         <div style={{height: '100%'}}>
+            <div class="m-5">
+                <Link to="/createtrip"><Button>Create New Trip</Button></Link>
+            </div>
             <main style={{marginTop: '64px'}}>
                 <TripCards/>
             </main>

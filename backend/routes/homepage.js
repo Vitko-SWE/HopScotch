@@ -11,7 +11,7 @@ router.route("/myTrips")
         db.query(query_string, (err,data) => {
             if(err) {
                 console.log("sql error" + err)
-                return 
+                return
             };
             console.log('Data received from Db:');
             console.log(data);
@@ -19,4 +19,4 @@ router.route("/myTrips")
           });
     })
 
-module.exports = router
+module.exports = router;
