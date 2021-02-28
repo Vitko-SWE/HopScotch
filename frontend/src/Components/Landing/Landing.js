@@ -12,22 +12,22 @@ export default function Landing() {
 
   return (
     <div>
-      <div class="intro pt-5 pb-5">
+      <div className="intro pt-5 pb-5">
         <h1>Welcome to Hopscotch!</h1>
-        <p class="para-center mt-5 mb-5">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eros enim, condimentum eu faucibus et, hendrerit non urna. Suspendisse vitae convallis libero. Aliquam tempus lacus et augue congue euismod. Sed eleifend tristique sapien eu iaculis. Integer quis auctor felis. Nam volutpat ante ac ipsum rutrum dapibus. Proin lobortis diam at arcu maximus cursus. Etiam sit amet lacus rhoncus, auctor velit et, faucibus justo.</p>
+        <p className="para-center mt-5 mb-5">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eros enim, condimentum eu faucibus et, hendrerit non urna. Suspendisse vitae convallis libero. Aliquam tempus lacus et augue congue euismod. Sed eleifend tristique sapien eu iaculis. Integer quis auctor felis. Nam volutpat ante ac ipsum rutrum dapibus. Proin lobortis diam at arcu maximus cursus. Etiam sit amet lacus rhoncus, auctor velit et, faucibus justo.</p>
         {!isAuthenticated && (
           <div>
             <LoginButton btntext="Get Started" />
           </div>
         )}
         {isAuthenticated && (
-          <div class="mt-5">
+          <div className="mt-5">
             <h2>Hi {user.name}!</h2>
             <Link to="homepage"/>
           </div>
         )}
       </div>
-      <div class="pt-5 pb-5">
+      <div className="pt-5 pb-5">
         <Container>
           <Row>
             <Col>
@@ -37,7 +37,7 @@ export default function Landing() {
               </div>
             </Col>
             <Col>
-              <div class="first-card">
+              <div className="first-card">
                 <h1>Hello World!</h1>
               </div>
             </Col>
