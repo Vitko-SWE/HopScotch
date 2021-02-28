@@ -52,6 +52,20 @@ router.route("/createtrip").post((req, res) => {
   });
 });
 
+router.route("/updatetrip/:tripid").post((req, res) => {
+  const query = `update Trip set Name = '${req.body.title.split("'").join("\\'")}', Origin = '${req.body.origin.split("'").join("\\'")}', Destination = '${req.body.destination.split("'").join("\\'")}', StartDate = '${req.body.startdate}', EndDate = '${req.body.enddate}', OutboundFlightId = ${req.body.outboundflightid}, InboundFlightId = ${req.body.inboundflightid}, Features = '${req.body.features.split("'").join("\\'")}' where TripId = '${req.params.tripid}';`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      console.log(data);
+      res.send(data);
+    }
+  });
+});
+
 router.route("/gettrip/:tripid").get((req, res) => {
   let query = `select * from Trip where TripId = '${req.params.tripid}';`;
   db.query(query, (err, data) => {
