@@ -4,7 +4,7 @@ let router = express.Router()
 
 router.route("/createtrip").post((req, res) => {
   let users = [];
-  var userquery = "select UserId from User where ";
+  let userquery = "select UserId from User where ";
   for (const email of req.body.editors) {
     userquery += `EmailAddress = "${email}" or `;
   }
@@ -15,7 +15,7 @@ router.route("/createtrip").post((req, res) => {
       res.send(err);
     }
     else {
-      if (data2.length === req.body.editors.length) {
+      if (data2.length === req.body.editors.length || req.body.editors[0] === "") {
         const query = `insert into Trip(Name, Origin, Destination, StartDate, EndDate, OutboundFlightId, InboundFlightId, Features, IsLocked) values('${req.body.title.split("'").join("\\'")}', '${req.body.origin.split("'").join("\\'")}', '${req.body.destination.split("'").join("\\'")}', '${req.body.startdate}', '${req.body.enddate}', ${req.body.outboundflightid}, ${req.body.inboundflightid}, '${req.body.features.split("'").join("\\'")}', 0);`;
         db.query(query, (err, data) => {
           if (err) {
@@ -53,7 +53,7 @@ router.route("/createtrip").post((req, res) => {
 });
 
 router.route("/gettrip/:tripid").get((req, res) => {
-  var query = `select * from Trip where TripId = '${req.params.tripid}'`;
+  let query = `select * from Trip where TripId = '${req.params.tripid}';`;
   db.query(query, (err, data) => {
     if (err) {
       console.log(err);
@@ -61,6 +61,45 @@ router.route("/gettrip/:tripid").get((req, res) => {
     }
     else {
       res.send(data[0]);
+    }
+  });
+});
+
+router.route("/gettripowners/:tripid").get((req, res) => {
+  let query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}' and Role = 'Owner');`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      res.send(data);
+    }
+  });
+});
+
+router.route("/gettripeditors/:tripid").get((req, res) => {
+  let query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}' and Role = 'Editor');`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      res.send(data);
+    }
+  });
+});
+
+router.route("/gettripviewers/:tripid").get((req, res) => {
+  let query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}' and Role = 'Viewer');`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      res.send(data);
     }
   });
 });

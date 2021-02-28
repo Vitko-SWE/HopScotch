@@ -8,9 +8,15 @@ import axios from "axios";
 export default function EditTrip(props) {
   const { user, getAccessTokenSilently } = useAuth0();
   const [tripInfo, getTripInfo] = useState({});
+  const [tripOwners, getTripOwners] = useState([]);
+  const [tripEditors, getTripEditors] = useState([]);
+  const [tripViewers, getTripViewers] = useState([]);
 
   useEffect(() => {
     updateTripInfo();
+    updateTripOwners();
+    updateTripEditors();
+    updateTripViewers();
   }, []);
 
   const updateTripInfo = () => {
@@ -21,6 +27,45 @@ export default function EditTrip(props) {
         },
       }).then((res) => {
         getTripInfo(res.data);
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
+  };
+  const updateTripOwners = () => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.get(`http://localhost:5000/trips/gettripowners/${props.match.params.tripid}`, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        getTripOwners(res.data);
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
+  };
+  const updateTripEditors = () => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.get(`http://localhost:5000/trips/gettripeditors/${props.match.params.tripid}`, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        getTripEditors(res.data);
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
+  };
+  const updateTripViewers = () => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.get(`http://localhost:5000/trips/gettripviewers/${props.match.params.tripid}`, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        getTripViewers(res.data);
       }).catch((err) => {
         console.log(err);
       });
@@ -44,6 +89,24 @@ export default function EditTrip(props) {
             <Col>
               <p><strong>Features:</strong> {tripInfo.Features}</p>
               <p><strong>Locked?</strong> {tripInfo.IsLocked === 0? "No" : "Yes"}</p>
+              <p>
+                <strong>Owners:</strong>{" "}
+                {tripOwners.map((owner, i) => (
+                  (i !== 0 ? ", " : "") + owner.Name
+                ))}
+              </p>
+              <p>
+                <strong>Editors:</strong>{" "}
+                {tripEditors.length === 0 ? "N/A" : (tripEditors.map((editor, i) => (
+                  (i !== 0 ? ", " : "") + editor.Name
+                )))}
+              </p>
+              <p>
+                <strong>Viewers:</strong>{" "}
+                {tripViewers.length === 0 ? "N/A" : (tripViewers.map((viewer, i) => (
+                  (i !== 0 ? ", " : "") + viewer.Name
+                )))}
+              </p>
             </Col>
           </Row>
         </Container>
