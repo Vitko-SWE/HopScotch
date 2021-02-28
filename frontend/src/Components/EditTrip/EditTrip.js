@@ -324,8 +324,8 @@ export default function EditTrip(props) {
             <Col>
               <p><strong>Origin:</strong> {tripInfo.Origin}</p>
               <p><strong>Destination:</strong> {tripInfo.Destination}</p>
-              <p><strong>Start Date:</strong> {tripInfo.StartDate}</p>
-              <p><strong>End Date:</strong> {tripInfo.EndDate}</p>
+              <p><strong>Start Date:</strong> {`${(new Date(tripInfo.StartDate)).getMonth() + 1}/${(new Date(tripInfo.StartDate)).getDate()}/${(new Date(tripInfo.StartDate)).getFullYear()}`}</p>
+              <p><strong>End Date:</strong> {`${(new Date(tripInfo.EndDate)).getMonth() + 1}/${(new Date(tripInfo.EndDate)).getDate()}/${(new Date(tripInfo.EndDate)).getFullYear()}`}</p>
               <p><strong>Outbound Flight ID:</strong> {tripInfo.OutboundFlightId}</p>
               <p><strong>Inbound Flight ID:</strong> {tripInfo.InboundFlightId}</p>
             </Col>
@@ -420,6 +420,7 @@ export default function EditTrip(props) {
                   </Form>
                 </Col>
               </Row>
+              <hr />
             </Container>
           )}
           <div>

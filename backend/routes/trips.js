@@ -5,7 +5,7 @@ let router = express.Router()
 router.route("/createtrip").post((req, res) => {
   let users = [];
   let userquery = "select UserId from User where ";
-  for (const email of req.body.editors) {
+  for (const email of req.body.owners) {
     userquery += `EmailAddress = "${email}" or `;
   }
   userquery = userquery.slice(0, -4) + ";";
@@ -15,7 +15,7 @@ router.route("/createtrip").post((req, res) => {
       res.send(err);
     }
     else {
-      if (data2.length === req.body.editors.length || req.body.editors[0] === "") {
+      if (data2.length === req.body.owners.length || req.body.owners[0] === "") {
         const query = `insert into Trip(Name, Origin, Destination, StartDate, EndDate, OutboundFlightId, InboundFlightId, Features, IsLocked) values('${req.body.title.split("'").join("\\'")}', '${req.body.origin.split("'").join("\\'")}', '${req.body.destination.split("'").join("\\'")}', '${req.body.startdate}', '${req.body.enddate}', ${req.body.outboundflightid}, ${req.body.inboundflightid}, '${req.body.features.split("'").join("\\'")}', 0);`;
         db.query(query, (err, data) => {
           if (err) {
@@ -26,7 +26,7 @@ router.route("/createtrip").post((req, res) => {
             console.log(data);
             let query2 = `insert into TripUser(UserId, TripId, Role) values('${req.headers.userid}', ${data.insertId}, 'Owner')`;
             for (const editor of data2) {
-              query2 += `, ('${editor.UserId}', ${data.insertId}, 'Editor')`;
+              query2 += `, ('${editor.UserId}', ${data.insertId}, 'Owner')`;
             }
             query2 += ";";
             db.query(query2, (err1, data1) => {

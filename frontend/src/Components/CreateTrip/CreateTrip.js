@@ -17,10 +17,10 @@ export default function CreateTrip() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const results = e.currentTarget;
-    const emails = results.tripEditors.value.replace(/\s/g,'').split(",");
+    const emails = results.tripOwners.value.replace(/\s/g,'').split(",");
 
     let errors = "";
-    if (results.tripEditors.value !== "") {
+    if (results.tripOwners.value !== "") {
       let valid = true;
       const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       for (let i = 0; i < emails.length; i++) {
@@ -29,7 +29,7 @@ export default function CreateTrip() {
         }
       }
       if (!valid) {
-        errors += "Please make sure all editor emails are valid.\n";
+        errors += "Please make sure all owner emails are valid.\n";
       }
     }
     if (startDate === null || endDate === null) {
@@ -59,7 +59,7 @@ export default function CreateTrip() {
           outboundflightid: results.tripOutboundFlightID.value,
           inboundflightid: results.tripInboundFlightID.value,
           features: results.tripFeatures.value,
-          editors: emails,
+          owners: emails,
         }, {
           headers: {
             userid: user.sub,
@@ -116,8 +116,8 @@ export default function CreateTrip() {
                 <Form.Label>Features</Form.Label>
                 <Form.Control required />
               </Form.Group>
-              <Form.Group controlId="tripEditors">
-                <Form.Label>Editors</Form.Label>
+              <Form.Group controlId="tripOwners">
+                <Form.Label>Owners</Form.Label>
                 <Form.Text className="text-muted">
                   Enter email addresses separated by commas.
                 </Form.Text>
