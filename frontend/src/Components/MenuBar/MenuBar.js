@@ -38,7 +38,7 @@ const Menubar = (props) => {
             <Nav.Link >
               <Link className="account-details" to="/Account" >Account Details</Link>
             </Nav.Link>
-            <LogoutButton />
+              <LogoutButton/>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

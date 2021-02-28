@@ -14,6 +14,8 @@ import '../ProfileInfo/Profile.css'
 import { Card, Image, ListGroup, ListGroupItem } from 'react-bootstrap'
 import DefaultHead from "./default_head.jpg";
 import app from "../../base.js";
+import { Redirect } from "react-router-dom";
+import Landing from "../Landing/Landing"
 
 class AccountInformation extends Component {
     constructor(props) {
@@ -41,6 +43,7 @@ class AccountInformation extends Component {
         this.fileSelectedHandler = this.fileSelectedHandler.bind(this)
         this.fileUploadHandler = this.fileUploadHandler.bind(this)
         this.getUser = this.getUser.bind(this)
+        this.deleteUser = this.deleteUser.bind(this)
         this.changePassword = this.changePassword.bind(this)
     }
 
@@ -134,7 +137,10 @@ class AccountInformation extends Component {
     
           try {
             api.get('/').then(response => {
-              console.log(response.data[0])
+                if (response.data.length === 0) {
+                    return
+                }
+              console.log(response.data)
               this.setState({Name: response.data[0]['Name']})
               this.setState({Email: response.data[0]['EmailAddress']})
               this.setState({AboutMe: response.data[0]['AboutMe']})
@@ -190,6 +196,35 @@ class AccountInformation extends Component {
         })
       }
 
+    deleteUser () {
+        var message = "Your account and all of your trips will be deleted! Are you sure you want to delete your account? "
+        if (window.confirm(message)) {
+            console.log("confirmed") 
+            this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
+                const token = `Bearer ${res}`
+
+                const api = axios.create({
+                    baseURL: "http://localhost:5000/user/deleteUser",
+                    headers: {
+                        user_ID: this.state.user_object.user.sub,
+                        Authorization: token,
+                    }
+                })
+
+                try {
+                    api.delete('/').then(response => {
+                        console.log("delete response: "  + response)
+
+                    })
+                } catch (err) {
+                    console.log(err)
+                }
+            })
+
+            this.state.user_object.logout()
+        }
+    }
+
       changePassword = async () => {
         this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
           const token = `Bearer ${res}`
@@ -236,12 +271,15 @@ class AccountInformation extends Component {
                                     <ListGroupItem />
                                 </ListGroup>
                             </Card.Body>
-                            <Button variant="primary" onClick={this.handleShow1.bind()}>
+                            <Button className="info-btn" variant="primary" onClick={this.handleShow1.bind()}>
                                 Edit Account Information
-                            </Button><br></br><br></br>
-                            <Button variant="primary" onClick={this.handleShow2.bind()}>
+                            </Button>
+                            <Button className="change-pass-btn" variant="primary" onClick={this.handleShow2.bind()}>
                                 Change Password
                             </Button>
+                            
+                            <Button className="delete-btn" variant="danger" onClick={this.deleteUser.bind()} >Delete Account</Button>
+    
 
 
                             {/* Modal 1 for editing account info */}
