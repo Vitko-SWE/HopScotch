@@ -5,7 +5,7 @@ let router = express.Router()
 router.route("/createtrip").post((req, res) => {
   let users = [];
   let userquery = "select UserId from User where ";
-  for (const email of req.body.editors) {
+  for (const email of req.body.owners) {
     userquery += `EmailAddress = "${email}" or `;
   }
   userquery = userquery.slice(0, -4) + ";";
@@ -15,7 +15,7 @@ router.route("/createtrip").post((req, res) => {
       res.send(err);
     }
     else {
-      if (data2.length === req.body.editors.length || req.body.editors[0] === "") {
+      if (data2.length === req.body.owners.length || req.body.owners[0] === "") {
         const query = `insert into Trip(Name, Origin, Destination, StartDate, EndDate, OutboundFlightId, InboundFlightId, Features, IsLocked) values('${req.body.title.split("'").join("\\'")}', '${req.body.origin.split("'").join("\\'")}', '${req.body.destination.split("'").join("\\'")}', '${req.body.startdate}', '${req.body.enddate}', ${req.body.outboundflightid}, ${req.body.inboundflightid}, '${req.body.features.split("'").join("\\'")}', 0);`;
         db.query(query, (err, data) => {
           if (err) {
@@ -26,7 +26,7 @@ router.route("/createtrip").post((req, res) => {
             console.log(data);
             let query2 = `insert into TripUser(UserId, TripId, Role) values('${req.headers.userid}', ${data.insertId}, 'Owner')`;
             for (const editor of data2) {
-              query2 += `, ('${editor.UserId}', ${data.insertId}, 'Editor')`;
+              query2 += `, ('${editor.UserId}', ${data.insertId}, 'Owner')`;
             }
             query2 += ";";
             db.query(query2, (err1, data1) => {
@@ -79,41 +79,64 @@ router.route("/gettrip/:tripid").get((req, res) => {
   });
 });
 
-router.route("/gettripowners/:tripid").get((req, res) => {
-  const query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}' and Role = 'Owner');`;
-  db.query(query, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    }
-    else {
-      res.send(data);
-    }
-  });
+router.route("/gettripusers/:tripid/:role").get((req, res) => {
+  if (req.params.role !== "all") {
+    const query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}' and Role = '${req.params.role}');`;
+    db.query(query, (err, data) => {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      }
+      else {
+        res.send(data);
+      }
+    });
+  }
+  else {
+    const query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}');`;
+    db.query(query, (err, data) => {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      }
+      else {
+        res.send(data);
+      }
+    });
+  }
 });
 
-router.route("/gettripeditors/:tripid").get((req, res) => {
-  const query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}' and Role = 'Editor');`;
-  db.query(query, (err, data) => {
+router.route("/addtripusers/:tripid/:role").post((req, res) => {
+  let userquery = "select UserId from User where ";
+  for (const email of req.body.users) {
+    userquery += `EmailAddress = "${email}" or `;
+  }
+  userquery = userquery.slice(0, -4) + ";";
+  db.query(userquery, (err, data2) => {
     if (err) {
       console.log(err);
       res.send(err);
     }
     else {
-      res.send(data);
-    }
-  });
-});
-
-router.route("/gettripviewers/:tripid").get((req, res) => {
-  const query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}' and Role = 'Viewer');`;
-  db.query(query, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    }
-    else {
-      res.send(data);
+      if (data2.length === req.body.users.length || req.body.users[0] === "") {
+        let query = `insert into TripUser(UserId, TripId, Role) values`;
+        for (const editor of data2) {
+          query += ` ('${editor.UserId}', ${req.params.tripid}, '${req.params.role}'),`;
+        }
+        query = query.slice(0, -1) + ";";
+        db.query(query, (err, data) => {
+          if (err) {
+            console.log(err);
+            res.send(err);
+          }
+          else {
+            res.send(data);
+          }
+        });
+      }
+      else {
+        res.status(404).send("Given email addresses do not all represent existing users.");
+      }
     }
   });
 });
@@ -132,6 +155,32 @@ router.route("/getuserrole/:tripid/:userid").get((req, res) => {
       else {
         res.send(data);
       }
+    }
+  })
+});
+
+router.route("/edituserrole/:tripid/:userid").post((req, res) => {
+  const query = `update TripUser set Role = '${req.body.newrole}' where TripId = '${req.params.tripid}' and UserId = '${req.params.userid}';`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      res.send(data);
+    }
+  })
+});
+
+router.route("/removeuser/:tripid/:userid").delete((req, res) => {
+  const query = `delete from TripUser where TripId = '${req.params.tripid}' and UserId = '${req.params.userid}';`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      res.send(data);
     }
   })
 });
