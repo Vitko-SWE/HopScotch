@@ -16,7 +16,7 @@ router.route("/createtrip").post((req, res) => {
     }
     else {
       if (data2.length === req.body.owners.length || req.body.owners[0] === "") {
-        const query = `insert into Trip(Name, Origin, Destination, StartDate, EndDate, OutboundFlightId, InboundFlightId, Features, IsLocked) values('${req.body.title.split("'").join("\\'")}', '${req.body.origin.split("'").join("\\'")}', '${req.body.destination.split("'").join("\\'")}', '${req.body.startdate}', '${req.body.enddate}', ${req.body.outboundflightid}, ${req.body.inboundflightid}, '${req.body.features.split("'").join("\\'")}', 0);`;
+        const query = `insert into Trip(Name, Origin, Destination, StartDate, EndDate, OutboundFlightId, InboundFlightId, Features, IsLocked) values('${req.body.title.split("'").join("\\'")}', '${req.body.origin.split("'").join("\\'")}', '${req.body.destination.split("'").join("\\'")}', '${req.body.startdate}', '${req.body.enddate}', NULL, NULL, NULL, 0);`;
         db.query(query, (err, data) => {
           if (err) {
             console.log(err);
@@ -53,7 +53,7 @@ router.route("/createtrip").post((req, res) => {
 });
 
 router.route("/updatetrip/:tripid").post((req, res) => {
-  const query = `update Trip set Name = '${req.body.title.split("'").join("\\'")}', Origin = '${req.body.origin.split("'").join("\\'")}', Destination = '${req.body.destination.split("'").join("\\'")}', StartDate = '${req.body.startdate}', EndDate = '${req.body.enddate}', OutboundFlightId = ${req.body.outboundflightid}, InboundFlightId = ${req.body.inboundflightid}, Features = '${req.body.features.split("'").join("\\'")}' where TripId = '${req.params.tripid}';`;
+  const query = `update Trip set Name = '${req.body.title.split("'").join("\\'")}', Origin = '${req.body.origin.split("'").join("\\'")}', Destination = '${req.body.destination.split("'").join("\\'")}', StartDate = '${req.body.startdate}', EndDate = '${req.body.enddate}' where TripId = '${req.params.tripid}';`;
   db.query(query, (err, data) => {
     if (err) {
       console.log(err);

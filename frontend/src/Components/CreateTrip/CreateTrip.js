@@ -38,12 +38,6 @@ export default function CreateTrip() {
     else if (startDate >= endDate) {
       errors += "Please make sure the end date is after the start date.\n";
     }
-    if (isNaN(results.tripInboundFlightID.value)) {
-      errors += "Please enter a valid inbound flight ID.\n"
-    }
-    if (isNaN(results.tripOutboundFlightID.value)) {
-      errors += "Please enter a valid outbound flight ID.\n"
-    }
 
     if (errors !== "") {
       alert(errors);
@@ -56,9 +50,6 @@ export default function CreateTrip() {
           destination: results.tripDestination.value,
           startdate: `${startDate.getFullYear()}-${("00" + (startDate.getMonth() + 1)).slice(-2)}-${("00" + startDate.getDate()).slice(-2)}`,
           enddate: `${endDate.getFullYear()}-${("00" + (endDate.getMonth() + 1)).slice(-2)}-${("00" + endDate.getDate()).slice(-2)}`,
-          outboundflightid: results.tripOutboundFlightID.value,
-          inboundflightid: results.tripInboundFlightID.value,
-          features: results.tripFeatures.value,
           owners: emails,
         }, {
           headers: {
@@ -104,18 +95,6 @@ export default function CreateTrip() {
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group controlId="tripOutboundFlightID">
-                <Form.Label>Outbound Flight ID</Form.Label>
-                <Form.Control required />
-              </Form.Group>
-              <Form.Group controlId="tripInboundFlightID">
-                <Form.Label>Inbound Flight ID</Form.Label>
-                <Form.Control required />
-              </Form.Group>
-              <Form.Group controlId="tripFeatures">
-                <Form.Label>Features</Form.Label>
-                <Form.Control required />
-              </Form.Group>
               <Form.Group controlId="tripOwners">
                 <Form.Label>Owners</Form.Label>
                 <Form.Text className="text-muted">

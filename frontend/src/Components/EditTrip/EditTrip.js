@@ -278,12 +278,6 @@ export default function EditTrip(props) {
     else if (startDate >= endDate) {
       errors += "Please make sure the end date is after the start date.\n";
     }
-    if (isNaN(results.tripInboundFlightID.value)) {
-      errors += "Please enter a valid inbound flight ID.\n"
-    }
-    if (isNaN(results.tripOutboundFlightID.value)) {
-      errors += "Please enter a valid outbound flight ID.\n"
-    }
 
     if (errors !== "") {
       alert(errors);
@@ -296,9 +290,6 @@ export default function EditTrip(props) {
           destination: results.tripDestination.value,
           startdate: `${startDate.getFullYear()}-${("00" + (startDate.getMonth() + 1)).slice(-2)}-${("00" + startDate.getDate()).slice(-2)}`,
           enddate: `${endDate.getFullYear()}-${("00" + (endDate.getMonth() + 1)).slice(-2)}-${("00" + endDate.getDate()).slice(-2)}`,
-          outboundflightid: results.tripOutboundFlightID.value,
-          inboundflightid: results.tripInboundFlightID.value,
-          features: results.tripFeatures.value,
         }, {
           headers: {
             userid: user.sub,
@@ -326,11 +317,11 @@ export default function EditTrip(props) {
               <p><strong>Destination:</strong> {tripInfo.Destination}</p>
               <p><strong>Start Date:</strong> {`${(new Date(tripInfo.StartDate)).getMonth() + 1}/${(new Date(tripInfo.StartDate)).getDate()}/${(new Date(tripInfo.StartDate)).getFullYear()}`}</p>
               <p><strong>End Date:</strong> {`${(new Date(tripInfo.EndDate)).getMonth() + 1}/${(new Date(tripInfo.EndDate)).getDate()}/${(new Date(tripInfo.EndDate)).getFullYear()}`}</p>
-              <p><strong>Outbound Flight ID:</strong> {tripInfo.OutboundFlightId}</p>
-              <p><strong>Inbound Flight ID:</strong> {tripInfo.InboundFlightId}</p>
+              <p><strong>Outbound Flight ID:</strong> {tripInfo.OutboundFlightId ? tripInfo.OutboundFlightId : "N/A"}</p>
+              <p><strong>Inbound Flight ID:</strong> {tripInfo.InboundFlightId ? tripInfo.InboundFlightId : "N/A"}</p>
             </Col>
             <Col>
-              <p><strong>Features:</strong> {tripInfo.Features}</p>
+              <p><strong>Features:</strong> {tripInfo.Features ? tripInfo.Features : "N/A"}</p>
               <p><strong>Locked?</strong> {tripInfo.IsLocked === 0? "No" : "Yes"}</p>
               <p>
                 <strong>Owners:</strong>{" "}
@@ -441,23 +432,11 @@ export default function EditTrip(props) {
                       <Form.Label>Destination</Form.Label>
                       <Form.Control required defaultValue={tripInfo.Destination} />
                     </Form.Group>
+                  </Col>
+                  <Col>
                     <Form.Group controlId="tripStartDate">
                       <Form.Label>Start Date</Form.Label><br />
                       <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
-                    </Form.Group>
-                  </Col>
-                  <Col>
-                    <Form.Group controlId="tripOutboundFlightID">
-                      <Form.Label>Outbound Flight ID</Form.Label>
-                      <Form.Control required defaultValue={tripInfo.OutboundFlightId} />
-                    </Form.Group>
-                    <Form.Group controlId="tripInboundFlightID">
-                      <Form.Label>Inbound Flight ID</Form.Label>
-                      <Form.Control required defaultValue={tripInfo.InboundFlightId} />
-                    </Form.Group>
-                    <Form.Group controlId="tripFeatures">
-                      <Form.Label>Features</Form.Label>
-                      <Form.Control required defaultValue={tripInfo.Features} />
                     </Form.Group>
                     <Form.Group controlId="tripEndDate">
                       <Form.Label>End Date</Form.Label><br />
