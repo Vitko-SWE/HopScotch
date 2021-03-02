@@ -305,6 +305,21 @@ export default function EditTrip(props) {
     }
   };
 
+  const deleteTrip = (e) => {
+    e.preventDefault();
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.delete(`http://localhost:5000/trips/deletetrip/${props.match.params.tripid}/`, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        history.push('/homepage')
+      });
+
+    });
+    
+  }
+
   return (
     <div>
       <div class="intro pt-5 pb-5">
@@ -409,6 +424,12 @@ export default function EditTrip(props) {
                     </Form.Group>
                     <Button variant="primary" type="submit">Submit</Button>
                   </Form>
+                  {tripOwners.find(element => element.sub === user.UserId) && (
+                    <div>
+                      <h5> Delete trip </h5>
+                      <Button variant="danger" onClick={ deleteTrip } type="submit">Delete Trip</Button>
+                    </div>
+                  )}
                 </Col>
               </Row>
               <hr />
