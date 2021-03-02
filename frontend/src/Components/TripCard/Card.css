@@ -19,3 +19,7 @@
    flex-flow: wrap;
    margin-left: 7cm;
   }
+
+  .edit-button {
+    margin-bottom: 0.3cm;
+  }
