@@ -79,6 +79,50 @@ router.route("/gettrip/:tripid").get((req, res) => {
   });
 });
 
+router.route("/deletetrip/:tripid").delete((req, res) => {
+  //Getting the trip so we can delete from features and flights table
+  const tripGetQuery = `select TripId, InboundFlightId, OutboundFlightId, Features from Trip where TripId = '${req.params.tripid}';`;
+  db.query(tripGetQuery, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      //Deleting flight entries
+      const flightDeleteQuery = `Delete from Flight where FlightId = ${data[0].OutboundFlightId} or FlightId = ${data[0].InboundFlightId};`
+      db.query(flightDeleteQuery, (err2, data2) => {
+        if(err) {
+          console.log(err2);
+          res.send(err2);
+        }
+        else {
+          //Deleting trip user entires
+          const tripUserDeleteQuery = `Delete from TripUser where Tripid = '${req.params.tripid}';`
+          db.query(tripUserDeleteQuery, (err3, data3) => {
+            if(err) {
+              console.log(err3);
+              res.send(err3);
+            }
+            else {
+              //Deleting trip entry
+              const tripDeleteQuery = `Delete from Trip where TripId = '${req.params.tripid}'`
+              db.query(tripDeleteQuery, (err4, data4) => {
+                if(err) {
+                  console.log(err4);
+                  res.send(err4);
+                }
+                else
+                  res.send(data4);
+                //TODO: Make one for TripFeatures when that's implemented
+              });
+            }
+          });
+        }
+      });
+    }
+  })
+})
+
 router.route("/gettripusers/:tripid/:role").get((req, res) => {
   if (req.params.role !== "all") {
     const query = `select * from User where UserId in (select UserId from TripUser where TripId = '${req.params.tripid}' and Role = '${req.params.role}');`;
