@@ -32,7 +32,7 @@ jobs:
 
       - name: run frontend test
         run: npm test
-        working-directory: ./frontend/ltms-io
+        working-directory: ./frontend
         env:
           CI: true
 
