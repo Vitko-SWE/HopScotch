@@ -323,9 +323,11 @@ class AccountInformation extends Component {
                                     </Form>
                                 </Modal.Body>
                                 <Modal.Footer>
-                                    <Button variant="secondary" onClick={this.handleClose1.bind()}>
-                                        Cancel
-                                </Button>
+                                    <Link to="/Account">
+                                        <Button variant="secondary" onClick={this.handleClose1.bind()}>
+                                            Cancel
+                                        </Button>
+                                    </Link>
                                     <Button variant="primary" onClick={this.handleSubmit.bind()}>Save</Button>
                                 </Modal.Footer>
                             </Modal>
