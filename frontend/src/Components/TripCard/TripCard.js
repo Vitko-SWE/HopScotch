@@ -42,6 +42,8 @@ class TripCards extends Component {
       try {
         api.get('/').then(response => {
           this.setState({trips: response.data})
+          let sortedTrips = this.state.trips.sort((a, b) => new Date(...a.StartDate.split('/').reverse()) - new Date(...b.StartDate.split('/').reverse()));
+          this.setState(({trips: sortedTrips}))
         })
       } catch (err) {
         console.log(err)
@@ -60,17 +62,18 @@ class TripCards extends Component {
             <Card.Body>
               <Card.Title>{trip.Name}</Card.Title>
               <Card.Text>
-                Days Remaining: 365
+                Start Date: {new Intl.DateTimeFormat('en-US').format(new Date(trip.StartDate))}
               </Card.Text>
               <Card.Text>
-                Trip Organizer: {trip.trip_owner}
+                End Date: {new Intl.DateTimeFormat('en-US').format(new Date(trip.EndDate))}
+              </Card.Text>
+              <Card.Text>
+                Days Remaining: {Math.ceil((new Date(trip.StartDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}
               </Card.Text>
             </Card.Body>
             <Card.Footer>
-              <small className="text-muted">
-              <Link to={`/edittrip/${trip.TripId}`}><Button  variant="primary" size="lg" block>Edit</Button></Link>
+              <Link to={`/edittrip/${trip.TripId}`}><Button className="edit-button"  variant="primary" size="lg" block>Edit</Button></Link>
               <Button  variant="danger" size="lg" block>Exit Trip</Button>
-              </small>
             </Card.Footer>
           </Card>
         )}
