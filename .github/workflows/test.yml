@@ -28,10 +28,15 @@ jobs:
 
       - name: build frontend env file
         working-directory: ./frontend
-        run: |
-            touch .env
-            echo ${{ secrets.REACT_APP_AUTH0_DOMAIN }}
+        env:
+          FRONTEND_ENV_ENCODED: ${{ secrets.FRONTEND_ENV_ENCODED }}
+        run: echo $FRONTEND_ENV_ENCODED | base64 --decode > .env
 
+      - name: build backend env file
+        working-directory: ./backend
+        env:
+          BACKEND_ENV_ENCODED: ${{ secrets.BACKEND_ENV_ENCODED }}
+        run: echo $BACKEND_ENV_ENCODED | base64 --decode > .env
 
       - name: install backend dependencies
         run: npm ci
