@@ -26,7 +26,11 @@ const jwtCheck = jwt({
     audience: process.env.AUTH0_AUDIENCE,
     issuer: process.env.AUTH0_ISSUER,
     algorithms: ['RS256']
-}).unless({path: ['/']});
+}).unless({path: [
+    /\/static*/,
+    /\/index.html/,
+    { url: '/', methods: ['GET', 'PUT']}
+]});
 
 app.use(jwtCheck);
 
@@ -35,9 +39,9 @@ app.use(jwtCheck);
 // app.use(cors())
 
 
-app.use("/homepage", myTrips)
-app.use("/user", userService);
-app.use("/trips", tripsService);
+app.use("/api/homepage", myTrips)
+app.use("/api/user", userService);
+app.use("/api/trips", tripsService);
 
 if (process.env.NODE_ENV == "production") {
     const publicPath = path.join(__dirname, './frontend');
