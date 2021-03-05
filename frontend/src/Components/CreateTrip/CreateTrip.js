@@ -44,7 +44,7 @@ export default function CreateTrip() {
     }
     else {
       getAccessTokenSilently({audience: "https://hopscotch/api"}).then((res) => {
-        axios.post("/trips/createtrip", {
+        axios.post("/api/trips/createtrip", {
           title: results.tripTitle.value,
           origin: results.tripOrigin.value,
           destination: results.tripDestination.value,
