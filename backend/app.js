@@ -27,9 +27,7 @@ const jwtCheck = jwt({
     issuer: process.env.AUTH0_ISSUER,
     algorithms: ['RS256']
 }).unless({path: [
-    /\/static*/,
-    /\/index.html/,
-    { url: '/', methods: ['GET', 'PUT']}
+    /^(?!\/api).*$/
 ]});
 
 app.use(jwtCheck);
@@ -50,7 +48,7 @@ if (process.env.NODE_ENV == "production") {
 }
 
 
-app.get('/authorized', (req, res) => {
+app.get('/api/authorized', (req, res) => {
     res.send('Secured Resource');
 })
 
