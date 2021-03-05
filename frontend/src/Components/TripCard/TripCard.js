@@ -32,7 +32,7 @@ class TripCards extends Component {
 
       // console.log("tk ==== " + token)
       const api = axios.create({
-        baseURL: 'http://localhost:5000/homepage/myTrips',
+        baseURL: '/homepage/myTrips',
         headers: {
           userid: this.state.user_object.user.sub,
           Authorization: token

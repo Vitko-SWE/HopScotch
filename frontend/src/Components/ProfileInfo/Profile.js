@@ -129,7 +129,7 @@ class AccountInformation extends Component {
           const token = `Bearer ${res}`
     
           const api = axios.create({
-            baseURL: `http://localhost:5000/user/getbyuserid/${this.state.user_object.user.sub}`,
+            baseURL: `/user/getbyuserid/${this.state.user_object.user.sub}`,
             headers: {
               Authorization: token
             }
@@ -155,7 +155,7 @@ class AccountInformation extends Component {
         this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
           const token = `Bearer ${res}`
           const api = axios.create({
-            baseURL: `http://localhost:5000/user/updateName`,
+            baseURL: `/user/updateName`,
             headers: {
               userid: this.state.user_object.user.sub,
               name: this.state.Name,
@@ -164,7 +164,7 @@ class AccountInformation extends Component {
           })
     
           try {
-            api.post(`http://localhost:5000/user/updateName`).then(response => {
+            api.post(`/user/updateName`).then(response => {
               console.log(response)
             })
           } catch (err) {
@@ -178,7 +178,7 @@ class AccountInformation extends Component {
         this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
           const token = `Bearer ${res}`
           const api = axios.create({
-            baseURL: `http://localhost:5000/user/updateAboutMe`,
+            baseURL: `/user/updateAboutMe`,
             headers: {
               userid: this.state.user_object.user.sub,
               aboutme: this.state.AboutMe,
@@ -187,7 +187,7 @@ class AccountInformation extends Component {
           })
     
           try {
-            api.post(`http://localhost:5000/user/updateAboutMe`).then(response => {
+            api.post(`/user/updateAboutMe`).then(response => {
               console.log(response)
             })
           } catch (err) {
@@ -204,7 +204,7 @@ class AccountInformation extends Component {
                 const token = `Bearer ${res}`
 
                 const api = axios.create({
-                    baseURL: "http://localhost:5000/user/deleteUser",
+                    baseURL: "/user/deleteUser",
                     headers: {
                         user_ID: this.state.user_object.user.sub,
                         Authorization: token,
@@ -236,7 +236,7 @@ class AccountInformation extends Component {
           })
     
           try {
-            api.post(`http://localhost:5000/user/changePassword`).then(response => {
+            api.post(`/user/changePassword`).then(response => {
               console.log(response)
             })
           } catch (err) {
