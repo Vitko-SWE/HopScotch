@@ -19,13 +19,13 @@ export default function Homepage() {
         const headers = {
             "Authorization" : "Bearer " + res,
         };
-        axios.get(`http://localhost:5000/user/getbyuserid/${user.sub}`, {"headers":headers})
+        axios.get(`/user/getbyuserid/${user.sub}`, {"headers":headers})
         .then( function(res, err) {
             if (err)
                 console.log(err);
             else if (res.data.length === 0) {
                 const newUser = { userId: `${user.sub}`, name: `${user.name}`, email: `${user.email}`}
-                axios.post('http://localhost:5000/user/postnewuser', newUser, {"headers":headers});
+                axios.post('/user/postnewuser', newUser, {"headers":headers});
             }
         });
     });
