@@ -26,7 +26,7 @@ const jwtCheck = jwt({
     audience: process.env.AUTH0_AUDIENCE,
     issuer: process.env.AUTH0_ISSUER,
     algorithms: ['RS256']
-});
+}).unless({path: ['/']});
 
 app.use(jwtCheck);
 
