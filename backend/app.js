@@ -7,6 +7,7 @@ const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 const cors = require('cors');
 const { createProxyMiddleware } = require('http-proxy-middleware');
+const path = require('path');
 
 require('dotenv').config()
 
@@ -25,7 +26,9 @@ const jwtCheck = jwt({
     audience: process.env.AUTH0_AUDIENCE,
     issuer: process.env.AUTH0_ISSUER,
     algorithms: ['RS256']
-});
+}).unless({path: [
+    /^(?!\/api).*$/
+]});
 
 app.use(jwtCheck);
 
@@ -34,9 +37,9 @@ app.use(jwtCheck);
 // app.use(cors())
 
 
-app.use("/homepage", myTrips)
-app.use("/user", userService);
-app.use("/trips", tripsService);
+app.use("/api/homepage", myTrips)
+app.use("/api/user", userService);
+app.use("/api/trips", tripsService);
 
 if (process.env.NODE_ENV == "production") {
     const publicPath = path.join(__dirname, './frontend');
@@ -45,7 +48,7 @@ if (process.env.NODE_ENV == "production") {
 }
 
 
-app.get('/authorized', (req, res) => {
+app.get('/api/authorized', (req, res) => {
     res.send('Secured Resource');
 })
 

@@ -29,7 +29,7 @@ export default function EditTrip(props) {
 
   const updateTripInfo = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get(`http://localhost:5000/trips/gettrip/${props.match.params.tripid}`, {
+      axios.get(`/api/trips/gettrip/${props.match.params.tripid}`, {
         headers: {
           Authorization: `Bearer ${res}`,
         },
@@ -44,7 +44,7 @@ export default function EditTrip(props) {
   };
   const updateUserRole = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get(`http://localhost:5000/trips/getuserrole/${props.match.params.tripid}/${user.sub}`, {
+      axios.get(`/api/trips/getuserrole/${props.match.params.tripid}/${user.sub}`, {
         headers: {
           Authorization: `Bearer ${res}`,
         },
@@ -57,7 +57,7 @@ export default function EditTrip(props) {
   };
   const updateTripUsers = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get(`http://localhost:5000/trips/gettripusers/${props.match.params.tripid}/all`, {
+      axios.get(`/api/trips/gettripusers/${props.match.params.tripid}/all`, {
         headers: {
           Authorization: `Bearer ${res}`,
         },
@@ -70,7 +70,7 @@ export default function EditTrip(props) {
   };
   const updateTripOwners = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get(`http://localhost:5000/trips/gettripusers/${props.match.params.tripid}/Owner`, {
+      axios.get(`/api/trips/gettripusers/${props.match.params.tripid}/Owner`, {
         headers: {
           Authorization: `Bearer ${res}`,
         },
@@ -83,7 +83,7 @@ export default function EditTrip(props) {
   };
   const updateTripEditors = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get(`http://localhost:5000/trips/gettripusers/${props.match.params.tripid}/Editor`, {
+      axios.get(`/api/trips/gettripusers/${props.match.params.tripid}/Editor`, {
         headers: {
           Authorization: `Bearer ${res}`,
         },
@@ -96,7 +96,7 @@ export default function EditTrip(props) {
   };
   const updateTripViewers = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get(`http://localhost:5000/trips/gettripusers/${props.match.params.tripid}/Viewer`, {
+      axios.get(`/api/trips/gettripusers/${props.match.params.tripid}/Viewer`, {
         headers: {
           Authorization: `Bearer ${res}`,
         },
@@ -132,7 +132,7 @@ export default function EditTrip(props) {
     }
     else {
       getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-        axios.post(`http://localhost:5000/trips/addtripusers/${props.match.params.tripid}/Owner`, {
+        axios.post(`/api/trips/addtripusers/${props.match.params.tripid}/Owner`, {
           users: emails,
         }, {
           headers: {
@@ -171,7 +171,7 @@ export default function EditTrip(props) {
     }
     else {
       getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-        axios.post(`http://localhost:5000/trips/addtripusers/${props.match.params.tripid}/Editor`, {
+        axios.post(`/api/trips/addtripusers/${props.match.params.tripid}/Editor`, {
           users: emails,
         }, {
           headers: {
@@ -210,7 +210,7 @@ export default function EditTrip(props) {
     }
     else {
       getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-        axios.post(`http://localhost:5000/trips/addtripusers/${props.match.params.tripid}/Viewer`, {
+        axios.post(`/api/trips/addtripusers/${props.match.params.tripid}/Viewer`, {
           users: emails,
         }, {
           headers: {
@@ -235,7 +235,7 @@ export default function EditTrip(props) {
     else {
       if (results.roleSelectRole.value !== "Remove user from trip") {
         getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-          axios.post(`http://localhost:5000/trips/edituserrole/${props.match.params.tripid}/${results.roleSelectUser.value}`, {
+          axios.post(`/api/trips/edituserrole/${props.match.params.tripid}/${results.roleSelectUser.value}`, {
             newrole: results.roleSelectRole.value,
           }, {
             headers: {
@@ -251,7 +251,7 @@ export default function EditTrip(props) {
       }
       else {
         getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-          axios.delete(`http://localhost:5000/trips/removeuser/${props.match.params.tripid}/${results.roleSelectUser.value}`, {
+          axios.delete(`/api/trips/removeuser/${props.match.params.tripid}/${results.roleSelectUser.value}`, {
             headers: {
               Authorization: `Bearer ${res}`,
             },
@@ -284,7 +284,7 @@ export default function EditTrip(props) {
     }
     else {
       getAccessTokenSilently({audience: "https://hopscotch/api"}).then((res) => {
-        axios.post(`http://localhost:5000/trips/updatetrip/${props.match.params.tripid}`, {
+        axios.post(`/api/trips/updatetrip/${props.match.params.tripid}`, {
           title: results.tripTitle.value,
           origin: results.tripOrigin.value,
           destination: results.tripDestination.value,
@@ -308,7 +308,7 @@ export default function EditTrip(props) {
   const deleteTrip = (e) => {
     e.preventDefault();
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.delete(`http://localhost:5000/trips/deletetrip/${props.match.params.tripid}/`, {
+      axios.delete(`/api/trips/deletetrip/${props.match.params.tripid}/`, {
         headers: {
           Authorization: `Bearer ${res}`,
         },
