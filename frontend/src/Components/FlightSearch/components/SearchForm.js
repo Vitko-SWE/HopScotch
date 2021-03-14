@@ -2,6 +2,11 @@ import React from 'react'
 import { Form, Col, Button } from 'react-bootstrap'
 
 export default function SearchForm() {
+    const handleSubmit = e => {
+        e.preventDefault();
+        const results = e.currentTarget;
+    }
+    
     return (
         <div>
             <Form>

@@ -6,8 +6,9 @@ const tripsService = require('./routes/trips');
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 const cors = require('cors');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+// const { createProxyMiddleware } = require('http-proxy-middleware');
 const path = require('path');
+const search = require("./routes/homepage");
 
 require('dotenv').config()
 
@@ -40,6 +41,7 @@ app.use(jwtCheck);
 app.use("/api/homepage", myTrips)
 app.use("/api/user", userService);
 app.use("/api/trips", tripsService);
+app.use("/api/search", search)
 
 if (process.env.NODE_ENV == "production") {
     const publicPath = path.join(__dirname, './frontend');
