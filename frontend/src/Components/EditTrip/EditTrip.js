@@ -368,7 +368,7 @@ export default function EditTrip(props) {
             </Row>
             <Row>
               <Col>
-                <Button>Flights</Button>
+                <Link to="/search/flights"><Button>Flights</Button></Link>
               </Col>
             </Row>
           </Container>
