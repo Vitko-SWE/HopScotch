@@ -11,6 +11,8 @@ import Homepage from './Components/Homepage/Homepage.js';
 import Profile from './Components/ProfileInfo/Profile';
 import CreateTrip from './Components/CreateTrip/CreateTrip';
 import EditTrip from './Components/EditTrip/EditTrip';
+import SearchDining from './Components/Search/SearchDining'
+import DiningResults from './Components/Search/SearchDiningResults'
 import { createBrowserHistory } from 'history';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 
@@ -30,6 +32,8 @@ function App() {
           <ProtectedRoute path="/homepage" component={Homepage} exact/>
           <ProtectedRoute path="/Account"  component={Profile} exact/>
           <ProtectedRoute path="/createtrip"  component={CreateTrip} exact/>
+          <ProtectedRoute path="/searchDining"  component={SearchDining} exact/>
+          {/* <ProtectedRoute path="/DiningResults"  component={DiningResults} exact/> */}
           <ProtectedRoute path="/edittrip/:tripid"  component={EditTrip} exact/>
         </Switch>
       </div>

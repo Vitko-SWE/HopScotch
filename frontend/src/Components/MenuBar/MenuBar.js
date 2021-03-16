@@ -29,7 +29,7 @@ const Menubar = (props) => {
             <NavDropdown  title="Search Options" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Search Flights</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">Search Hotels</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Search Other</NavDropdown.Item>
+              <NavDropdown.Item href="searchDining">Search Dining</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
             </NavDropdown>
