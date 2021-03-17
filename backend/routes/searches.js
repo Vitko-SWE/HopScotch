@@ -10,7 +10,6 @@ router.route("/attractionsearch/:query").get((req, res) => {
     },
   }).then((resp) => {
     const token = resp.data.access_token;
-    console.log(token);
     axios.get("https://test.api.amadeus.com/v1/shopping/activities?latitude=41.397158&longitude=2.160873&radius=1", {
       headers: {
         Authorization: `Bearer ${token}`,
