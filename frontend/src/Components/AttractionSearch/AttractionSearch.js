@@ -6,6 +6,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 export default function AttractionSearch() {
   const { getAccessTokenSilently } = useAuth0();
+  const [searchResults, setSearchResults] = useState([]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -16,7 +17,8 @@ export default function AttractionSearch() {
           Authorization: `Bearer ${res}`,
         },
       }).then((res) => {
-        console.log(res);
+        //console.log(res.data);
+        setSearchResults(res.data.data);
       }).catch((err) => {
         console.log(err);
       });
@@ -32,6 +34,9 @@ export default function AttractionSearch() {
         </Form.Group>
         <Button variant="primary" type="submit">Search</Button>
       </Form>
+      {searchResults.map((result) => (
+        <p>{result.name}</p>
+      ))}
     </div>
   );
 };
