@@ -26,6 +26,7 @@ export default function AttractionSearch() {
           Authorization: `Bearer ${res}`,
         },
       }).then((res) => {
+        console.log(res.data);
         setSearchResults(res.data);
       }).catch((err) => {
         console.log(err);
