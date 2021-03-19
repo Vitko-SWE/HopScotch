@@ -8,8 +8,8 @@ const client = yelp.client(process.env.YELP_SECRET);
 
 router.route("/searchDining").get((req, resp) => {
     client.search({
-        term: 'Four Barrel Coffee',
-        location: 'san francisco, ca',
+        term: req.headers.string,
+        location: req.headers.city,
       }).then(response => {
         console.log(response.jsonBody.businesses);
         resp.send(response.jsonBody.businesses)

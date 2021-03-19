@@ -1,23 +1,32 @@
 import React, { useEffect, useState} from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios'
-import { Button, Form, Card} from 'react-bootstrap';
-import  DisplayResults from '../Search/SearchDiningResults'
-import {Link} from 'react-router-dom'
+import { Button, Form, Card, ListGroup, ListGroupItem} from 'react-bootstrap';
 import '../Search/SearchDiningResults.css'
+import { FaYelp } from 'react-icons/fa';
+import Rating from './Rating'
+
+
 
 
 export default function SearchDining () {
     const {user, getAccessTokenSilently} = useAuth0();
     const searchResult = useState({items: []})
+    const [searchString, setSearchString] = useState("")
     
 
     const handleSearch = () => {
+        console.log(searchString)
+
+        var str = searchString.split(",")
+        console.log(str)
 
         getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
             axios.get('/api/search/searchDining', {
                 headers: {
                 Authorization: `Bearer ${res}`,
+                string: str[0],
+                city: str[1],
                 },
             }).then((res) => {
 
@@ -30,90 +39,71 @@ export default function SearchDining () {
     }
 
 
+    const handleSearchChange = (e) => {
+        e.preventDefault()
+        setSearchString(e.currentTarget.value)
+    }
 
 
-
-        // console.log(searchResult[0].items)
-        // var items = searchResult[0].items.map((item, index) => {
-            
-        //     <Card style={{ width: '18rem' }}>
-        //         <Card.Img variant="top" src={item.image_url} />
-        //         <Card.Body>
-        //             <Card.Title>Card Title</Card.Title>
-        //             <Card.Text>
-        //             Some quick example text to build on the card title and make up the bulk of
-
-        //             the card's content.
-        //             </Card.Text>
-        //             <Button variant="primary">Go somewhere</Button>
-        //         </Card.Body>
-        //     </Card>
-        // })
-
-        if (searchResult[0].items.length === 0) {
-            return  (
-            
+    if (searchResult[0].items.length === 0) {
+        return  (
+            <div className="search-bar">
                 <Form>
                     <Form.Group controlId="diningSearch">
                         <Form.Label>Search Dining Options</Form.Label>
-                        <Form.Control type="search" placeholder="Search Dining" />
+                        <Form.Control onChange={handleSearchChange}  type="search" placeholder="Enter keyword and location seperated by comma" />
                     </Form.Group>
                     <Button onClick={handleSearch}>
                             Search
                     </Button>
                 </Form>
-            )
-        }
-        else {
-            console.log("in items")
-            var items = searchResult[0].items.map((item, index) => {
-            
-                <Card style={{ width: '18rem' }}>
-                    <Card.Img variant="top" src={item.image_url} />
-                    <Card.Body>
-                        <Card.Title>Card Title</Card.Title>
-                        <Card.Text>
-                        Some quick example text to build on the card title and make up the bulk of
-    
-                        the card's content.
-                        </Card.Text>
-                        <Button variant="primary">Go somewhere</Button>
-                    </Card.Body>
-                </Card>
-            })
-            return (
-                // {console.log(searchResult[0].items)}
+            </div>
+        )
+    }
+    else {
+        console.log("in items")
+        return (
+            <div>
+                <div className="search-bar">
+                    <Form>
+                        <Form.Group controlId="diningSearch">
+                            <Form.Label>Search Dining Options</Form.Label>
+                            <Form.Control onChange={handleSearchChange}  type="search" placeholder="Enter keyword and location seperated by comma" />
+                        </Form.Group>
+                        <Button onClick={handleSearch}>
+                                Search
+                        </Button>
+                    </Form>
+                </div>
                 <div className='card-display'>
-                    {/* <Card style={{ width: '18rem' }}>
-                        <Card.Img variant="top" src={searchResult[0].items[0].image_url} />
-                        <Card.Body>
-                            <Card.Title>Card Title</Card.Title>
-                            <Card.Text>
-                            Some quick example text to build on the card title and make up the bulk of
-                            the card's content.
-                            </Card.Text>
-                            <Button variant="primary">Go somewhere</Button>
-                        </Card.Body>
-                    </Card> */}
-                    {/* {searchResult[0].items[0].name} */}
                     {searchResult[0].items.map((item, index) => 
-            
                         <Card className="custom_card" style={{ width: '18rem' }}>
-                            <Card.Img variant="top" src={item.image_url} />
+                            <Card.Img style={{width: '18rem', height: '280px'}} variant="top" src={item.image_url} />
                             <Card.Body>
                                 <Card.Title>{item.name}</Card.Title>
                                 <Card.Text>
-                                Some quick example text to build on the card title and make up the bulk of
-
-                                the card's content.
+                                    <Rating rating={item.rating}/>
+                                    <Card.Text className="text-muted">{item.review_count} reviews</Card.Text>
                                 </Card.Text>
-                                <Button variant="primary">Go somewhere</Button>
+                                <Card.Text>Price: {item.price}</Card.Text>
+                                <Card.Text>{item.location.address1}, {item.location.city}, {item.location.state}</Card.Text>
+                            </Card.Body>
+                            <Card.Body>
+                                <Card.Body>
+                                    <a href={item.url}>
+                                            <FaYelp size={50} style={{fill: 'red' }} />
+                                    </a>
+                                    <h1>Yelp</h1>
+                                    <p>Read more on Yelp</p>
+                                </Card.Body>
+                                <Button variant="primary">Select</Button> 
                             </Card.Body>
                         </Card>
                     )}
                 </div>
-            )
-        }
+            </div>
+        )
+    }
    
 
 

@@ -19,3 +19,8 @@
    flex-flow: wrap;
    margin-left: 1cm;
   }
+
+  .search-bar {
+    width: 20cm;
+    margin-left: 15cm;
+  }
