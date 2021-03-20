@@ -1,9 +1,10 @@
 import React, { useEffect, useState} from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios'
-import { Button, Form, Card, ListGroup, ListGroupItem} from 'react-bootstrap';
+import { Button, Form, Card, ListGroup, ListGroupItem, InputGroup, FormControl} from 'react-bootstrap';
 import '../Search/SearchDiningResults.css'
 import { FaYelp } from 'react-icons/fa';
+import { BsSearch } from 'react-icons/bs'
 import Rating from './Rating'
 
 
@@ -13,6 +14,8 @@ export default function SearchDining () {
     const {user, getAccessTokenSilently} = useAuth0();
     const searchResult = useState({items: []})
     const [searchString, setSearchString] = useState("")
+    const [dining, setDining] = useState("")
+    const [location, setLocation] = useState("")
     
 
     const handleSearch = () => {
@@ -25,8 +28,8 @@ export default function SearchDining () {
             axios.get('/api/search/searchDining', {
                 headers: {
                 Authorization: `Bearer ${res}`,
-                string: str[0],
-                city: str[1],
+                string: dining,
+                city: location,
                 },
             }).then((res) => {
 
@@ -39,24 +42,52 @@ export default function SearchDining () {
     }
 
 
-    const handleSearchChange = (e) => {
+    // const handleSearchChange = (e) => {
+    //     e.preventDefault()
+    //     setSearchString(e.currentTarget.value)
+    // }
+
+    const handleLocationChange = (e) => {
         e.preventDefault()
-        setSearchString(e.currentTarget.value)
+        setLocation(e.currentTarget.value)
+    }
+
+    const handleDiningChange = (e) => {
+        e.preventDefault()
+        setDining(e.currentTarget.value)
+    }
+
+
+    const handleSelect = (item_id) => {
+        getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+            axios.post('/api/search/selectDining', {
+                headers: {
+                Authorization: `Bearer ${res}`,
+                ited_ID: item_id
+                },
+            }).then((res) => {
+            }).catch((err) => {
+                console.log(err);
+            });
+        });
     }
 
 
     if (searchResult[0].items.length === 0) {
         return  (
             <div className="search-bar">
-                <Form>
-                    <Form.Group controlId="diningSearch">
-                        <Form.Label>Search Dining Options</Form.Label>
-                        <Form.Control onChange={handleSearchChange}  type="search" placeholder="Enter keyword and location seperated by comma" />
-                    </Form.Group>
-                    <Button onClick={handleSearch}>
-                            Search
-                    </Button>
-                </Form>
+                <InputGroup className="mb-3">
+                    <InputGroup.Prepend>
+                        <InputGroup.Text>Find</InputGroup.Text>
+                    </InputGroup.Prepend>
+                    <FormControl onChange={handleDiningChange} type="dining-str" placeholder="Breakfast, Coffee, Pizza..."/>
+                    <FormControl onChange={handleLocationChange} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
+                    <InputGroup.Append>
+                        <Button className='search-btn' onClick={handleSearch}>
+                                <BsSearch size={20} />
+                        </Button>
+                    </InputGroup.Append>
+                </InputGroup>
             </div>
         )
     }
@@ -65,20 +96,23 @@ export default function SearchDining () {
         return (
             <div>
                 <div className="search-bar">
-                    <Form>
-                        <Form.Group controlId="diningSearch">
-                            <Form.Label>Search Dining Options</Form.Label>
-                            <Form.Control onChange={handleSearchChange}  type="search" placeholder="Enter keyword and location seperated by comma" />
-                        </Form.Group>
-                        <Button onClick={handleSearch}>
-                                Search
-                        </Button>
-                    </Form>
+                    <InputGroup className="mb-3">
+                        <InputGroup.Prepend>
+                            <InputGroup.Text>Find</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl onChange={handleDiningChange} type="dining-str" placeholder="Breakfast, Coffee, Pizza..."/>
+                        <FormControl onChange={handleLocationChange} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
+                        <InputGroup.Append>
+                            <Button className='search-btn' onClick={handleSearch}>
+                                    <BsSearch size={20} />
+                            </Button>
+                        </InputGroup.Append>
+                    </InputGroup>
                 </div>
                 <div className='card-display'>
                     {searchResult[0].items.map((item, index) => 
                         <Card className="custom_card" style={{ width: '18rem' }}>
-                            <Card.Img style={{width: '18rem', height: '280px'}} variant="top" src={item.image_url} />
+                            <Card.Img style={{width: '17.9rem', height: '280px'}} variant="top" src={item.image_url} />
                             <Card.Body>
                                 <Card.Title>{item.name}</Card.Title>
                                 <Card.Text>
