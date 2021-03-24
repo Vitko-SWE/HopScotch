@@ -32,7 +32,7 @@ function App() {
           <ProtectedRoute path="/Account"  component={Profile} exact/>
           <ProtectedRoute path="/createtrip"  component={CreateTrip} exact/>
           <ProtectedRoute path="/edittrip/:tripid"  component={EditTrip} exact/>
-          <ProtectedRoute path="/attractionsearch/"  component={AttractionSearch} exact/>
+          <ProtectedRoute path="/attractionsearch/:tripid"  component={AttractionSearch} exact/>
         </Switch>
       </div>
     </Router>

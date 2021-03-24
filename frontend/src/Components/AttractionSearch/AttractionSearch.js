@@ -1,24 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, Card } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import "./Card.css"
 
-export default function AttractionSearch() {
+export default function AttractionSearch(props) {
   const { getAccessTokenSilently } = useAuth0();
   const [searchResults, setSearchResults] = useState({
     ta: [],
     poi: [],
   });
+  const [tripInfo, setTripInfo] = useState({});
+
+  useEffect(() => {
+    updateTripInfo();
+  }, []);
+
+  const updateTripInfo = () => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.get(`/api/trips/gettrip/${props.match.params.tripid}`, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        setTripInfo(res.data);
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
     const value = e.currentTarget;
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
       axios.post("/api/searches/attractionsearch/", {
-        latitude: value.searchLatitude.value,
-        longitude: value.searchLongitude.value,
+        location: tripInfo.Destination,
         query: value.searchQuery.value,
         filter: value.searchFilter.value,
       }, {
@@ -34,16 +52,49 @@ export default function AttractionSearch() {
     });
   };
 
+  const addTourToTrip = (result) => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.post("/api/searches/addtour/", {
+        tripid: props.match.params.tripid,
+        id: result.id,
+        geoCode: result.geoCode,
+        bookingLink: result.bookingLink,
+        price: result.price ? result.price.amount : "0",
+      }, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        console.log(res.data);
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
+  };
+
+  const addPOIToTrip = (result) => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.post("/api/searches/addpoi/", {
+        tripid: props.match.params.tripid,
+        id: result.id,
+        geoCode: result.geoCode,
+      }, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        console.log(res.data);
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
+  };
+
   return (
     <div>
       <h1>Attraction Search</h1>
       <Form onSubmit={handleSearch}>
-        <Form.Group controlId="searchLatitude">
-          <Form.Control required />
-        </Form.Group>
-        <Form.Group controlId="searchLongitude">
-          <Form.Control required />
-        </Form.Group>
+        <p>Searching in destination location '{tripInfo.Destination}'</p>
         <Form.Group controlId="searchQuery">
           <Form.Control required />
         </Form.Group>
@@ -66,6 +117,7 @@ export default function AttractionSearch() {
                 <Card.Body>
                   <Card.Title>{result.name}</Card.Title>
                   <Card.Text><a href={result.bookingLink}>Booking Link</a></Card.Text>
+                  <Button onClick={() => addTourToTrip(result)}>Add to '{tripInfo.Name}'</Button>
                 </Card.Body>
               </Card>
             ))}
@@ -81,6 +133,7 @@ export default function AttractionSearch() {
                 <Card.Body>
                   <Card.Title>{result.name}</Card.Title>
                   <Card.Text>Type: {result.category}</Card.Text>
+                  <Button onClick={() => addPOIToTrip(result)}>Add to '{tripInfo.Name}'</Button>
                 </Card.Body>
               </Card>
             ))}
