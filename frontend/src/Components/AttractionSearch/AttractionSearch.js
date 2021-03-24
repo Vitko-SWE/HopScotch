@@ -12,6 +12,7 @@ export default function AttractionSearch(props) {
     poi: [],
   });
   const [tripInfo, setTripInfo] = useState({});
+  const [searchedYet, setSY] = useState(false);
 
   useEffect(() => {
     updateTripInfo();
@@ -45,9 +46,18 @@ export default function AttractionSearch(props) {
         },
       }).then((res) => {
         console.log(res.data);
-        setSearchResults(res.data);
+        let tempd = res.data;
+        if (tempd.name === "Error" || Object.keys(tempd).length === 0) {
+          tempd = {
+            ta: [],
+            poi: [],
+          };
+        }
+        setSearchResults(tempd);
+        setSY(true);
       }).catch((err) => {
         console.log(err);
+        setSY(true);
       });
     });
   };
@@ -107,6 +117,11 @@ export default function AttractionSearch(props) {
         </Form.Group>
         <Button variant="primary" type="submit">Search</Button>
       </Form>
+      {(searchResults.ta.length === 0 && searchResults.poi.length === 0 && searchedYet === true) && (
+        <div>
+          <h3>There were no matching results.</h3>
+        </div>
+      )}
       {searchResults.ta.length !== 0 && (
         <div>
           <h3>Tours and Activities</h3>
