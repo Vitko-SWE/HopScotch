@@ -17,12 +17,18 @@
   .card-display {
    display: flex;
    flex-flow: wrap;
-   margin-left: 1cm;
+   /* margin-left: 1cm; */
+   max-width: 95%;
+   margin: 0 auto
   }
 
   .search-bar {
-    width: 20cm;
-    margin-left: 15cm;
+    /* display: flex;
+    flex-basis: auto; */
+    /* justify-content: center; */
+    max-width: 20cm;
+    
+    margin: 0 auto; 
   }
 
   .search-btn {

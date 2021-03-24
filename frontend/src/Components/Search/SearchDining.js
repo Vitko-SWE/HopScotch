@@ -6,6 +6,7 @@ import '../Search/SearchDiningResults.css'
 import { FaYelp } from 'react-icons/fa';
 import { BsSearch } from 'react-icons/bs'
 import Rating from './Rating'
+import SelectTripDropdown from './SelectTripDropdown'
 
 
 
@@ -13,17 +14,13 @@ import Rating from './Rating'
 export default function SearchDining () {
     const {user, getAccessTokenSilently} = useAuth0();
     const searchResult = useState({items: []})
-    const [searchString, setSearchString] = useState("")
+    const trips = useState({items: []});
     const [dining, setDining] = useState("")
     const [location, setLocation] = useState("")
     
 
     const handleSearch = () => {
-        console.log(searchString)
-
-        var str = searchString.split(",")
-        console.log(str)
-
+        getTrips();
         getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
             axios.get('/api/search/searchDining', {
                 headers: {
@@ -32,9 +29,8 @@ export default function SearchDining () {
                 city: location,
                 },
             }).then((res) => {
-
+                //update state of searchResult
                 searchResult[1]({items: res.data})
-                // console.log(searchResult[0])
             }).catch((err) => {
                 console.log(err);
             });
@@ -42,10 +38,27 @@ export default function SearchDining () {
     }
 
 
-    // const handleSearchChange = (e) => {
-    //     e.preventDefault()
-    //     setSearchString(e.currentTarget.value)
-    // }
+    const getTrips = async () => {
+        getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
+          const token = `Bearer ${res}`
+          const api = axios.create({
+            baseURL: '/api/homepage/myTrips',
+            headers: {
+              userid: user.sub,
+              Authorization: token
+            }
+          })
+    
+          try {
+            api.get('/').then(response => {
+                //update state trips array
+                trips[1]({items: response.data})
+            })
+          } catch (err) {
+            console.log(err)
+          }
+        })
+      }
 
     const handleLocationChange = (e) => {
         e.preventDefault()
@@ -57,20 +70,6 @@ export default function SearchDining () {
         setDining(e.currentTarget.value)
     }
 
-
-    const handleSelect = (item_id) => {
-        getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-            axios.post('/api/search/selectDining', {
-                headers: {
-                Authorization: `Bearer ${res}`,
-                ited_ID: item_id
-                },
-            }).then((res) => {
-            }).catch((err) => {
-                console.log(err);
-            });
-        });
-    }
 
 
     if (searchResult[0].items.length === 0) {
@@ -111,8 +110,8 @@ export default function SearchDining () {
                 </div>
                 <div className='card-display'>
                     {searchResult[0].items.map((item, index) => 
-                        <Card className="custom_card" style={{ width: '18rem' }}>
-                            <Card.Img style={{width: '17.9rem', height: '280px'}} variant="top" src={item.image_url} />
+                        <Card className="custom_card" style={{ width: '19%' }}>
+                            <Card.Img style={{width: '100%', height: '280px'}} variant="top" src={item.image_url} />
                             <Card.Body>
                                 <Card.Title>{item.name}</Card.Title>
                                 <Card.Text>
@@ -130,7 +129,7 @@ export default function SearchDining () {
                                     <h1>Yelp</h1>
                                     <p>Read more on Yelp</p>
                                 </Card.Body>
-                                <Button variant="primary">Select</Button> 
+                                <SelectTripDropdown trips={trips[0].items} diningOption={item}/>
                             </Card.Body>
                         </Card>
                     )}
