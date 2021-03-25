@@ -52,3 +52,7 @@ Password: Hopscotch123
     - Frontend: `npm start`
 
 4. Your web browser should give you a security since we are using a self-signed certificate for local testing purposes.
+
+### External API information login
+
+For anything amadeus related (This would be attractions/POI and flights). The main URL is https://developers.amadeus.com/ and the email/password is mhdavid1998@gmail.com and Hunter2!

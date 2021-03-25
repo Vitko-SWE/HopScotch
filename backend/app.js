@@ -4,6 +4,7 @@ const myTrips = require("./routes/homepage");
 const userService = require('./routes/users');
 const tripsService = require('./routes/trips');
 const searchService = require('./routes/search')
+const searchesService = require('./routes/searches');
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 const cors = require('cors');
@@ -42,6 +43,7 @@ app.use("/api/homepage", myTrips)
 app.use("/api/user", userService);
 app.use("/api/trips", tripsService);
 app.use("/api/search", searchService);
+app.use("/api/searches", searchService);
 
 if (process.env.NODE_ENV == "production") {
     const publicPath = path.join(__dirname, './frontend');

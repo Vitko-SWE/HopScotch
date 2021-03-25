@@ -317,7 +317,7 @@ export default function EditTrip(props) {
       });
 
     });
-    
+
   }
 
   return (
@@ -356,6 +356,11 @@ export default function EditTrip(props) {
                   (i !== 0 ? ", " : "") + viewer.Name
                 )))}
               </p>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Link to={`/attractionsearch/${props.match.params.tripid}`}>Search Attractions</Link>
             </Col>
           </Row>
         </Container>
