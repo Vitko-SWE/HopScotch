@@ -36,7 +36,7 @@ function App() {
           <ProtectedRoute path="/searchDining"  component={SearchDining} exact/>
           {/* <ProtectedRoute path="/DiningResults"  component={DiningResults} exact/> */}
           <ProtectedRoute path="/edittrip/:tripid"  component={EditTrip} exact/>
-          <ProtectedRoute path="/attractionsearch/:tripid"  component={AttractionSearch} exact/>
+          <ProtectedRoute path="/attractionsearch/"  component={AttractionSearch} exact/>
         </Switch>
       </div>
     </Router>
