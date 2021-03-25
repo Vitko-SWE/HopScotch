@@ -3,6 +3,7 @@ const db = require('../db');
 let router = express.Router()
 const axios = require('axios')
 const yelp = require('yelp-fusion');
+const { response } = require('express');
 require('dotenv').config()
 const client = yelp.client(process.env.YELP_SECRET);
 
@@ -15,6 +16,7 @@ router.route("/searchDining").get((req, resp) => {
         resp.send(response.jsonBody.businesses)
       }).catch(e => {
         console.log(e);
+        resp.send([])
       });
 })
 

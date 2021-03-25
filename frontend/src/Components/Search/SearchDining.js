@@ -31,8 +31,13 @@ export default function SearchDining () {
             }).then((res) => {
                 //update state of searchResult
                 searchResult[1]({items: res.data})
+                
+                if (res.data.length === 0) {
+                    alert("Oops, it looks like we couldn't find anything for this location");
+                }
             }).catch((err) => {
                 console.log(err);
+                alert("Oops, it looks like we couldn't find anything for this location");
             });
         });
     }
@@ -91,7 +96,6 @@ export default function SearchDining () {
         )
     }
     else {
-        console.log("in items")
         return (
             <div>
                 <div className="search-bar">

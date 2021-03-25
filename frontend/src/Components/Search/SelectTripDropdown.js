@@ -4,10 +4,7 @@ import axios from 'axios'
 import { Dropdown, DropdownButton } from 'react-bootstrap'
 export default function SelectTripDropdown(props) {
     const {user, getAccessTokenSilently} = useAuth0();
-    const [show, setShow] = useState(false);
     const trips = useState({items: []});
-
-    console.log("trips: " + props.trips)
     
     const handleSelect = (item) => {
         console.log(item.TripId)
