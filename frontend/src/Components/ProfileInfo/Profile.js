@@ -127,14 +127,14 @@ class AccountInformation extends Component {
     getUser = async () => {
         this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
           const token = `Bearer ${res}`
-    
+
           const api = axios.create({
             baseURL: `/api/user/getbyuserid/${this.state.user_object.user.sub}`,
             headers: {
               Authorization: token
             }
           })
-    
+
           try {
             api.get('/').then(response => {
                 if (response.data.length === 0) {
@@ -162,9 +162,9 @@ class AccountInformation extends Component {
               Authorization: token
             }
           })
-    
+
           try {
-            api.post(`/user/updateName`).then(response => {
+            api.post(`/`).then(response => {
               console.log(response)
             })
           } catch (err) {
@@ -185,9 +185,9 @@ class AccountInformation extends Component {
               Authorization: token
             }
           })
-    
+
           try {
-            api.post(`/user/updateAboutMe`).then(response => {
+            api.post(`/`).then(response => {
               console.log(response)
             })
           } catch (err) {
@@ -199,7 +199,7 @@ class AccountInformation extends Component {
     deleteUser () {
         var message = "Your account and all of your trips will be deleted! Are you sure you want to delete your account? "
         if (window.confirm(message)) {
-            console.log("confirmed") 
+            console.log("confirmed")
             this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
                 const token = `Bearer ${res}`
 
@@ -234,7 +234,7 @@ class AccountInformation extends Component {
               Authorization: token
             }
           })
-    
+
           try {
             api.post(`/api/user/changePassword`).then(response => {
               console.log(response)
@@ -277,9 +277,9 @@ class AccountInformation extends Component {
                             <Button className="change-pass-btn" variant="primary" onClick={this.handleShow2.bind()}>
                                 Change Password
                             </Button>
-                            
+
                             <Button className="delete-btn" variant="danger" onClick={this.deleteUser.bind()} >Delete Account</Button>
-    
+
 
 
                             {/* Modal 1 for editing account info */}
