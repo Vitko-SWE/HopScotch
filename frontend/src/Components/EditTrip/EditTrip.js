@@ -358,11 +358,6 @@ export default function EditTrip(props) {
               </p>
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <Link to={`/attractionsearch/${props.match.params.tripid}`}>Search Attractions</Link>
-            </Col>
-          </Row>
         </Container>
       </div>
       {userRole !== "Viewer" && (
