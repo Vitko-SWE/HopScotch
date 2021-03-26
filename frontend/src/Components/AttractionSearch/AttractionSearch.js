@@ -20,7 +20,7 @@ export default function AttractionSearch() {
 
   const updateTrips = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get(`/api/homepage/myTrips`, {
+      axios.get(`/api/trips/myeditabletrips`, {
         headers: {
           userid: user.sub,
           Authorization: `Bearer ${res}`,
@@ -70,7 +70,7 @@ export default function AttractionSearch() {
         id: result.id,
         geoCode: result.geoCode,
         bookingLink: result.bookingLink,
-        price: result.price ? result.price.amount : "0",
+        price: result.price.amount,
       }, {
         headers: {
           Authorization: `Bearer ${res}`,
@@ -136,11 +136,16 @@ export default function AttractionSearch() {
                 <Card.Img variant="top" src={result.pictures[0]} />
                 <Card.Body>
                   <Card.Title>{result.name}</Card.Title>
+                  <Card.Text><strong>Price:</strong> {result.price.amount + " " + result.price.currencyCode}</Card.Text>
                   <Card.Text><a href={result.bookingLink}>Booking Link</a></Card.Text>
                   <DropdownButton id="dropdown-item-button" title="Add to trip">
-                    {trips.map((item) => (
-                      <Dropdown.Item onClick={() => addTourToTrip(item, result)} as="button">{item.Name}</Dropdown.Item>
-                    ))}
+                    {trips.length === 0 && (
+                      <Dropdown.Header>You do not have any editable trips.</Dropdown.Header>
+                    )}
+                    {trips.length !== 0 && trips.map((item) => (
+                        <Dropdown.Item onClick={() => addTourToTrip(item, result)} as="button">{item.Name}</Dropdown.Item>
+                      ))
+                    }
                   </DropdownButton>
                 </Card.Body>
               </Card>
@@ -156,11 +161,15 @@ export default function AttractionSearch() {
               <Card className="custom_card">
                 <Card.Body>
                   <Card.Title>{result.name}</Card.Title>
-                  <Card.Text>Type: {result.category}</Card.Text>
+                  <Card.Text><strong>Type:</strong> {result.category}</Card.Text>
                   <DropdownButton id="dropdown-item-button" title="Add to trip">
-                    {trips.map((item) => (
-                      <Dropdown.Item onClick={() => addPOIToTrip(item, result)} as="button">{item.Name}</Dropdown.Item>
-                    ))}
+                    {trips.length === 0 && (
+                      <Dropdown.Header>You do not have any editable trips.</Dropdown.Header>
+                    )}
+                    {trips.length !== 0 && trips.map((item) => (
+                        <Dropdown.Item onClick={() => addPOIToTrip(item, result)} as="button">{item.Name}</Dropdown.Item>
+                      ))
+                    }
                   </DropdownButton>
                 </Card.Body>
               </Card>
