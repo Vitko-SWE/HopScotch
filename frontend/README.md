@@ -68,3 +68,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `yarn build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Special Thanks
+
+- Special thanks to GitHub user BesrourMS for putting together a JSON file of all the 2 letter IATA airline codes! Check it out here: [https://github.com/BesrourMS/Airlines](https://github.com/BesrourMS/Airlines)

@@ -27,7 +27,8 @@ router.route("/flights").get(async (req, res) => {
             destinationLocationCode: destCode,
             departureDate: deptDate,
             returnDate: retDate,
-            adults: numPass
+            adults: numPass,
+            currencyCode: "USD"
         }).catch(err => {
             console.log(err);
             res.status(500).send(err);

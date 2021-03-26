@@ -42,6 +42,7 @@ app.use("/api/homepage", myTrips)
 app.use("/api/user", userService);
 app.use("/api/trips", tripsService);
 app.use("/api/search", search)
+app.use("/static/airlinelogos", express.static("./airlineLogos"))
 
 if (process.env.NODE_ENV == "production") {
     const publicPath = path.join(__dirname, './frontend');

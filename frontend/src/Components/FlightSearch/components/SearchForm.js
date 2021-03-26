@@ -2,9 +2,11 @@ import axios from 'axios';
 import React from 'react'
 import { Form, Col, Button } from 'react-bootstrap'
 import { useAuth0 } from "@auth0/auth0-react";
+import { useHistory } from 'react-router';
 
 export default function SearchForm(props) {
     const { user, getAccessTokenSilently } = useAuth0();
+    const history = useHistory();
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -26,6 +28,10 @@ export default function SearchForm(props) {
             }).then(res => {
                 console.log(res);
                 props.loadingCallback(false);
+                history.push({
+                    pathname: '/search/flights/results',
+                    state: {data: res.data}
+                });
             });
         });
     }

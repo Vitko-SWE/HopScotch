@@ -14,6 +14,7 @@ import EditTrip from './Components/EditTrip/EditTrip';
 import { createBrowserHistory } from 'history';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import FlightSearch from './Components/FlightSearch/FlightSearch';
+import FlightSearchResults from "./Components/FlightSearchResults/FlightSearchResults.js";
 
 export const history = createBrowserHistory();
 
@@ -33,6 +34,7 @@ function App() {
           <ProtectedRoute path="/createtrip"  component={CreateTrip} exact/>
           <ProtectedRoute path="/edittrip/:tripid"  component={EditTrip} exact/>
           <ProtectedRoute path="/search/flights" component={FlightSearch} exact />
+          <ProtectedRoute path="/search/flights/results" component={FlightSearchResults} exact />
         </Switch>
       </div>
     </Router>
