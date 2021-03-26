@@ -1,6 +1,13 @@
 const express = require('express')
 // const db = require('../db');
 let router = express.Router()
+// const axios = require('axios')
+
+var Amadeus = require('amadeus');
+var amadeus = new Amadeus({
+    clientId: process.env.AMADEUS_CLIENT_ID,
+    clientSecret: process.env.AMADEUS_CLIENT_SECRET
+});
 
 router.route("/flights").get(async (req, res) => {
     const originCode = req.query.originCode;
@@ -15,8 +22,22 @@ router.route("/flights").get(async (req, res) => {
         console.log("Invalid parameters.");
         res.status(400).send("Invalid parameters.");
     } else {
-        //TODO: Call API
-        
+        const flightResponse = await amadeus.shopping.flightOffersSearch.get({
+            originLocationCode: originCode,
+            destinationLocationCode: destCode,
+            departureDate: deptDate,
+            returnDate: retDate,
+            adults: numPass
+        }).catch(err => {
+            console.log(err);
+            res.status(500).send(err);
+        });
+
+        try {
+            res.status(200).json(JSON.parse(flightResponse.body));
+        } catch {
+            res.status(500).send("JSON err");
+        }
     }
 })
 

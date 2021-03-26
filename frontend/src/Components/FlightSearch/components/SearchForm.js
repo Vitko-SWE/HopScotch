@@ -1,15 +1,38 @@
+import axios from 'axios';
 import React from 'react'
 import { Form, Col, Button } from 'react-bootstrap'
+import { useAuth0 } from "@auth0/auth0-react";
 
-export default function SearchForm() {
+export default function SearchForm(props) {
+    const { user, getAccessTokenSilently } = useAuth0();
+
     const handleSubmit = e => {
         e.preventDefault();
+        props.loadingCallback(true)
         const results = e.currentTarget;
+
+        getAccessTokenSilently({audience: "https://hopscotch/api"}).then((res) => {
+            axios.get("/api/search/flights", {
+                params: {
+                    originCode: results.fsOriginGroup.value,
+                    destCode: results.fsDestGroup.value,
+                    deptDate: results.fsDepartDateGroup.value,
+                    retDate: results.fsReturnDateGroup.value,
+                    numPass: results.fsNumPassGroup.value
+                },
+                headers: {
+                    Authorization: `Bearer ${res}`
+                }
+            }).then(res => {
+                console.log(res);
+                props.loadingCallback(false);
+            });
+        });
     }
     
     return (
         <div>
-            <Form>
+            <Form onSubmit={handleSubmit}>
                 <Form.Row>
                     <Form.Group as={Col} controlId="fsOriginGroup">
                         <Form.Control placeholder="Where are we starting?" />
@@ -37,7 +60,7 @@ export default function SearchForm() {
                     </Form.Group>
                 </Form.Row>
 
-                <Button>Submit</Button>
+                <Button type="submit">Search</Button>
             </Form>
         </div>
     )

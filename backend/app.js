@@ -8,7 +8,7 @@ const jwks = require('jwks-rsa');
 const cors = require('cors');
 // const { createProxyMiddleware } = require('http-proxy-middleware');
 const path = require('path');
-const search = require("./routes/homepage");
+const search = require("./routes/search");
 
 require('dotenv').config()
 
