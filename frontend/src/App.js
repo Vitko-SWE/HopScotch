@@ -12,6 +12,9 @@ import Homepage from './Components/Homepage/Homepage.js';
 import Profile from './Components/ProfileInfo/Profile';
 import CreateTrip from './Components/CreateTrip/CreateTrip';
 import EditTrip from './Components/EditTrip/EditTrip';
+import SearchDining from './Components/Search/SearchDining'
+import DiningResults from './Components/Search/SearchDiningResults'
+import AttractionSearch from './Components/AttractionSearch/AttractionSearch';
 import { createBrowserHistory } from 'history';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 
@@ -28,14 +31,15 @@ function App() {
         <MenuBar/>
         <Switch>
           <Route path="/" component={Landing} exact />
-          <Route path="/direction" render={() => {window.location.href="Directions.html"}} />
+          <Route path="/directions" render={() => {window.location.href="Directions.html"}} />
           <Route path="/map" render={() => {window.location.href="Map.html"}} />
           <ProtectedRoute path="/homepage" component={Homepage} exact/>
           <ProtectedRoute path="/Account"  component={Profile} exact/>
           <ProtectedRoute path="/createtrip"  component={CreateTrip} exact/>
+          <ProtectedRoute path="/searchDining"  component={SearchDining} exact/>
+          {/* <ProtectedRoute path="/DiningResults"  component={DiningResults} exact/> */}
           <ProtectedRoute path="/edittrip/:tripid"  component={EditTrip} exact/>
-          <Route component={NoMatch} />
-          <Route onEnter={() => window.location.reload()} />
+          <ProtectedRoute path="/attractionsearch/"  component={AttractionSearch} exact/>
         </Switch>
       </div>
     </Router>
