@@ -26,6 +26,9 @@ const Menubar = (props) => {
             <Nav.Link>
               <Link className="mytrips-link" to="/homepage" >My Trips</Link>
             </Nav.Link>
+            <Nav.Link>
+              <Link className="mytrips-link" to="/map" >Map</Link>
+            </Nav.Link>
             <NavDropdown  title="Search Options" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Search Flights</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">Search Hotels</NavDropdown.Item>
