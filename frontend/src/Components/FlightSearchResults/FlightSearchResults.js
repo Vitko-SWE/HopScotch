@@ -11,7 +11,9 @@ export default function FlightSearchResults(props) {
     const [trips, setTrips] = useState([]);
 
     useEffect(() => {
-        getUserTrips();
+        if(trips == []) {
+            getUserTrips();
+        }
     });
 
     const getUserTrips = () => {

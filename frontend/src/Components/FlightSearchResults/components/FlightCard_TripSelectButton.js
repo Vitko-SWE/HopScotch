@@ -3,7 +3,7 @@ import { Dropdown, DropdownButton } from 'react-bootstrap';
 
 export default function FlightCard_TripSelectButton(props) {
     const handleClick = item => {
-        e.preventDefaults();
+        item.preventDefaults();
 
         const newFeature = {
             FeatureId: btoa(JSON.stringify(props.trip))
