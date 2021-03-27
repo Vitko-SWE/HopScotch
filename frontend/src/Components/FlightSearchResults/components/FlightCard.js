@@ -44,7 +44,7 @@ export default function FlightCard(props) {
                     </Col>
                     <Col xs={3} className="border-left">
                         <h3>${props.price.total}</h3>
-                        <FlightCard_TripSelectButton />
+                        <FlightCard_TripSelectButton trips={props.trips} flight={props} trip={props.data}/>
                     </Col>
                 </Row>
             </Container>

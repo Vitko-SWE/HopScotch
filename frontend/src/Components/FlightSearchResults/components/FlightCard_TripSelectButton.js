@@ -1,17 +1,21 @@
 import React from 'react'
+import { Dropdown, DropdownButton } from 'react-bootstrap';
 
 export default function FlightCard_TripSelectButton(props) {
-    const handleClick = e => {
+    const handleClick = item => {
         e.preventDefaults();
 
         const newFeature = {
-            FeatureId: JSON.stringify()
+            FeatureId: btoa(JSON.stringify(props.trip))
         }
     }
 
     return (
-        <div>
-            <Button onClick={handleClick}>I'll take it!</Button>
-        </div>
+        <DropdownButton title="Select">
+            <Dropdown.Header>Add this flight to a trip:</Dropdown.Header>
+            {props.trips.map((item) => {
+                <Dropdown.Item onClick={() => handleClick(item)} as="button">{item.Name}</Dropdown.Item>
+            })}
+        </DropdownButton>
     )
 }

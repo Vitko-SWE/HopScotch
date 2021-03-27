@@ -37,6 +37,7 @@ export default function FlightSearchResults(props) {
                         price={item.price} 
                         airlines={item.validatingAirlineCodes}
                         trips={trips}
+                        data={item}
                     />
                 )
             })}

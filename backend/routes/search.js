@@ -42,26 +42,26 @@ router.route("/flights").get(async (req, res) => {
     }
 });
 
-router.route("/selectFlight").get(async (req, res) => {
-    const FeatureId = req.body.FeatureId;
-    const FeatureType = req.body.FeatureType;
-    const TripId = req.body.TripId;
+// router.route("/selectFlight").get(async (req, res) => {
+//     const FeatureId = req.body.FeatureId;
+//     const FeatureType = req.body.FeatureType;
+//     const TripId = req.body.TripId;
 
-    if(FeatureId == undefined || FeatureType == undefined || TripId == undefined) {
-        console.log("Invalid parameters.")
-        res.status(400).send("Invalid parameters.")
-        return;
-    }
+//     if(FeatureId == undefined || FeatureType == undefined || TripId == undefined) {
+//         console.log("Invalid parameters.")
+//         res.status(400).send("Invalid parameters.")
+//         return;
+//     }
 
-    const query_string = `INSERT INTO TripFeatures VALUES ("${FeatureId}", "${FeatureType}", 0, "", 0, 0, null, ${TripId})`;
-    db.query(query_string, (err, data) => {
-        if(err) {
-            console.log(err);
-            res.status(500).send(err);
-        } else {
-            res.status(200).send(data);
-        }
-    });
-});
+//     const query_string = `INSERT INTO TripFeatures VALUES ("${FeatureId}", "${FeatureType}", 0, "", 0, 0, null, ${TripId})`;
+//     db.query(query_string, (err, data) => {
+//         if(err) {
+//             console.log(err);
+//             res.status(500).send(err);
+//         } else {
+//             res.status(200).send(data);
+//         }
+//     });
+// });
 
 module.exports = router;
