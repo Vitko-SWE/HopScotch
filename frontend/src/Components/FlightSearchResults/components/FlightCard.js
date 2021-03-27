@@ -2,15 +2,12 @@ import React from 'react'
 import { useState } from 'react'
 import { Row, Col, Container, Button, Collapse, Card, Image } from 'react-bootstrap'
 import FlightCard_SegmentDetails from './FlightCard_SegmentDetails';
+import FlightCard_TripSelectButton from './FlightCard_TripSelectButton';
 const airlines = require('../airlines.json')
 
 export default function FlightCard(props) {
     const [deptOpen, setDeptOpen] = useState(false);
     const [retOpen, setRetOpen] = useState(false);
-
-    const handleClick = e => {
-        e.preventDefaults();
-    }
 
     return (
         <div>
@@ -47,7 +44,7 @@ export default function FlightCard(props) {
                     </Col>
                     <Col xs={3} className="border-left">
                         <h3>${props.price.total}</h3>
-                        <Button onClick={handleClick}>I'll take it!</Button>
+                        <FlightCard_TripSelectButton />
                     </Col>
                 </Row>
             </Container>
