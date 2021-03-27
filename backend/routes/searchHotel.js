@@ -1,3 +1,4 @@
+const axios  = require('axios');
 const express = require('express')
 const db = require('../db');
 let router = express.Router()
@@ -8,11 +9,21 @@ router.route("/search").get((req, res) => {
     console.log(req.headers.hotel);
     console.log(req.headers.location);
 
-    
-    //Calling google places to get the hotels from the coordiantes given
+    axios.get(`https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${req.headers.location}&types=geocode&key=AIzaSyDhf9OqY8Z3uNub0hgRYttINkf1gXOGZH4`)
+    .then((res2) => {
+        console.log(res2.data.predictions[0].place_id);
+        axios.get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${res2.data.predictions[0].place_id}&key=AIzaSyDhf9OqY8Z3uNub0hgRYttINkf1gXOGZH4`)
+        .then((res3) => {
+            //console.log(res3.data.result.geometry.location.lat);
+            //console.log(res3.data.result.geometry.location.lng);
 
-    //Returning the list of hotels
-    
+            axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${res3.data.result.geometry.location.lat},${res3.data.result.geometry.location.lng}&name=${req.headers.hotel}&radius=8000&type=hotel&key=AIzaSyDhf9OqY8Z3uNub0hgRYttINkf1gXOGZH4`)
+            .then((res4) =>{
+                //console.log(res4.data.results);
+                res.send(res4.data.results);
+            });
+        });
+    });
 });
 
 module.exports = router
