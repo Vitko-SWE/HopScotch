@@ -30,7 +30,7 @@ export default function SearchHotel() {
                 location: hotelLocation,
                 },
             }).then((res2) => {
-                console.log(res2);
+                hotelSearchResult[1]({items: res2.data})
             }).catch((err) => {
                 console.log(err);
             });
@@ -45,7 +45,7 @@ export default function SearchHotel() {
                 <InputGroup.Prepend>
                     <InputGroup.Text>Find Hotels</InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl onChange={handleHotelChange} type="hotel-str" placeholder="Hotel name"/>
+                <FormControl onChange={handleHotelChange} type="hotel-str" placeholder="Hotel name (optional)"/>
                 <FormControl onChange={handleLocationChange} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
                 <InputGroup.Append>
                     <Button className='search-btn' onClick={handleSearch}>
