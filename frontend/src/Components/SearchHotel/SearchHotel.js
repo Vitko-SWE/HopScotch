@@ -11,7 +11,6 @@ export default function SearchHotel() {
     const [hotelSearchResult, setHotelSearchResult] = useState([]);
     const [hotel, setHotel] = useState("");
     const [hotelLocation, setHotelLocation] = useState("");
-    let isPopulated = false;
 
     const handleLocationChange = (e) => {
         e.preventDefault()
@@ -31,10 +30,9 @@ export default function SearchHotel() {
                 hotel: hotel,
                 location: hotelLocation,
                 },
-            }).then((res) => {
-                setHotelSearchResult(res.data);
-                console.log(hotelSearchResult);
-                isPopulated = true;
+            }).then(async (res) => {
+                await setHotelSearchResult(res.data);
+                console.log(hotelSearchResult)
             }).catch((err) => {
                 console.log(err);
             });
@@ -56,6 +54,13 @@ export default function SearchHotel() {
                     </InputGroup.Append>
                 </InputGroup>
             </div>
+            {hotelSearchResult.length > 0 &&
+            <div>
+                {hotelSearchResult.map((item, index) => 
+                    <h1>{item.name}</h1>
+                )} 
+            </div>
+            }
         </div>
     );
 }
