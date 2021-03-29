@@ -1,0 +1,9 @@
+.card-columns {
+    padding: 1rem;
+    margin: 2rem;
+}
+
+.hotel-card {
+    padding: 2rem;
+    border:5px;
+}

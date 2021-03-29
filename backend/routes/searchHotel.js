@@ -17,10 +17,22 @@ router.route("/search").get((req, res) => {
             //console.log(res3.data.result.geometry.location.lat);
             //console.log(res3.data.result.geometry.location.lng);
 
-            axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${res3.data.result.geometry.location.lat},${res3.data.result.geometry.location.lng}&name=${req.headers.hotel}&radius=8000&type=hotel&key=${process.env.GOOGLE_PLACE_KEY}`)
+            axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${res3.data.result.geometry.location.lat},${res3.data.result.geometry.location.lng}&name=${req.headers.hotel}&radius=8000&type=lodging&fields=formatted_address,photos,name,rating,geometry,price_level&key=${process.env.GOOGLE_PLACE_KEY}`)
             .then((res4) =>{
-                //console.log(res4.data.results);
-                res.send(res4.data.results);
+                const sendBack = [];
+                const sendBackPromises = [];
+                for(i = 0; i < res4.data.results.length; i++) {
+                    sendBackPromises.push(
+                        axios.get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${res4.data.results[i].place_id}&key=AIzaSyDhf9OqY8Z3uNub0hgRYttINkf1gXOGZH4`)
+                        .then((res5) => {
+                            //console.log(sendBack);
+                            sendBack.push(res5.data.result);
+                        })
+                    );
+                }
+                Promise.allSettled(sendBackPromises).then(() => 
+                    res.send(sendBack)
+                );
             });
         });
     });

@@ -1,15 +1,17 @@
-import React, { useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
-import { FormControl, InputGroup, Button } from 'react-bootstrap';
+import { FormControl, InputGroup, Button, Card, CardColumns } from 'react-bootstrap';
 import { BsSearch } from 'react-icons/bs'
 import axios from 'axios'
 
+import '../SearchHotel/SearchHotel.css'
 
 export default function SearchHotel() {
     const {user, getAccessTokenSilently} = useAuth0();
-    const hotelSearchResult = useState({items: []});
+    const [hotelSearchResult, setHotelSearchResult] = useState([]);
     const [hotel, setHotel] = useState("");
     const [hotelLocation, setHotelLocation] = useState("");
+    let isPopulated = false;
 
     const handleLocationChange = (e) => {
         e.preventDefault()
@@ -29,31 +31,31 @@ export default function SearchHotel() {
                 hotel: hotel,
                 location: hotelLocation,
                 },
-            }).then((res2) => {
-                hotelSearchResult[1]({items: res2.data})
+            }).then((res) => {
+                setHotelSearchResult(res.data);
+                console.log(hotelSearchResult);
+                isPopulated = true;
             }).catch((err) => {
                 console.log(err);
             });
         });
-        
     }
-
-
-    return  (
-        <div className="search-bar">
-            <InputGroup className="mb-3">
-                <InputGroup.Prepend>
-                    <InputGroup.Text>Find Hotels</InputGroup.Text>
-                </InputGroup.Prepend>
-                <FormControl onChange={handleHotelChange} type="hotel-str" placeholder="Hotel name (optional)"/>
-                <FormControl onChange={handleLocationChange} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
-                <InputGroup.Append>
-                    <Button className='search-btn' onClick={handleSearch}>
-                            <BsSearch size={20} />
-                    </Button>
-                </InputGroup.Append>
-            </InputGroup>
+    return (
+        <div>
+            <div className="search-bar">
+                <InputGroup className="mb-3">
+                    <InputGroup.Prepend>
+                        <InputGroup.Text>Find Hotels</InputGroup.Text>
+                    </InputGroup.Prepend>
+                    <FormControl onChange={handleHotelChange} type="hotel-str" placeholder="Hotel name (optional)"/>
+                    <FormControl onChange={handleLocationChange} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
+                    <InputGroup.Append>
+                        <Button className='search-btn' onClick={handleSearch}>
+                                <BsSearch size={20} />
+                        </Button>
+                    </InputGroup.Append>
+                </InputGroup>
+            </div>
         </div>
-    )
-
+    );
 }
