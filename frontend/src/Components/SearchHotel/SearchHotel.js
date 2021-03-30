@@ -3,12 +3,14 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { FormControl, InputGroup, Button, Card, CardColumns } from 'react-bootstrap';
 import { BsSearch } from 'react-icons/bs'
 import axios from 'axios'
+import SelectHotelTripDropdown from './SelectHotelTripDropdown'
 
 import '../SearchHotel/SearchHotel.css'
 
 export default function SearchHotel() {
     const {user, getAccessTokenSilently} = useAuth0();
     const [hotelSearchResult, setHotelSearchResult] = useState([]);
+    const [trips, setTrips] = useState([]);
     const [hotel, setHotel] = useState("");
     const [hotelLocation, setHotelLocation] = useState("");
 
@@ -23,6 +25,7 @@ export default function SearchHotel() {
     }
 
     const handleSearch = () => {
+        getTrips();
         getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
             axios.get('/api/hotel/search', {
                 headers: {
@@ -38,6 +41,28 @@ export default function SearchHotel() {
             });
         });
     }
+
+    const getTrips = async () => {
+        getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
+          const token = `Bearer ${res}`
+          const api = axios.create({
+            baseURL: '/api/homepage/myTrips',
+            headers: {
+              userid: user.sub,
+              Authorization: token
+            }
+          })
+    
+          try {
+            api.get('/').then(response => {
+                //update state trips array
+                setTrips(response.data);
+            })
+          } catch (err) {
+            console.log(err)
+          }
+        })
+      }
     return (
         <div>
             <div className="search-bar">
@@ -67,6 +92,8 @@ export default function SearchHotel() {
                         <a href={item.url} className="btn btn-primary">Visit on google maps</a>
                         <h1></h1>
                         <a href={item.website} className="btn btn-primary">Visit hotel's website</a>
+                        <h1></h1>
+                        <SelectHotelTripDropdown trips={trips} hotelOption={item}/>
                     </Card.Body>
                 </Card>
                 )} 

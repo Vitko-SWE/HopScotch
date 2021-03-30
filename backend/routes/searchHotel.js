@@ -38,4 +38,22 @@ router.route("/search").get((req, res) => {
     });
 });
 
+router.route("/selectHotel").post((req, res) => {
+    console.log(req.body);
+    
+    var query_string = `INSERT INTO TripFeatures VALUES ("${req.body.FeatureId}", "${req.body.FeatureType}", 0, "${req.body.Address}", 0, 0, "${req.body.BookingUrl}", ${req.body.TripId}, "${req.body.FeatureName}", null)`;
+
+    db.query(query_string, (err, data) => {
+        if (err) {
+            console.log(err)
+            return err;
+        }
+        console.log(data)
+        res.send(data);
+    })
+    
+
+
+})
+
 module.exports = router
