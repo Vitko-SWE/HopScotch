@@ -1,31 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { Form, Button, Card } from "react-bootstrap";
+import { Form, Button, Card, Dropdown, DropdownButton } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import "./Card.css"
 
-export default function AttractionSearch(props) {
-  const { getAccessTokenSilently } = useAuth0();
+export default function AttractionSearch() {
+  const { user, getAccessTokenSilently } = useAuth0();
   const [searchResults, setSearchResults] = useState({
     ta: [],
     poi: [],
   });
-  const [tripInfo, setTripInfo] = useState({});
+  const [trips, setTrips] = useState([]);
   const [searchedYet, setSY] = useState(false);
 
   useEffect(() => {
-    updateTripInfo();
+    updateTrips();
   }, []);
 
-  const updateTripInfo = () => {
+  const updateTrips = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get(`/api/trips/gettrip/${props.match.params.tripid}`, {
+      axios.get(`/api/trips/myeditabletrips`, {
         headers: {
+          userid: user.sub,
           Authorization: `Bearer ${res}`,
         },
       }).then((res) => {
-        setTripInfo(res.data);
+        setTrips(res.data);
       }).catch((err) => {
         console.log(err);
       });
@@ -36,8 +37,8 @@ export default function AttractionSearch(props) {
     e.preventDefault();
     const value = e.currentTarget;
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.post("/api/searches/attractionsearch/", {
-        location: tripInfo.Destination,
+      axios.post("/api/search/attractionsearch/", {
+        location: value.searchLocation.value,
         query: value.searchQuery.value,
         filter: value.searchFilter.value,
       }, {
@@ -62,14 +63,16 @@ export default function AttractionSearch(props) {
     });
   };
 
-  const addTourToTrip = (result) => {
+  const addTourToTrip = (item, result) => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.post("/api/searches/addtour/", {
-        tripid: props.match.params.tripid,
+      axios.post("/api/search/addtour/", {
+        tripid: item.TripId,
         id: result.id,
         geoCode: result.geoCode,
         bookingLink: result.bookingLink,
-        price: result.price ? result.price.amount : "0",
+        price: result.price.amount,
+        picURL: result.pictures[0],
+        name: result.name
       }, {
         headers: {
           Authorization: `Bearer ${res}`,
@@ -82,10 +85,10 @@ export default function AttractionSearch(props) {
     });
   };
 
-  const addPOIToTrip = (result) => {
+  const addPOIToTrip = (item, result) => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.post("/api/searches/addpoi/", {
-        tripid: props.match.params.tripid,
+      axios.post("/api/search/addpoi/", {
+        tripid: item.TripId,
         id: result.id,
         geoCode: result.geoCode,
       }, {
@@ -104,8 +107,12 @@ export default function AttractionSearch(props) {
     <div>
       <h1>Attraction Search</h1>
       <Form onSubmit={handleSearch}>
-        <p>Searching in destination location '{tripInfo.Destination}'</p>
         <Form.Group controlId="searchQuery">
+          <Form.Label>Query</Form.Label><br />
+          <Form.Control required />
+        </Form.Group>
+        <Form.Group controlId="searchLocation">
+          <Form.Label>Location</Form.Label><br />
           <Form.Control required />
         </Form.Group>
         <Form.Group controlId="searchFilter">
@@ -131,8 +138,17 @@ export default function AttractionSearch(props) {
                 <Card.Img variant="top" src={result.pictures[0]} />
                 <Card.Body>
                   <Card.Title>{result.name}</Card.Title>
+                  <Card.Text><strong>Price:</strong> {result.price.amount + " " + result.price.currencyCode}</Card.Text>
                   <Card.Text><a href={result.bookingLink}>Booking Link</a></Card.Text>
-                  <Button onClick={() => addTourToTrip(result)}>Add to '{tripInfo.Name}'</Button>
+                  <DropdownButton id="dropdown-item-button" title="Add to trip">
+                    {trips.length === 0 && (
+                      <Dropdown.Header>You do not have any editable trips.</Dropdown.Header>
+                    )}
+                    {trips.length !== 0 && trips.map((item) => (
+                        <Dropdown.Item onClick={() => addTourToTrip(item, result)} as="button">{item.Name}</Dropdown.Item>
+                      ))
+                    }
+                  </DropdownButton>
                 </Card.Body>
               </Card>
             ))}
@@ -147,8 +163,16 @@ export default function AttractionSearch(props) {
               <Card className="custom_card">
                 <Card.Body>
                   <Card.Title>{result.name}</Card.Title>
-                  <Card.Text>Type: {result.category}</Card.Text>
-                  <Button onClick={() => addPOIToTrip(result)}>Add to '{tripInfo.Name}'</Button>
+                  <Card.Text><strong>Type:</strong> {result.category}</Card.Text>
+                  <DropdownButton id="dropdown-item-button" title="Add to trip">
+                    {trips.length === 0 && (
+                      <Dropdown.Header>You do not have any editable trips.</Dropdown.Header>
+                    )}
+                    {trips.length !== 0 && trips.map((item) => (
+                        <Dropdown.Item onClick={() => addPOIToTrip(item, result)} as="button">{item.Name}</Dropdown.Item>
+                      ))
+                    }
+                  </DropdownButton>
                 </Card.Body>
               </Card>
             ))}

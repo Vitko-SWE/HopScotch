@@ -17,6 +17,6 @@ router.route("/myTrips")
             console.log(data);
             res.send(data)
           });
-    })
+    });
 
 module.exports = router;
