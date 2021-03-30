@@ -9,6 +9,8 @@ export default function FlightCard(props) {
     const [deptOpen, setDeptOpen] = useState(false);
     const [retOpen, setRetOpen] = useState(false);
 
+    // console.log(props.trips)
+
     return (
         <div>
             <Container fluid className="border p-3 rounded">
