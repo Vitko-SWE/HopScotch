@@ -55,9 +55,20 @@ export default function SearchHotel() {
                 </InputGroup>
             </div>
             {hotelSearchResult.length > 0 &&
-            <div>
+            <div className='card-display'>
                 {hotelSearchResult.map((item, index) => 
-                    <h1>{item.name}</h1>
+                <Card className="custom_card" style={{ width: '19%' }}>
+                    <Card.Body>
+                        <Card.Title>{item.name}</Card.Title>
+                        <Card.Text>
+                            Rating: {item.rating}/5
+                        </Card.Text>
+                        <Card.Text>Address: {item.formatted_address}</Card.Text>
+                        <a href={item.url} className="btn btn-primary">Visit on google maps</a>
+                        <h1></h1>
+                        <a href={item.website} className="btn btn-primary">Visit hotel's website</a>
+                    </Card.Body>
+                </Card>
                 )} 
             </div>
             }
