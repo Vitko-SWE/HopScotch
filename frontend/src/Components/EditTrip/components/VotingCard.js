@@ -78,8 +78,22 @@ export default function VotingCard(props) {
                 </Card.Header>
 
                 <Card.Body>
-                    <h5>Test thing</h5>
-                    <h5>Test info</h5>
+                    {props.score ? (
+                        <h5>Score: {props.score}</h5>
+                    ) : (
+                        <h5>Score not found.</h5>
+                    )}
+
+                    {props.voters ? (
+                        <div>
+                            <h7>Voters: </h7>
+                            {props.voters.map((item, i) => {
+                                <div key={i}>{item} </div>
+                            })}
+                        </div>
+                    ) : (
+                        <h7>Voters not found.</h7>
+                    )}
                 </Card.Body>
 
                 <Card.Footer>
@@ -90,11 +104,13 @@ export default function VotingCard(props) {
                     <Button variant="danger" onClick={handleThumbsDown} disabled={lockout}>
                         <HandThumbsDown size={36} />
                     </Button>
-
-                    <Collapse in={loading}>
-                        <Spinner animation="border" />
-                    </Collapse>
                 </Card.Footer>
+                
+                <Collapse in={loading}>
+                    <Card.Footer>
+                        <Spinner animation="border" />
+                    </Card.Footer>
+                </Collapse>
             </Card>
         </div>
     )
