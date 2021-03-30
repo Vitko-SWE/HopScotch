@@ -21,3 +21,7 @@
    max-width: 95%;
    margin: 0 auto
   }
+
+  .delete-btn {
+    margin-left: 1%;
+  }

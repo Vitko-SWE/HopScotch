@@ -518,7 +518,8 @@ export default function EditTrip(props) {
                                 <h1>Yelp</h1>
                                 <p>Read more on Yelp</p>
                             </Card.Body>
-                            <Button>Delete Feature</Button>
+                            <Button variant="danger" className="delete-btn">Delete Feature</Button>
+                            <Button>Vote</Button>
                         </Card.Body>
                     </Card>
                 )}
@@ -541,7 +542,8 @@ export default function EditTrip(props) {
                               </a>
                               <p>Read more about booking</p>
                           </Card.Body>
-                          <Button>Delete Feature</Button>
+                          <Button variant="danger" className="delete-btn">Delete Feature</Button>
+                          <Button>Vote</Button>
                       </Card.Body>
                   </Card>
               )}
