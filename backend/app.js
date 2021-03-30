@@ -44,7 +44,7 @@ app.use("/api/homepage", myTrips)
 app.use("/api/user", userService);
 app.use("/api/trips", tripsService);
 app.use("/api/search", searchService);
-app.use("/api/searches", searchService);
+app.use("/api/searches", searchesService);
 app.use("/api/hotel", searchHotelService);
 
 if (process.env.NODE_ENV == "production") {
