@@ -362,6 +362,15 @@ export default function EditTrip(props) {
       </div>
       {userRole !== "Viewer" && (
         <div class="pt-5 pb-5">
+          {(userRole == "Editor" || userRole == "Owner") && (
+            <div>
+              <h3>Voting</h3>
+
+              {/** TODO: map array of votes conditionally (if zero say so) */}
+
+              <hr />
+            </div>
+          )}
           <h3 class="pb-3">Actions</h3>
           {userRole === "Owner" && (
             <Container>

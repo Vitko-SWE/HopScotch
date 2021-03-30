@@ -271,7 +271,7 @@ router.route("/vote").post((req, res) => {
   })
 })
 
-//gets a record of all votes
+//gets a record of all votes for a feature
 router.route("/:tripid/vote/:featureid").get((req, res) => {
   const checkQuery = `SELECT * FROM Votes WHERE TripId='${req.params.tripid}' AND FeatureId='${req.params.featureid}'`
   db.query(checkQuery, (err, data) => {
@@ -302,6 +302,18 @@ router.route("/:tripid/vote/:featureid").get((req, res) => {
 //gets total score for a feature
 router.route("/:tripid/vote/:featureid").get((req, res) => {
   const checkQuery = `SELECT SUM(Score) FROM Votes WHERE TripId='${req.params.tripid}' AND FeatureId='${req.params.featureid}'`
+  db.query(checkQuery, (err, data) => {
+    if(err) {
+      return res.status(500).send(err)
+    } else {
+      return res.status(200).send(data)
+    }
+  })
+})
+
+//for a specific trip, get all the features and it's details
+router.route("/:tripid/votes").get((req, res) => {
+  const checkQuery = `SELECT v.FeatureId, SUM(v.Score) as Score, GROUP_CONCAT(v.UserId) as Voters, tf.FeatureName, tf.FeatureType FROM Votes v JOIN TripFeatures tf ON v.FeatureId=tf.FeatureId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId'`
   db.query(checkQuery, (err, data) => {
     if(err) {
       return res.status(500).send(err)
