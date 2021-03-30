@@ -4,27 +4,41 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { BsSearch } from 'react-icons/bs'
+import { FaYelp } from 'react-icons/fa';
+import Rating from './Rating';
+import SelectTripDropdown from './SelectTripDropdown';
+import SelectHotelTripDropdown from './SelectHotelTripDropdown';
 import "./Card.css";
 
 export default function MainSearch() {
+  // General Globals
   const { user, getAccessTokenSilently } = useAuth0();
   const [type, setType] = useState("Attractions");
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("");
 
+  // Attraction Globals
   const [attractionFilter, setAttractionFilter] = useState("All");
   const [attSearchResults, setAttSearchResults] = useState({
     ta: [],
     poi: [],
   });
-  const [trips, setTrips] = useState([]);
+  const [attTrips, setAttTrips] = useState([]);
   const [searchedYet, setSY] = useState(false);
 
-  useEffect(() => {
-    updateTrips();
-  }, []);
+  // Food Globals
+  const foodSearchResult = useState({items: []})
+  const foodTrips = useState({items: []});
 
-  const updateTrips = () => {
+  // Hotel Globals
+  const [hotelSearchResult, setHotelSearchResult] = useState([]);
+  const [hotelTrips, setHotelTrips] = useState([]);
+
+  // Attraction Functions
+  useEffect(() => {
+    updateAttTrips();
+  }, []);
+  const updateAttTrips = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
       axios.get(`/api/trips/myeditabletrips`, {
         headers: {
@@ -32,14 +46,12 @@ export default function MainSearch() {
           Authorization: `Bearer ${res}`,
         },
       }).then((res) => {
-        setTrips(res.data);
+        setAttTrips(res.data);
       }).catch((err) => {
         console.log(err);
       });
     });
   };
-
-
   const handleAttractionFilter = (e) => {
     setAttractionFilter(e);
   };
@@ -109,8 +121,97 @@ export default function MainSearch() {
     });
   };
 
+  // Food Functions
+  const getFoodTrips = async () => {
+    getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
+      const token = `Bearer ${res}`;
+      const api = axios.create({
+        baseURL: '/api/homepage/myTrips',
+        headers: {
+          userid: user.sub,
+          Authorization: token
+        }
+      });
+      try {
+        api.get('/').then(response => {
+          foodTrips[1]({items: response.data});
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+  };
+  const handleFoodSearch = () => {
+    getFoodTrips();
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.get('/api/search/searchDining', {
+        headers: {
+          Authorization: `Bearer ${res}`,
+          string: query,
+          city: location,
+        },
+      }).then((res) => {
+        foodSearchResult[1]({items: res.data});
+
+        if (res.data.length === 0) {
+          alert("Oops, it looks like we couldn't find anything for this location");
+        }
+      }).catch((err) => {
+        console.log(err);
+        alert("Oops, it looks like we couldn't find anything for this location");
+      });
+    });
+  };
+
+  // Hotel Functions
+  const getHotelTrips = async () => {
+    getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
+      const token = `Bearer ${res}`;
+      const api = axios.create({
+        baseURL: '/api/homepage/myTrips',
+        headers: {
+          userid: user.sub,
+          Authorization: token,
+        }
+      })
+      try {
+        api.get('/').then(response => {
+          //update state trips array
+          setHotelTrips(response.data);
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+  };
+  const handleHotelSearch = () => {
+    getHotelTrips();
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.get('/api/hotel/search', {
+        headers: {
+          Authorization: `Bearer ${res}`,
+          hotel: query,
+          location: location,
+        },
+      }).then(async (res) => {
+        await setHotelSearchResult(res.data);
+        console.log(hotelSearchResult);
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
+  };
+
+  // General Functions
   const handleType = (e) => {
     setType(e);
+    setAttSearchResults({
+      ta: [],
+      poi: [],
+    });
+    setSY(false);
+    foodSearchResult[1]({items: []});
+    setHotelSearchResult([]);
   };
   const handleQuery = (e) => {
     e.preventDefault();
@@ -166,10 +267,10 @@ export default function MainSearch() {
                     <Card.Text><strong>Price:</strong> {result.price.amount + " " + result.price.currencyCode}</Card.Text>
                     <Card.Text><a href={result.bookingLink}>Booking Link</a></Card.Text>
                     <DropdownButton id="dropdown-item-button" title="Add to trip">
-                      {trips.length === 0 && (
+                      {attTrips.length === 0 && (
                         <Dropdown.Header>You do not have any editable trips.</Dropdown.Header>
                       )}
-                      {trips.length !== 0 && trips.map((item) => (
+                      {attTrips.length !== 0 && attTrips.map((item) => (
                           <Dropdown.Item onClick={() => addTourToTrip(item, result)} as="button">{item.Name}</Dropdown.Item>
                         ))
                       }
@@ -190,10 +291,10 @@ export default function MainSearch() {
                     <Card.Title>{result.name}</Card.Title>
                     <Card.Text><strong>Type:</strong> {result.category}</Card.Text>
                     <DropdownButton id="dropdown-item-button" title="Add to trip">
-                      {trips.length === 0 && (
+                      {attTrips.length === 0 && (
                         <Dropdown.Header>You do not have any editable trips.</Dropdown.Header>
                       )}
-                      {trips.length !== 0 && trips.map((item) => (
+                      {attTrips.length !== 0 && attTrips.map((item) => (
                           <Dropdown.Item onClick={() => addPOIToTrip(item, result)} as="button">{item.Name}</Dropdown.Item>
                         ))
                       }
@@ -208,30 +309,84 @@ export default function MainSearch() {
     );
   }
   else if (type === "Food") {
-    return (
-      <div>
-        <h1>Search</h1>
-        <div className="search-bar">
-          <InputGroup className="mb-3">
-            <InputGroup.Prepend>
-              <InputGroup.Text>Find</InputGroup.Text>
-            </InputGroup.Prepend>
-            <DropdownButton title={type} onSelect={handleType} variant="outline-secondary" id="input-group-dropdown-1">
-              <Dropdown.Item eventKey="Attractions">Attractions</Dropdown.Item>
-              <Dropdown.Item eventKey="Food">Food</Dropdown.Item>
-              <Dropdown.Item eventKey="Hotels">Hotels</Dropdown.Item>
-            </DropdownButton>
-            <FormControl onChange={handleQuery} type="dining-str" placeholder="search query"/>
-            <FormControl onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
-            <InputGroup.Append>
-              <Button className='search-btn' onClick={null}>
-                <BsSearch size={20} />
-              </Button>
-            </InputGroup.Append>
-          </InputGroup>
+    if (foodSearchResult[0].items.length === 0) {
+      return (
+        <div>
+          <h1>Search</h1>
+          <div className="search-bar">
+            <InputGroup className="mb-3">
+              <InputGroup.Prepend>
+                <InputGroup.Text>Find</InputGroup.Text>
+              </InputGroup.Prepend>
+              <DropdownButton title={type} onSelect={handleType} variant="outline-secondary" id="input-group-dropdown-1">
+                <Dropdown.Item eventKey="Attractions">Attractions</Dropdown.Item>
+                <Dropdown.Item eventKey="Food">Food</Dropdown.Item>
+                <Dropdown.Item eventKey="Hotels">Hotels</Dropdown.Item>
+              </DropdownButton>
+              <FormControl onChange={handleQuery} type="dining-str" placeholder="Breakfast, Coffee, Pizza..."/>
+              <FormControl onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
+              <InputGroup.Append>
+                <Button className='search-btn' onClick={handleFoodSearch}>
+                  <BsSearch size={20} />
+                </Button>
+              </InputGroup.Append>
+            </InputGroup>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+    else {
+      return (
+        <div>
+          <h1>Search</h1>
+          <div className="search-bar">
+            <InputGroup className="mb-3">
+              <InputGroup.Prepend>
+                <InputGroup.Text>Find</InputGroup.Text>
+              </InputGroup.Prepend>
+              <DropdownButton title={type} onSelect={handleType} variant="outline-secondary" id="input-group-dropdown-1">
+                <Dropdown.Item eventKey="Attractions">Attractions</Dropdown.Item>
+                <Dropdown.Item eventKey="Food">Food</Dropdown.Item>
+                <Dropdown.Item eventKey="Hotels">Hotels</Dropdown.Item>
+              </DropdownButton>
+              <FormControl onChange={handleQuery} type="dining-str" placeholder="Breakfast, Coffee, Pizza..."/>
+              <FormControl onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
+              <InputGroup.Append>
+                <Button className='search-btn' onClick={handleFoodSearch}>
+                  <BsSearch size={20} />
+                </Button>
+              </InputGroup.Append>
+            </InputGroup>
+          </div>
+          <div className='card-display'>
+            {foodSearchResult[0].items.map((item, index) =>
+              <Card className="custom_card" style={{ width: '19%' }}>
+                <Card.Img style={{width: '100%', height: '280px'}} variant="top" src={item.image_url} />
+                <Card.Body>
+                  <Card.Title>{item.name}</Card.Title>
+                  <Card.Text>
+                    <Rating rating={item.rating}/>
+                    <Card.Text className="text-muted">{item.review_count} reviews</Card.Text>
+                  </Card.Text>
+                  <Card.Text>Price: {item.price}</Card.Text>
+                  <Card.Text>{item.location.address1}, {item.location.city}, {item.location.state}</Card.Text>
+                </Card.Body>
+                <Card.Body>
+                  <Card.Body>
+                    <a href={item.url}>
+                      <FaYelp size={50} style={{fill: 'red' }} />
+                    </a>
+                    <h1>Yelp</h1>
+                    <p>Read more on Yelp</p>
+                  </Card.Body>
+                  <SelectTripDropdown trips={foodTrips[0].items} diningOption={item}/>
+                </Card.Body>
+              </Card>
+            )}
+          </div>
+        </div>
+      )
+    }
   }
   else if (type === "Hotels") {
     return (
@@ -250,12 +405,32 @@ export default function MainSearch() {
             <FormControl onChange={handleQuery} type="dining-str" placeholder="search query"/>
             <FormControl onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
             <InputGroup.Append>
-              <Button className='search-btn' onClick={null}>
+              <Button className='search-btn' onClick={handleHotelSearch}>
                 <BsSearch size={20} />
               </Button>
             </InputGroup.Append>
           </InputGroup>
         </div>
+        {hotelSearchResult.length > 0 &&
+        <div className='card-display'>
+          {hotelSearchResult.map((item, index) =>
+            <Card className="custom_card" style={{ width: '19%' }}>
+              <Card.Body>
+                <Card.Title>{item.name}</Card.Title>
+                <Card.Text>
+                  Rating: {item.rating}/5
+                </Card.Text>
+                <Card.Text>Address: {item.formatted_address}</Card.Text>
+                <a href={item.url} className="btn btn-primary">Visit on google maps</a>
+                <h1></h1>
+                <a href={item.website} className="btn btn-primary">Visit hotel's website</a>
+                <h1></h1>
+                <SelectHotelTripDropdown trips={hotelTrips} hotelOption={item}/>
+              </Card.Body>
+            </Card>
+          )}
+        </div>
+        }
       </div>
     );
   }
