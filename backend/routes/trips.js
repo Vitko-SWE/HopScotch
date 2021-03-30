@@ -1,5 +1,6 @@
 const express = require('express')
 const db = require('../db');
+const { route } = require('./homepage');
 let router = express.Router()
 
 router.route("/createtrip").post((req, res) => {
@@ -91,7 +92,7 @@ router.route("/deletetrip/:tripid").delete((req, res) => {
       //Deleting flight entries
       const flightDeleteQuery = `Delete from Flight where FlightId = ${data[0].OutboundFlightId} or FlightId = ${data[0].InboundFlightId};`
       db.query(flightDeleteQuery, (err2, data2) => {
-        if(err) {
+        if (err) {
           console.log(err2);
           res.send(err2);
         }
@@ -99,7 +100,7 @@ router.route("/deletetrip/:tripid").delete((req, res) => {
           //Deleting trip user entires
           const tripUserDeleteQuery = `Delete from TripUser where Tripid = '${req.params.tripid}';`
           db.query(tripUserDeleteQuery, (err3, data3) => {
-            if(err) {
+            if (err) {
               console.log(err3);
               res.send(err3);
             }
@@ -107,7 +108,7 @@ router.route("/deletetrip/:tripid").delete((req, res) => {
               //Deleting trip entry
               const tripDeleteQuery = `Delete from Trip where TripId = '${req.params.tripid}'`
               db.query(tripDeleteQuery, (err4, data4) => {
-                if(err) {
+                if (err) {
                   console.log(err4);
                   res.send(err4);
                 }
@@ -228,5 +229,86 @@ router.route("/removeuser/:tripid/:userid").delete((req, res) => {
     }
   })
 });
+
+router.route("/vote").post((req, res) => {
+  if(req.body.tripid == null || req.body.userid == null
+    || req.body.featureid == null || req.body.isflight == null
+    || req.body.score == null) {
+      return res.status(400).send("400 Invalid parameters.")
+  }
+
+  const checkQuery = `SELECT * FROM Votes WHERE UserId='${req.body.userid}' AND TripId='${req.body.tripid}' AND FeatureId='${req.body.featureid}' AND IsFlight=${req.body.isflight}`
+  db.query(checkQuery, (err, data) => {
+    if(err) {
+      console.log(err)
+      return res.status(500).send(err)
+    }
+
+    if(data.length == 0) {
+      // has not voted yet
+      const query = `INSERT INTO Votes(UserId, TripId, FeatureId, IsFlight, Score) values ('${req.body.userid}', '${req.body.tripid}', '${req.body.featureid}', ${req.body.isflight}, ${req.body.score})`
+      db.query(query, (err, data) => {
+        if(err) {
+          return res.status(500).send(err)
+        } else {
+          return res.status(200).send(data)
+        }
+      })
+    } else if(data.length == 1) {
+      //updating existing vote
+      const query = `UPDATE Votes SET Score=${req.body.score} WHERE UserId='${req.body.userid}' AND TripId='${req.body.tripid}' AND FeatureId='${req.body.featureid}' AND IsFlight=${req.body.isflight}`
+      db.query(query, (err, data) => {
+        if(err) {
+          return res.status(500).send(err)
+        } else {
+          return res.status(200).send(data)
+        }
+      })
+    } else {
+      //weird error that should never happen
+      return res.status(500).send("Multiple votes recorded. Yikes.")
+    }
+  })
+})
+
+//gets a record of all votes
+router.route("/:tripid/vote/:featureid").get((req, res) => {
+  const checkQuery = `SELECT * FROM Votes WHERE TripId='${req.params.tripid}' AND FeatureId='${req.params.featureid}'`
+  db.query(checkQuery, (err, data) => {
+    if(err) {
+      return res.status(500).send(err)
+    } else {
+      return res.status(200).send(data)
+    }
+  })
+})
+
+//gets a specific vote for a user
+router.route("/:tripid/vote/:featureid").get((req, res) => {
+  if(req.headers.userid == null) {
+    return res.status(400).send("Missing user id.")
+  }
+
+  const checkQuery = `SELECT * FROM Votes WHERE TripId='${req.params.tripid}' AND FeatureId='${req.params.featureid} AND UserId='${req.headers.userid}'`
+  db.query(checkQuery, (err, data) => {
+    if(err) {
+      return res.status(500).send(err)
+    } else {
+      return res.status(200).send(data)
+    }
+  })
+})
+
+//gets total score for a feature
+router.route("/:tripid/vote/:featureid").get((req, res) => {
+  const checkQuery = `SELECT SUM(Score) FROM Votes WHERE TripId='${req.params.tripid}' AND FeatureId='${req.params.featureid}'`
+  db.query(checkQuery, (err, data) => {
+    if(err) {
+      return res.status(500).send(err)
+    } else {
+      return res.status(200).send(data)
+    }
+  })
+})
 
 module.exports = router;

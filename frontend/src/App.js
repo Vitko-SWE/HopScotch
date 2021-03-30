@@ -16,6 +16,7 @@ import DiningResults from './Components/Search/SearchDiningResults'
 import AttractionSearch from './Components/AttractionSearch/AttractionSearch';
 import { createBrowserHistory } from 'history';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
+import VotingCard from './Components/EditTrip/components/VotingCard';
 
 export const history = createBrowserHistory();
 
@@ -37,6 +38,7 @@ function App() {
           {/* <ProtectedRoute path="/DiningResults"  component={DiningResults} exact/> */}
           <ProtectedRoute path="/edittrip/:tripid"  component={EditTrip} exact/>
           <ProtectedRoute path="/attractionsearch/"  component={AttractionSearch} exact/>
+          <Route path="/testrender/votingcard" component={VotingCard} exact />
         </Switch>
       </div>
     </Router>
