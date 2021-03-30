@@ -71,6 +71,8 @@ export default function AttractionSearch() {
         geoCode: result.geoCode,
         bookingLink: result.bookingLink,
         price: result.price.amount,
+        picURL: result.pictures[0],
+        name: result.name
       }, {
         headers: {
           Authorization: `Bearer ${res}`,

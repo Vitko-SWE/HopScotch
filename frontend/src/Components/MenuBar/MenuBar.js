@@ -29,8 +29,8 @@ const Menubar = (props) => {
             <NavDropdown  title="Search Options" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Search Flights</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">Search Hotels</NavDropdown.Item>
-              <NavDropdown.Item href="searchDining">Search Dining</NavDropdown.Item>
-              <NavDropdown.Item><Link to={"/attractionsearch"}>Search Attractions</Link></NavDropdown.Item>
+              <NavDropdown.Item href="/searchDining">Search Dining</NavDropdown.Item>
+              <NavDropdown.Item href={"/attractionsearch"}>Search Attractions</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
             </NavDropdown>

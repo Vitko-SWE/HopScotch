@@ -22,7 +22,7 @@ router.route("/searchDining").get((req, resp) => {
 
 router.route("/selectDining").post((req, resp) => {
   console.log(req.body.TripId)
-    var query_string = `INSERT INTO TripFeatures VALUES ("${req.body.FeatureId}", "${req.body.FeatureType}", 0, "", 0, 0, null, ${req.body.TripId})`;
+    var query_string = `INSERT INTO TripFeatures VALUES ("${req.body.FeatureId}", "${req.body.FeatureType}", 0, "", 0, 0, null, ${req.body.TripId}, null, null)`;
     console.log("posting new dining feature")
     db.query(query_string, (err, data) => {
         if (err) {
@@ -165,7 +165,7 @@ router.route("/attractionsearch").post((req, res) => {
 
 router.route("/addtour").post((req, res) => {
   axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${encodeURIComponent(req.body.geoCode.latitude + "," + req.body.geoCode.longitude)}&key=AIzaSyDhf9OqY8Z3uNub0hgRYttINkf1gXOGZH4`).then((resploc) => {
-    db.query(`insert into TripFeatures(FeatureId, FeatureType, Price, Location, StartDateTime, EndDateTime, BookingURL, TripId) values("${req.body.id}", "Tour/Activity", ${req.body.price}, "${resploc.data.results[0].formatted_address}", 0, 0, "${req.body.bookingLink}", ${req.body.tripid});`, (err, data) => {
+    db.query(`insert into TripFeatures(FeatureId, FeatureType, Price, Location, StartDateTime, EndDateTime, BookingURL, TripId, FeatureName, PictureURL) values("${req.body.id}", "Tour/Activity", ${req.body.price}, "${resploc.data.results[0].formatted_address}", 0, 0, "${req.body.bookingLink}", ${req.body.tripid}, "${req.body.name}", "${req.body.picURL}");`, (err, data) => {
       if (err) {
         console.log(err);
         res.send(err);

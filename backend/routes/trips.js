@@ -1,6 +1,9 @@
 const express = require('express')
 const db = require('../db');
 let router = express.Router()
+require('dotenv').config()
+const yelp = require('yelp-fusion');
+const client = yelp.client(process.env.YELP_SECRET);
 
 router.route("/createtrip").post((req, res) => {
   let users = [];
@@ -241,6 +244,54 @@ router.route("/myeditabletrips").get((req, res) => {
     console.log(data);
     res.send(data)
   });
+});
+
+router.route("/getTripFeatures/:tripid").get((req, res) => {
+  const query = `select * from TripFeatures where TripId = '${req.params.tripid}';`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      if (data.length === 0) {
+        res.status(404).send("Trip features not found for the given trip.");
+      }
+      else {
+        var diningOptions = []
+        var promises = []
+        var otherFeatures = []
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].FeatureType == "Dining") {
+            promises.push(
+              client.business(data[i].FeatureId).then(response => {
+                console.log("request to yelp")
+                // console.log(response.jsonBody);
+                diningOptions.push(response.jsonBody)
+                // console.log(diningOptions)
+              })
+            )
+        
+            
+          }
+          else {
+            otherFeatures.push(data[i])
+          }
+
+          console.log(diningOptions)
+        }
+
+
+        var features = {
+          dining: diningOptions,
+          otherFeatures: otherFeatures
+        }
+        // console.log(diningOptions)
+        Promise.all(promises).then(() => res.send(features))
+        // res.send(data);
+      }
+    }
+  })
 });
 
 module.exports = router;
