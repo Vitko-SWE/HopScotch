@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Container, Row, Col, Form, Button, Card,  } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card, Accordion,  } from 'react-bootstrap';
 import "./EditTrip.css";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
@@ -501,54 +501,76 @@ export default function EditTrip(props) {
             </Form>
           </div>
           <hr/>
-          <h5>Dining Features Details</h5>
-          <div class="card-display">
-              {tripFeatures.dining.length > 0 && tripFeatures.dining.map((item, index) => 
-                    <Card className="custom_card" style={{ width: '19%' }}>
-                        <Card.Img style={{width: '100%', height: '280px'}} variant="top" src={item.image_url} />
-                        <Card.Body>
-                            <Card.Title>{item.name}</Card.Title>
-                            <Card.Text>{item.location.address1}, {item.location.city}, {item.location.state}</Card.Text>
-                        </Card.Body>
-                        <Card.Body>
-                            <Card.Body>
-                                <a href={item.url}>
-                                        <FaYelp size={50} style={{fill: 'red' }} />
-                                </a>
-                                <h1>Yelp</h1>
-                                <p>Read more on Yelp</p>
-                            </Card.Body>
-                            <Button variant="danger" className="delete-btn">Delete Feature</Button>
-                            <Button>Vote</Button>
-                        </Card.Body>
-                    </Card>
-                )}
-          </div>
-          <hr/>
-          <h5>Other Feature Details</h5>
-          <div className="card-display">
+          {/* <h5>Dining Features Details</h5> */}
+          <Accordion defaultActiveKey="0">
+            <Card>
+              <Accordion.Toggle as={Card.Header} eventKey="0">
+                <h5>Dining Features Details</h5>
+              </Accordion.Toggle>
+              <Accordion.Collapse eventKey="0">
+              <Card.Body>
+                <div class="card-display">
+                    {tripFeatures.dining.length > 0 && tripFeatures.dining.map((item, index) =>
+                    
+                          <Card className="custom_card" style={{ width: '19%' }}>
+                              <Card.Img style={{width: '100%', height: '280px'}} variant="top" src={item.image_url} />
+                              <Card.Body>
+                                  <Card.Title>{item.name}</Card.Title>
+                                  <Card.Text>{item.location.address1}, {item.location.city}, {item.location.state}</Card.Text>
+                              </Card.Body>
+                              <Card.Body>
+                                  <Card.Body>
+                                      <a href={item.url}>
+                                              <FaYelp size={50} style={{fill: 'red' }} />
+                                      </a>
+                                      <h1>Yelp</h1>
+                                      <p>Read more on Yelp</p>
+                                  </Card.Body>
+                                  <Button variant="danger" className="delete-btn">Delete Feature</Button>
+                                  <Button>Vote</Button>
+                              </Card.Body>
+                          </Card>
+                      )}
+                </div>
+              </Card.Body>
+          </Accordion.Collapse>
+        </Card>
+        <Card>
+        <Accordion.Toggle as={Card.Header} eventKey="1">
+        <h5>Other Feature Details</h5>
+        </Accordion.Toggle>
+          <Accordion.Collapse eventKey="1">
+            <Card.Body>
+        
+                {/* <hr/>
+                <h5>Other Feature Details</h5> */}
+                  <div className="card-display">
 
-              {tripFeatures.otherFeatures.length > 0 && tripFeatures.otherFeatures.map((item, index) => 
-                  <Card className="custom_card" style={{ width: '19%' }}>
-                      <Card.Img style={{width: '100%', height: '280px'}} variant="top" src={item.PictureURL} />
-                      <Card.Body>
-                          <Card.Title>{item.FeatureName}</Card.Title>
-                          <Card.Text>{item.Location}</Card.Text>
-                      </Card.Body>
-                      <Card.Body>
-                          <Card.Body>
-                              <a href={item.BookingURL}>
-                                      <RiExternalLinkLine size={50} style={{fill: 'red' }} />
-                              </a>
-                              <p>Read more about booking</p>
-                          </Card.Body>
-                          <Button variant="danger" className="delete-btn">Delete Feature</Button>
-                          <Button>Vote</Button>
-                      </Card.Body>
-                  </Card>
-              )}
-                
-          </div>
+                      {tripFeatures.otherFeatures.length > 0 && tripFeatures.otherFeatures.map((item, index) => 
+                          <Card className="custom_card" style={{ width: '19%' }}>
+                              <Card.Img style={{width: '100%', height: '280px'}} variant="top" src={item.PictureURL} />
+                              <Card.Body>
+                                  <Card.Title>{item.FeatureName}</Card.Title>
+                                  <Card.Text>{item.Location}</Card.Text>
+                              </Card.Body>
+                              <Card.Body>
+                                  <Card.Body>
+                                      <a href={item.BookingURL}>
+                                              <RiExternalLinkLine size={50} style={{fill: 'red' }} />
+                                      </a>
+                                      <p>Read more about booking</p>
+                                  </Card.Body>
+                                  <Button variant="danger" className="delete-btn">Delete Feature</Button>
+                                  <Button>Vote</Button>
+                              </Card.Body>
+                          </Card>
+                      )}
+                        
+                  </div>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
         </div>
       )}
     </div>
