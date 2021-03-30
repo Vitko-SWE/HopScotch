@@ -293,5 +293,4 @@ router.route("/getTripFeatures/:tripid").get((req, res) => {
     }
   })
 });
-
 module.exports = router;
