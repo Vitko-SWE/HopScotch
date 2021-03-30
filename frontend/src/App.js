@@ -13,6 +13,7 @@ import CreateTrip from './Components/CreateTrip/CreateTrip';
 import EditTrip from './Components/EditTrip/EditTrip';
 import SearchDining from './Components/Search/SearchDining'
 import DiningResults from './Components/Search/SearchDiningResults'
+import SearchHotel from './Components/SearchHotel/SearchHotel'
 import AttractionSearch from './Components/AttractionSearch/AttractionSearch';
 import { createBrowserHistory } from 'history';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
@@ -34,6 +35,7 @@ function App() {
           <ProtectedRoute path="/Account"  component={Profile} exact/>
           <ProtectedRoute path="/createtrip"  component={CreateTrip} exact/>
           <ProtectedRoute path="/searchDining"  component={SearchDining} exact/>
+          <ProtectedRoute path="/searchHotel"  component={SearchHotel} exact/>
           {/* <ProtectedRoute path="/DiningResults"  component={DiningResults} exact/> */}
           <ProtectedRoute path="/edittrip/:tripid"  component={EditTrip} exact/>
           <ProtectedRoute path="/attractionsearch/"  component={AttractionSearch} exact/>

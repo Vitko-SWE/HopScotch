@@ -1,0 +1,28 @@
+.card-columns {
+    padding: 1rem;
+    margin: 2rem;
+}
+
+.hotel-card {
+    padding: 2rem;
+    border:5px;
+}
+
+/* Add some padding inside the card container */
+.card-display {
+    display: flex;
+    flex-flow: wrap;
+    /* margin-left: 1cm; */
+    max-width: 95%;
+    margin: 0 auto
+}
+
+.custom_card {
+    /* Add shadows to create the "card" effect */
+    width: 7cm;
+    margin: 1cm;
+    flex-direction: row;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+
+}
