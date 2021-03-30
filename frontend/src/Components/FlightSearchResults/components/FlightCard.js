@@ -1,4 +1,5 @@
 import React from 'react'
+import { useEffect } from 'react';
 import { useState } from 'react'
 import { Row, Col, Container, Button, Collapse, Card, Image } from 'react-bootstrap'
 import FlightCard_SegmentDetails from './FlightCard_SegmentDetails';
@@ -8,6 +9,9 @@ const airlines = require('../airlines.json')
 export default function FlightCard(props) {
     const [deptOpen, setDeptOpen] = useState(false);
     const [retOpen, setRetOpen] = useState(false);
+    const [buttonTrips, setButtonTrips] = useState(props.trips);
+
+    useEffect(() => { setButtonTrips(props.trips) }, [props.trips])
 
     // console.log(props.trips)
 
@@ -18,7 +22,7 @@ export default function FlightCard(props) {
                     <Col xs={2} className="border-right">
                         {props.airlines.map((item, i) => {
                             return(
-                                <div id={i}>
+                                <div key={i}>
                                     <Image src={`/static/airlinelogos/${item}.png`} rounded fluid/>
                                     <h5>{airlines.find(x => x.code == item).name}</h5>
                                 </div>
@@ -46,7 +50,9 @@ export default function FlightCard(props) {
                     </Col>
                     <Col xs={3} className="border-left">
                         <h3>${props.price.total}</h3>
-                        <FlightCard_TripSelectButton trips={props.trips} flight={props} trip={props.data}/>
+                        {buttonTrips.length > 0 &&
+                            <FlightCard_TripSelectButton key={buttonTrips.length} trips={buttonTrips} flight={props} trip={props.data}/>
+                        }
                     </Col>
                 </Row>
             </Container>

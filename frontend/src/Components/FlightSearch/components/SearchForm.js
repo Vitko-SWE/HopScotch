@@ -13,7 +13,8 @@ export default function SearchForm(props) {
         props.loadingCallback(true)
         const results = e.currentTarget;
 
-        getAccessTokenSilently({audience: "https://hopscotch/api"}).then((res) => {
+        getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+            const authToken = res;
             axios.get("/api/search/flights", {
                 params: {
                     originCode: results.fsOriginGroup.value,
@@ -23,19 +24,30 @@ export default function SearchForm(props) {
                     numPass: results.fsNumPassGroup.value
                 },
                 headers: {
-                    Authorization: `Bearer ${res}`
+                    Authorization: `Bearer ${authToken}`
                 }
             }).then(res => {
-                console.log(res);
-                props.loadingCallback(false);
-                history.push({
-                    pathname: '/search/flights/results',
-                    state: {data: res.data}
+                const flightData = res.data
+                axios.get('/api/homepage/myTrips', {
+                    headers: {
+                        Authorization: `Bearer ${authToken}`,
+                        userid: user.sub
+                    }
+                }).then((res) => {
+                    console.log(res);
+                    props.loadingCallback(false);
+                    history.push({
+                        pathname: '/search/flights/results',
+                        state: {
+                            data: flightData,
+                            trips: res.data
+                        }
+                    });
                 });
             });
         });
     }
-    
+
     return (
         <div>
             <Form onSubmit={handleSubmit}>

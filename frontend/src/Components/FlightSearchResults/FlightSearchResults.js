@@ -11,7 +11,9 @@ export default function FlightSearchResults(props) {
     const { user, getAccessTokenSilently } = useAuth0();
     const [trips, setTrips] = useState([]);
 
-    useLayoutEffect(() => {
+    console.log(state)
+
+    useEffect(() => {
         if(trips.length == 0) {
             getUserTrips();
         }
@@ -24,8 +26,8 @@ export default function FlightSearchResults(props) {
                     Authorization: `Bearer ${res}`,
                     userid: user.sub
                 }
-            }).then((res) => {
-                setTrips(res.data)
+            }).then(async (res) => {
+                await setTrips(res.data)
                 console.log("RES")
                 console.log(res)
             }).catch((err) => {
@@ -46,7 +48,7 @@ export default function FlightSearchResults(props) {
                         itineraries={item.itineraries} 
                         price={item.price} 
                         airlines={item.validatingAirlineCodes}
-                        trips={trips}
+                        trips={state.trips}
                         data={item}
                     />
                 )
