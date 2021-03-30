@@ -334,9 +334,22 @@ export default function EditTrip(props) {
         },
       }).then(async (res) => {
         console.log(res.data)
-        // console.log("features:  " + tripFeatures.dining)
         setTripFeatures({dining: res.data.dining, otherFeatures: res.data.otherFeatures})
-        console.log("features:  " + tripFeatures.dining)
+        var names = [];
+        var addresses = [];      
+        res.data.otherFeatures.forEach(element => {
+          console.log("other feature address: " + element.Location)
+          names.push(element.FeatureName)
+          addresses.push(element.Location)
+        });
+        res.data.dining.forEach(element => {
+          console.log("dining address:  " + element.location.address1 + ", " + element.location.city + ", " + element.location.country)
+          names.push(element.name)
+          addresses.push(element.location.address1 + ", " + element.location.city + ", " + element.location.country)
+        });
+        localStorage.setItem('names', names.join("+"))
+        localStorage.setItem('addresses', addresses.join("+"))
+        
       }).catch((err) => {
         console.log(err);
       });
@@ -349,6 +362,7 @@ export default function EditTrip(props) {
       <div class="intro pt-5 pb-5">
         <h1 class="pb-3">{tripInfo.Name}</h1>
         <h3 class="pb-3">Your role: <strong>{userRole}</strong></h3>
+        <Link to="/directions"><Button variant="primary">Directions</Button></Link>
         <Container>
           <Row>
             <Col>
