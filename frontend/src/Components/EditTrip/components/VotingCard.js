@@ -33,7 +33,11 @@ export default function VotingCard(props) {
             }).then(res => {
                 setLockout(true)
                 setLoading(false)
-                alert("Vote recorded!") //TODO: get rid of this
+                if(res.status == 200) {
+                    alert("Vote recorded!") //TODO: get rid of this    
+                } else {
+                    alert("Error.")
+                }
             }).catch(err => {
                 console.log(err)
                 setLoading(false)
