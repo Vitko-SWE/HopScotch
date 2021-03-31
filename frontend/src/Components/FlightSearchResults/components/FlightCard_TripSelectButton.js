@@ -5,6 +5,7 @@ import { useLayoutEffect } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { useHistory } from 'react-router';
 
 export default function FlightCard_TripSelectButton(props) {
     const [buttonTrips, setButtonTrips] = useState(props.trips);
@@ -31,11 +32,7 @@ export default function FlightCard_TripSelectButton(props) {
                 if (res.status == 200) {
                     alert("Success!")
                     history.push({
-                        pathname: `/edittrip/${item.TripId}`,
-                        state: {
-                            data: flightData,
-                            trips: res.data
-                        }
+                        pathname: `/edittrip/${item.TripId}`
                     });
                 } else {
                     alert("error")
