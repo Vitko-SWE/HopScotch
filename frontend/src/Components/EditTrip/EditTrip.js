@@ -5,6 +5,7 @@ import "./EditTrip.css";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import DatePicker from "react-datepicker";
+import VotingCard from "./components/VotingCard";
 
 export default function EditTrip(props) {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -16,6 +17,7 @@ export default function EditTrip(props) {
   const [tripViewers, getTripViewers] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [votes, setVotes] = useState([]);
   const history = useHistory();
 
   useEffect(() => {
@@ -25,6 +27,7 @@ export default function EditTrip(props) {
     updateTripOwners();
     updateTripEditors();
     updateTripViewers();
+    updateVotingCards();
   }, []);
 
   const updateTripInfo = () => {
@@ -107,6 +110,20 @@ export default function EditTrip(props) {
       });
     });
   };
+
+  const updateVotingCards = () => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then(res => {
+      axios.get(`/api/trips/${props.match.params.tripid}/votes`, {
+        headers: {
+          Authorization: `Bearer ${res}`
+        }
+      }).then(res => {
+        setVotes(res.data)
+      }).catch(err => {
+        console.log(err)
+      })
+    })
+  }
 
   const handleAddOwners = (e) => {
     e.preventDefault();
@@ -367,6 +384,24 @@ export default function EditTrip(props) {
               <h3>Voting</h3>
 
               {/** TODO: map array of votes conditionally (if zero say so) */}
+              {votes.length > 0 ? (
+                <div>
+                  {votes.map((item, i) => {
+                    return (<VotingCard
+                      key={i}
+                      title={item.FeatureName}
+                      type={item.FeatureType}
+                      score={item.Score}
+                      voters={item.Voters.split(",")}
+                      tripid={props.match.params.tripid}
+                      featureid={item.FeatureId}
+                      isflight={item.IsFlight}
+                    />)
+                  })}
+                </div>
+              ) : (
+                <h6>No votes availible. Why not add something?</h6>
+              )}
 
               <hr />
             </div>
