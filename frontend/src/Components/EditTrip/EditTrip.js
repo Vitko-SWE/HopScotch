@@ -458,6 +458,17 @@ export default function EditTrip(props) {
       </div>
       {userRole !== "Viewer" && (
         <div class="pt-5 pb-5">
+          <Container>
+            <Row>
+              <Col><h3>Search for: </h3></Col>
+            </Row>
+            <Row>
+              <Col>
+                <Link to="/search/flights"><Button>Flights</Button></Link>
+              </Col>
+            </Row>
+          </Container>
+          <hr />
           <h3 class="pb-3">Actions</h3>
           {userRole === "Owner" && (
             <Container>

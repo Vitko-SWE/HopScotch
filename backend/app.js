@@ -8,7 +8,7 @@ const searchHotelService = require('./routes/searchHotel')
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 const cors = require('cors');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+// const { createProxyMiddleware } = require('http-proxy-middleware');
 const path = require('path');
 
 require('dotenv').config()
@@ -42,6 +42,7 @@ app.use(jwtCheck);
 app.use("/api/homepage", myTrips)
 app.use("/api/user", userService);
 app.use("/api/trips", tripsService);
+app.use("/static/airlinelogos", express.static("./airlineLogos"))
 app.use("/api/search", searchService);
 app.use("/api/hotel", searchHotelService);
 
