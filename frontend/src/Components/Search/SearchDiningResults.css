@@ -22,6 +22,19 @@
    margin: 0 auto
   }
 
-  .delete-btn {
-    margin-left: 1%;
+  .search-bar {
+    /* display: flex;
+    flex-basis: auto; */
+    /* justify-content: center; */
+    max-width: 20cm;
+    
+    margin: 0 auto; 
+  }
+
+  .search-btn {
+    width: 1.5cm;
+  }
+
+  .mb-3 {
+    margin-top: 1cm;
   }

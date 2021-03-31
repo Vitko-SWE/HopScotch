@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card,  } from 'react-bootstrap';
 import "./EditTrip.css";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import DatePicker from "react-datepicker";
+import { RiExternalLinkLine } from 'react-icons/ri';
+import { FaYelp } from 'react-icons/fa'
+import Rating from '../Search/Rating'
+import '../EditTrip/EditTrip.css'
 
 export default function EditTrip(props) {
   const { user, getAccessTokenSilently } = useAuth0();
   const [tripInfo, getTripInfo] = useState({});
   const [userRole, getUserRole] = useState("");
+  const [tripFeatures, setTripFeatures] = useState({dining:[], otherFeatures: []});
   const [tripUsers, getTripUsers] = useState([]);
   const [tripOwners, getTripOwners] = useState([]);
   const [tripEditors, getTripEditors] = useState([]);
@@ -25,6 +30,7 @@ export default function EditTrip(props) {
     updateTripOwners();
     updateTripEditors();
     updateTripViewers();
+    getTripFeatures();
   }, []);
 
   const updateTripInfo = () => {
@@ -317,14 +323,46 @@ export default function EditTrip(props) {
       });
 
     });
-    
+
   }
+
+  const getTripFeatures = () => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.get(`/api/trips/getTripFeatures/${props.match.params.tripid}`, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then(async (res) => {
+        console.log(res.data)
+        setTripFeatures({dining: res.data.dining, otherFeatures: res.data.otherFeatures})
+        var names = [];
+        var addresses = [];      
+        res.data.otherFeatures.forEach(element => {
+          console.log("other feature address: " + element.Location)
+          names.push(element.FeatureName)
+          addresses.push(element.Location)
+        });
+        res.data.dining.forEach(element => {
+          console.log("dining address:  " + element.location.address1 + ", " + element.location.city + ", " + element.location.country)
+          names.push(element.name)
+          addresses.push(element.location.address1 + ", " + element.location.city + ", " + element.location.country)
+        });
+        localStorage.setItem('names', names.join("+"))
+        localStorage.setItem('addresses', addresses.join("+"))
+        
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
+  }
+
 
   return (
     <div>
       <div class="intro pt-5 pb-5">
         <h1 class="pb-3">{tripInfo.Name}</h1>
         <h3 class="pb-3">Your role: <strong>{userRole}</strong></h3>
+        <Link to="/directions"><Button variant="primary">Directions</Button></Link>
         <Container>
           <Row>
             <Col>
@@ -336,7 +374,12 @@ export default function EditTrip(props) {
               <p><strong>Inbound Flight ID:</strong> {tripInfo.InboundFlightId ? tripInfo.InboundFlightId : "N/A"}</p>
             </Col>
             <Col>
-              <p><strong>Features:</strong> {tripInfo.Features ? tripInfo.Features : "N/A"}</p>
+              <p><strong>Features:</strong> {tripFeatures.dining.length > 0 && tripFeatures.dining.map((item, index) => (
+                  <li>Dining: {item.name}</li>))}
+                  {tripFeatures.otherFeatures.length > 0 && tripFeatures.otherFeatures.map((item, index) => (
+                  <li>{item.FeatureType}: {item.FeatureName}</li>))}
+
+              </p>
               <p><strong>Locked?</strong> {tripInfo.IsLocked === 0? "No" : "Yes"}</p>
               <p>
                 <strong>Owners:</strong>{" "}
@@ -481,6 +524,55 @@ export default function EditTrip(props) {
               {" "}
               <Link to={`/edittrip/${props.match.params.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
             </Form>
+          </div>
+          <hr/>
+          <h5>Dining Features Details</h5>
+          <div class="card-display">
+              {tripFeatures.dining.length > 0 && tripFeatures.dining.map((item, index) => 
+                    <Card className="custom_card" style={{ width: '19%' }}>
+                        <Card.Img style={{width: '100%', height: '280px'}} variant="top" src={item.image_url} />
+                        <Card.Body>
+                            <Card.Title>{item.name}</Card.Title>
+                            <Card.Text>{item.location.address1}, {item.location.city}, {item.location.state}</Card.Text>
+                        </Card.Body>
+                        <Card.Body>
+                            <Card.Body>
+                                <a href={item.url}>
+                                        <FaYelp size={50} style={{fill: 'red' }} />
+                                </a>
+                                <h1>Yelp</h1>
+                                <p>Read more on Yelp</p>
+                            </Card.Body>
+                            <Button variant="danger" className="delete-btn">Delete Feature</Button>
+                            <Button>Vote</Button>
+                        </Card.Body>
+                    </Card>
+                )}
+          </div>
+          <hr/>
+          <h5>Other Feature Details</h5>
+          <div className="card-display">
+
+              {tripFeatures.otherFeatures.length > 0 && tripFeatures.otherFeatures.map((item, index) => 
+                  <Card className="custom_card" style={{ width: '19%' }}>
+                      <Card.Img style={{width: '100%', height: '280px'}} variant="top" src={item.PictureURL} />
+                      <Card.Body>
+                          <Card.Title>{item.FeatureName}</Card.Title>
+                          <Card.Text>{item.Location}</Card.Text>
+                      </Card.Body>
+                      <Card.Body>
+                          <Card.Body>
+                              <a href={item.BookingURL}>
+                                      <RiExternalLinkLine size={50} style={{fill: 'red' }} />
+                              </a>
+                              <p>Read more about booking</p>
+                          </Card.Body>
+                          <Button variant="danger" className="delete-btn">Delete Feature</Button>
+                          <Button>Vote</Button>
+                      </Card.Body>
+                  </Card>
+              )}
+                
           </div>
         </div>
       )}
