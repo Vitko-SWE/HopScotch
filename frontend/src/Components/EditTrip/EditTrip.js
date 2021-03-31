@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, CardDeck } from 'react-bootstrap';
 import "./EditTrip.css";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
@@ -383,9 +383,8 @@ export default function EditTrip(props) {
             <div>
               <h3>Voting</h3>
 
-              {/** TODO: map array of votes conditionally (if zero say so) */}
               {votes.length > 0 ? (
-                <div>
+                <CardDeck className="ml-5 mr-5 mt-3 justify-content-center">
                   {votes.map((item, i) => {
                     return (<VotingCard
                       key={i}
@@ -398,7 +397,7 @@ export default function EditTrip(props) {
                       isflight={item.IsFlight}
                     />)
                   })}
-                </div>
+                </CardDeck>
               ) : (
                 <h6>No votes availible. Why not add something?</h6>
               )}

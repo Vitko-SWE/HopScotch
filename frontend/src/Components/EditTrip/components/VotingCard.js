@@ -78,7 +78,7 @@ export default function VotingCard(props) {
                 </Card.Header>
 
                 <Card.Body>
-                    {props.score ? (
+                    {props.voters ? (
                         <h5>Score: {props.score}</h5>
                     ) : (
                         <h5>Score not found.</h5>
@@ -88,7 +88,9 @@ export default function VotingCard(props) {
                         <div>
                             <h7>Voters: </h7>
                             {props.voters.map((item, i) => {
-                                <div key={i}>{item} </div>
+                                return(
+                                    <div key={i}>{item} </div>
+                                )
                             })}
                         </div>
                     ) : (
