@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Container, Row, Col, Form, Button, Card,  } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card, } from 'react-bootstrap';
 import "./EditTrip.css";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
@@ -14,7 +14,8 @@ export default function EditTrip(props) {
   const { user, getAccessTokenSilently } = useAuth0();
   const [tripInfo, getTripInfo] = useState({});
   const [userRole, getUserRole] = useState("");
-  const [tripFeatures, setTripFeatures] = useState({dining:[], otherFeatures: []});
+  const [tripFeatures, setTripFeatures] = useState({ dining: [], otherFeatures: [] });
+  const [confirmedFeatures, getConfirmedFeatures] = useState([]);
   const [tripUsers, getTripUsers] = useState([]);
   const [tripOwners, getTripOwners] = useState([]);
   const [tripEditors, getTripEditors] = useState([]);
@@ -31,7 +32,59 @@ export default function EditTrip(props) {
     updateTripEditors();
     updateTripViewers();
     getTripFeatures();
+    updateConfirmedFeatures();
   }, []);
+
+  const updateConfirmedFeatures = () => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.get(`/api/trips/getConfirmedFeatures/${props.match.params.tripid}`, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        console.log(res.data)
+        getConfirmedFeatures(res.data)
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
+  }
+
+  const confirmFeature = (featureId) => {
+    console.log(featureId)
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.post(`/api/trips/confirmFeature/${props.match.params.tripid}/${featureId}`, {
+        confirmed: true
+      }, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        console.log(res);
+        history.push(`/edittrip/${props.match.params.tripid}`);
+      }).catch((err) => {
+        alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
+      });
+    });
+  }
+
+  const unconfirmFeature = (featureId) => {
+    console.log(featureId)
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.post(`/api/trips/unconfirmFeature/${props.match.params.tripid}/${featureId}`, {
+        confirmed: false
+      }, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        console.log(res);
+        history.push(`/edittrip/${props.match.params.tripid}`);
+      }).catch((err) => {
+        alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
+      });
+    });
+  }
 
   const updateTripInfo = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
@@ -48,6 +101,7 @@ export default function EditTrip(props) {
       });
     });
   };
+
   const updateUserRole = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
       axios.get(`/api/trips/getuserrole/${props.match.params.tripid}/${user.sub}`, {
@@ -61,6 +115,7 @@ export default function EditTrip(props) {
       });
     });
   };
+
   const updateTripUsers = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
       axios.get(`/api/trips/gettripusers/${props.match.params.tripid}/all`, {
@@ -117,14 +172,14 @@ export default function EditTrip(props) {
   const handleAddOwners = (e) => {
     e.preventDefault();
     const results = e.currentTarget;
-    const emails = results.addOwners.value.replace(/\s/g,'').split(",");
+    const emails = results.addOwners.value.replace(/\s/g, '').split(",");
 
     let errors = "";
     if (results.addOwners.value !== "") {
       let valid = true;
       const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       for (let i = 0; i < emails.length; i++) {
-        if (emails[i] === "" || emails[i] === user.email || !regex.test(emails[i])){
+        if (emails[i] === "" || emails[i] === user.email || !regex.test(emails[i])) {
           valid = false;
         }
       }
@@ -156,14 +211,14 @@ export default function EditTrip(props) {
   const handleAddEditors = (e) => {
     e.preventDefault();
     const results = e.currentTarget;
-    const emails = results.addEditors.value.replace(/\s/g,'').split(",");
+    const emails = results.addEditors.value.replace(/\s/g, '').split(",");
 
     let errors = "";
     if (results.addEditors.value !== "") {
       let valid = true;
       const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       for (let i = 0; i < emails.length; i++) {
-        if (emails[i] === "" || emails[i] === user.email || !regex.test(emails[i])){
+        if (emails[i] === "" || emails[i] === user.email || !regex.test(emails[i])) {
           valid = false;
         }
       }
@@ -195,14 +250,14 @@ export default function EditTrip(props) {
   const handleAddViewers = (e) => {
     e.preventDefault();
     const results = e.currentTarget;
-    const emails = results.addViewers.value.replace(/\s/g,'').split(",");
+    const emails = results.addViewers.value.replace(/\s/g, '').split(",");
 
     let errors = "";
     if (results.addViewers.value !== "") {
       let valid = true;
       const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       for (let i = 0; i < emails.length; i++) {
-        if (emails[i] === "" || emails[i] === user.email || !regex.test(emails[i])){
+        if (emails[i] === "" || emails[i] === user.email || !regex.test(emails[i])) {
           valid = false;
         }
       }
@@ -289,7 +344,7 @@ export default function EditTrip(props) {
       alert(errors);
     }
     else {
-      getAccessTokenSilently({audience: "https://hopscotch/api"}).then((res) => {
+      getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
         axios.post(`/api/trips/updatetrip/${props.match.params.tripid}`, {
           title: results.tripTitle.value,
           origin: results.tripOrigin.value,
@@ -321,9 +376,7 @@ export default function EditTrip(props) {
       }).then((res) => {
         history.push('/homepage')
       });
-
     });
-
   }
 
   const getTripFeatures = () => {
@@ -334,22 +387,22 @@ export default function EditTrip(props) {
         },
       }).then(async (res) => {
         console.log(res.data)
-        setTripFeatures({dining: res.data.dining, otherFeatures: res.data.otherFeatures})
+        setTripFeatures({ dining: res.data.dining, otherFeatures: res.data.otherFeatures })
         var names = [];
-        var addresses = [];      
+        var addresses = [];
         res.data.otherFeatures.forEach(element => {
-          console.log("other feature address: " + element.Location)
+          //console.log("other feature address: " + element.Location)
           names.push(element.FeatureName)
           addresses.push(element.Location)
         });
         res.data.dining.forEach(element => {
-          console.log("dining address:  " + element.location.address1 + ", " + element.location.city + ", " + element.location.country)
+          //console.log("dining address:  " + element.location.address1 + ", " + element.location.city + ", " + element.location.country)
           names.push(element.name)
           addresses.push(element.location.address1 + ", " + element.location.city + ", " + element.location.country)
         });
         localStorage.setItem('names', names.join("+"))
         localStorage.setItem('addresses', addresses.join("+"))
-        
+
       }).catch((err) => {
         console.log(err);
       });
@@ -375,12 +428,12 @@ export default function EditTrip(props) {
             </Col>
             <Col>
               <p><strong>Features:</strong> {tripFeatures.dining.length > 0 && tripFeatures.dining.map((item, index) => (
-                  <li>Dining: {item.name}</li>))}
-                  {tripFeatures.otherFeatures.length > 0 && tripFeatures.otherFeatures.map((item, index) => (
+                <li>Dining: {item.name}</li>))}
+                {tripFeatures.otherFeatures.length > 0 && tripFeatures.otherFeatures.map((item, index) => (
                   <li>{item.FeatureType}: {item.FeatureName}</li>))}
 
               </p>
-              <p><strong>Locked?</strong> {tripInfo.IsLocked === 0? "No" : "Yes"}</p>
+              <p><strong>Locked?</strong> {tripInfo.IsLocked === 0 ? "No" : "Yes"}</p>
               <p>
                 <strong>Owners:</strong>{" "}
                 {tripOwners.map((owner, i) => (
@@ -470,7 +523,7 @@ export default function EditTrip(props) {
                   {tripOwners.find(element => element.sub === user.UserId) && (
                     <div>
                       <h5> Delete trip </h5>
-                      <Button variant="danger" onClick={ deleteTrip } type="submit">Delete Trip</Button>
+                      <Button variant="danger" onClick={deleteTrip} type="submit">Delete Trip</Button>
                     </div>
                   )}
                 </Col>
@@ -514,54 +567,84 @@ export default function EditTrip(props) {
               <Link to={`/edittrip/${props.match.params.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
             </Form>
           </div>
-          <hr/>
+          <hr />
           <h5>Dining Features Details</h5>
           <div class="card-display">
-              {tripFeatures.dining.length > 0 && tripFeatures.dining.map((item, index) => 
-                    <Card className="custom_card" style={{ width: '19%' }}>
-                        <Card.Img style={{width: '100%', height: '280px'}} variant="top" src={item.image_url} />
-                        <Card.Body>
-                            <Card.Title>{item.name}</Card.Title>
-                            <Card.Text>{item.location.address1}, {item.location.city}, {item.location.state}</Card.Text>
-                        </Card.Body>
-                        <Card.Body>
-                            <Card.Body>
-                                <a href={item.url}>
-                                        <FaYelp size={50} style={{fill: 'red' }} />
-                                </a>
-                                <h1>Yelp</h1>
-                                <p>Read more on Yelp</p>
-                            </Card.Body>
-                            <Button variant="danger" className="delete-btn">Delete Feature</Button>
-                            <Button>Vote</Button>
-                        </Card.Body>
-                    </Card>
-                )}
+            {tripFeatures.dining.length > 0 && tripFeatures.dining.map((item, index) =>
+              <Card className="custom_card" style={{ width: '19%' }}>
+                <Card.Img style={{ width: '100%', height: '280px' }} variant="top" src={item.image_url} />
+                <Card.Body>
+                  <Card.Title>{item.name}</Card.Title>
+                  <Card.Text>{item.location.address1}, {item.location.city}, {item.location.state}</Card.Text>
+                </Card.Body>
+                <Card.Body>
+                  <Card.Body>
+                    <a href={item.url}>
+                      <FaYelp size={50} style={{ fill: 'red' }} />
+                    </a>
+                    <h1>Yelp</h1>
+                    <p>Read more on Yelp</p>
+                  </Card.Body>
+                  <Button variant="danger" className="delete-btn">Delete Feature</Button>
+                  <Button>Vote</Button>
+                  {confirmedFeatures.find(feature => feature.FeatureId === item.id && feature.Confirmed === 'true') ? 
+                  <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" fill="green" class="bi bi-bookmark-check-fill" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zm8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z" />
+                    </svg> Confirmed!
+                  </div> : 
+                  <div>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" fill="red" class="bi bi-bookmark-x-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zM6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293 6.854 5.146z" />
+                      </svg> Pending
+                  </div>}
+                  {userRole === "Owner" ? <div>
+                    {confirmedFeatures.find(feature => feature.FeatureId === item.id && feature.Confirmed === 'true') ? <div><Button variant="danger" onClick={() => unconfirmFeature(item.id)}>Unconfirm</Button></div> : <div><Button onClick={() => confirmFeature(item.id)}>Confirm</Button></div>}
+                    </div>: null
+                  }
+                </Card.Body>
+              </Card>
+            )}
           </div>
-          <hr/>
+          <hr />
           <h5>Other Feature Details</h5>
           <div className="card-display">
 
-              {tripFeatures.otherFeatures.length > 0 && tripFeatures.otherFeatures.map((item, index) => 
-                  <Card className="custom_card" style={{ width: '19%' }}>
-                      <Card.Img style={{width: '100%', height: '280px'}} variant="top" src={item.PictureURL} />
-                      <Card.Body>
-                          <Card.Title>{item.FeatureName}</Card.Title>
-                          <Card.Text>{item.Location}</Card.Text>
-                      </Card.Body>
-                      <Card.Body>
-                          <Card.Body>
-                              <a href={item.BookingURL}>
-                                      <RiExternalLinkLine size={50} style={{fill: 'red' }} />
-                              </a>
-                              <p>Read more about booking</p>
-                          </Card.Body>
-                          <Button variant="danger" className="delete-btn">Delete Feature</Button>
-                          <Button>Vote</Button>
-                      </Card.Body>
-                  </Card>
-              )}
-                
+            {tripFeatures.otherFeatures.length > 0 && tripFeatures.otherFeatures.map((item, index) =>
+              <Card className="custom_card" style={{ width: '19%' }}>
+                <Card.Img style={{ width: '100%', height: '280px' }} variant="top" src={item.PictureURL} />
+                <Card.Body>
+                  <Card.Title>{item.FeatureName}</Card.Title>
+                  <Card.Text>{item.Location}</Card.Text>
+                </Card.Body>
+                <Card.Body>
+                  <Card.Body>
+                    <a href={item.BookingURL}>
+                      <RiExternalLinkLine size={50} style={{ fill: 'red' }} />
+                    </a>
+                    <p>Read more about booking</p>
+                  </Card.Body>
+                  <Button variant="danger" className="delete-btn">Delete Feature</Button>
+                  <Button>Vote</Button>
+                  {item.Confirmed === 'true' ?
+                  <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" fill="green" class="bi bi-bookmark-check-fill" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zm8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z" />
+                    </svg> Confirmed!
+                  </div> : 
+                  <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" fill="red" class="bi bi-bookmark-x-fill" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zM6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293 6.854 5.146z" />
+                    </svg> Pending
+                  </div>}
+                  {userRole === "Owner" ? <div>
+                    {item.Confirmed === 'true' ? <div><Button variant="danger" onClick={() => unconfirmFeature(item.FeatureId)}>Unconfirm</Button></div> : <div><Button onClick={() => confirmFeature(item.FeatureId)}>Confirm</Button></div>}
+                    </div>: null
+                  }
+                </Card.Body>
+              </Card>
+            )}
+
           </div>
         </div>
       )}
