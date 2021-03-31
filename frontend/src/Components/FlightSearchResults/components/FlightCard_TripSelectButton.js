@@ -21,7 +21,9 @@ export default function FlightCard_TripSelectButton(props) {
         <DropdownButton title="Select">
             <Dropdown.Header>Add this flight to a trip:</Dropdown.Header>
             {buttonTrips.length >= 0 && buttonTrips.map((item, i) => {
-                <Dropdown.Item key={item.TripId} onClick={() => handleClick(item)} as="button">{item.Name}</Dropdown.Item>
+                return (
+                    <Dropdown.Item key={item.TripId} onClick={() => handleClick(item)} as="button">{item.Name}</Dropdown.Item>
+                )
             })}
         </DropdownButton>
     )
