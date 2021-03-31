@@ -5,12 +5,17 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import NoMatch from 'react-router-nomatch';
 import MenuBar from './Components/MenuBar/MenuBar.js';
 import Landing from './Components/Landing/Landing.js';
 import Homepage from './Components/Homepage/Homepage.js';
 import Profile from './Components/ProfileInfo/Profile';
 import CreateTrip from './Components/CreateTrip/CreateTrip';
 import EditTrip from './Components/EditTrip/EditTrip';
+import SearchDining from './Components/Search/SearchDining'
+import DiningResults from './Components/Search/SearchDiningResults'
+import SearchHotel from './Components/SearchHotel/SearchHotel'
+import AttractionSearch from './Components/AttractionSearch/AttractionSearch';
 import { createBrowserHistory } from 'history';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import FlightSearch from './Components/FlightSearch/FlightSearch';
@@ -29,12 +34,18 @@ function App() {
         <MenuBar/>
         <Switch>
           <Route path="/" component={Landing} exact />
+          <Route path="/directions" render={() => {window.location.href="Directions.html"}} />
+          <Route path="/map" render={() => {window.location.href="Map.html"}} />
           <ProtectedRoute path="/homepage" component={Homepage} exact/>
           <ProtectedRoute path="/Account"  component={Profile} exact/>
           <ProtectedRoute path="/createtrip"  component={CreateTrip} exact/>
+          <ProtectedRoute path="/searchDining"  component={SearchDining} exact/>
+          <ProtectedRoute path="/searchHotel"  component={SearchHotel} exact/>
+          {/* <ProtectedRoute path="/DiningResults"  component={DiningResults} exact/> */}
           <ProtectedRoute path="/edittrip/:tripid"  component={EditTrip} exact/>
           <ProtectedRoute path="/search/flights" component={FlightSearch} exact />
           <ProtectedRoute path="/search/flights/results" component={FlightSearchResults} exact />
+          <ProtectedRoute path="/attractionsearch/"  component={AttractionSearch} exact/>
         </Switch>
       </div>
     </Router>
