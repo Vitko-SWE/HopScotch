@@ -42,26 +42,32 @@ router.route("/flights").get(async (req, res) => {
     }
 });
 
-// router.route("/selectFlight").get(async (req, res) => {
-//     const FeatureId = req.body.FeatureId;
-//     const FeatureType = req.body.FeatureType;
-//     const TripId = req.body.TripId;
+router.route("/selectFlight").post(async (req, res) => {
+    console.log(req.body)
+    const FlightData = req.body.FlightData;
+    const TripId = req.body.TripId;
+    const Price = req.body.Price;
+    const Airline = req.body.Airline;
+    const Origin = req.body.Origin;
+    const Destination = req.body.Destination;
+    const User = req.body.User
 
-//     if(FeatureId == undefined || FeatureType == undefined || TripId == undefined) {
-//         console.log("Invalid parameters.")
-//         res.status(400).send("Invalid parameters.")
-//         return;
-//     }
+    if(FlightData == null || TripId == null || Price == null
+        || Airline == null || Origin == null || Destination == null) {
+        console.log("Invalid parameters.")
+        res.status(400).send("Invalid parameters.")
+        return;
+    }
 
-//     const query_string = `INSERT INTO TripFeatures VALUES ("${FeatureId}", "${FeatureType}", 0, "", 0, 0, null, ${TripId})`;
-//     db.query(query_string, (err, data) => {
-//         if(err) {
-//             console.log(err);
-//             res.status(500).send(err);
-//         } else {
-//             res.status(200).send(data);
-//         }
-//     });
-// });
+    const query_string = `INSERT INTO Flight(TripID, Price, Airline, Origin, Destination, FlightData, User) VALUES (${TripId}, ${Price}, "${Airline}", "${Origin}", "${Destination}", "${FlightData}", "${User}")`;
+    db.query(query_string, (err, data) => {
+        if(err) {
+            console.log(err);
+            res.status(500).send(err);
+        } else {
+            res.status(200).send(data);
+        }
+    });
+});
 
 module.exports = router;

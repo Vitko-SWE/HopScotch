@@ -13,7 +13,7 @@ export default function FlightCard(props) {
 
     useEffect(() => { setButtonTrips(props.trips) }, [props.trips])
 
-    // console.log(props.trips)
+    console.log(props)
 
     return (
         <div>
@@ -51,7 +51,15 @@ export default function FlightCard(props) {
                     <Col xs={3} className="border-left">
                         <h3>${props.price.total}</h3>
                         {buttonTrips.length > 0 &&
-                            <FlightCard_TripSelectButton key={buttonTrips.length} trips={buttonTrips} flight={props} trip={props.data}/>
+                            <FlightCard_TripSelectButton 
+                                key={buttonTrips.length} 
+                                trips={buttonTrips} 
+                                trip={props.data}
+                                price={props.price.total}
+                                airline={props.airlines[0]}
+                                origin={props.itineraries[0].segments[0].departure.iataCode}
+                                destination={props.itineraries[1].segments[0].departure.iataCode}
+                            />
                         }
                     </Col>
                 </Row>
