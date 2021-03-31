@@ -19,6 +19,8 @@ import AttractionSearch from './Components/AttractionSearch/AttractionSearch';
 import MainSearch from './Components/Search/MainSearch';
 import { createBrowserHistory } from 'history';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
+import FlightSearch from './Components/FlightSearch/FlightSearch';
+import FlightSearchResults from "./Components/FlightSearchResults/FlightSearchResults.js";
 
 export const history = createBrowserHistory();
 
@@ -42,6 +44,8 @@ function App() {
           <ProtectedRoute path="/searchHotel"  component={SearchHotel} exact/>
           {/* <ProtectedRoute path="/DiningResults"  component={DiningResults} exact/> */}
           <ProtectedRoute path="/edittrip/:tripid"  component={EditTrip} exact/>
+          <ProtectedRoute path="/search/flights" component={FlightSearch} exact />
+          <ProtectedRoute path="/search/flights/results" component={FlightSearchResults} exact />
           <ProtectedRoute path="/attractionsearch/"  component={AttractionSearch} exact/>
           <ProtectedRoute path="/search/"  component={MainSearch} exact/>
         </Switch>
