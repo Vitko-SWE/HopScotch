@@ -69,6 +69,45 @@ router.route("/updatetrip/:tripid").post((req, res) => {
   });
 });
 
+router.route("/getConfirmedFeatures/:tripid").get((req, res) => {
+  const query = `select * from TripFeatures where TripId = '${req.params.tripid}' AND Confirmed = 'true';`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      res.send(data)
+    }
+  })
+});
+
+router.route("/confirmFeature/:tripid/:featureid").post((req, res) => {
+  const query = `update TripFeatures set Confirmed = 'true' where TripId = '${req.params.tripid}' and FeatureId = '${req.params.featureid}'`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      res.send(data)
+    }
+  })
+});
+
+router.route("/unconfirmFeature/:tripid/:featureid").post((req, res) => {
+  const query = `update TripFeatures set Confirmed = 'false' where TripId = '${req.params.tripid}' and FeatureId = '${req.params.featureid}'`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      res.send(data)
+    }
+  })
+});
+
 router.route("/gettrip/:tripid").get((req, res) => {
   const query = `select * from Trip where TripId = '${req.params.tripid}';`;
   db.query(query, (err, data) => {
