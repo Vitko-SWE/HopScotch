@@ -8,6 +8,7 @@ import { FaYelp } from 'react-icons/fa';
 import Rating from './Rating';
 import SelectTripDropdown from './SelectTripDropdown';
 import SelectHotelTripDropdown from './SelectHotelTripDropdown';
+import FlightSearch from '../FlightSearch/FlightSearch';
 import "./Card.css";
 
 export default function MainSearch() {
@@ -235,6 +236,7 @@ export default function MainSearch() {
               <Dropdown.Item eventKey="Attractions">Attractions</Dropdown.Item>
               <Dropdown.Item eventKey="Food">Food</Dropdown.Item>
               <Dropdown.Item eventKey="Hotels">Hotels</Dropdown.Item>
+              <Dropdown.Item eventKey="Flights">Flights</Dropdown.Item>
             </DropdownButton>
             <FormControl onChange={handleQuery} type="dining-str" placeholder="search query"/>
             <FormControl onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
@@ -322,6 +324,7 @@ export default function MainSearch() {
                 <Dropdown.Item eventKey="Attractions">Attractions</Dropdown.Item>
                 <Dropdown.Item eventKey="Food">Food</Dropdown.Item>
                 <Dropdown.Item eventKey="Hotels">Hotels</Dropdown.Item>
+                <Dropdown.Item eventKey="Flights">Flights</Dropdown.Item>
               </DropdownButton>
               <FormControl onChange={handleQuery} type="dining-str" placeholder="Breakfast, Coffee, Pizza..."/>
               <FormControl onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
@@ -348,6 +351,7 @@ export default function MainSearch() {
                 <Dropdown.Item eventKey="Attractions">Attractions</Dropdown.Item>
                 <Dropdown.Item eventKey="Food">Food</Dropdown.Item>
                 <Dropdown.Item eventKey="Hotels">Hotels</Dropdown.Item>
+                <Dropdown.Item eventKey="Flights">Flights</Dropdown.Item>
               </DropdownButton>
               <FormControl onChange={handleQuery} type="dining-str" placeholder="Breakfast, Coffee, Pizza..."/>
               <FormControl onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
@@ -401,6 +405,7 @@ export default function MainSearch() {
               <Dropdown.Item eventKey="Attractions">Attractions</Dropdown.Item>
               <Dropdown.Item eventKey="Food">Food</Dropdown.Item>
               <Dropdown.Item eventKey="Hotels">Hotels</Dropdown.Item>
+              <Dropdown.Item eventKey="Flights">Flights</Dropdown.Item>
             </DropdownButton>
             <FormControl onChange={handleQuery} type="dining-str" placeholder="search query"/>
             <FormControl onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
@@ -431,6 +436,19 @@ export default function MainSearch() {
           )}
         </div>
         }
+      </div>
+    );
+  }
+  else if (type === "Flights") {
+    return (
+      <div>
+        <DropdownButton title={type} onSelect={handleType} variant="outline-secondary" id="input-group-dropdown-1">
+          <Dropdown.Item eventKey="Attractions">Attractions</Dropdown.Item>
+          <Dropdown.Item eventKey="Food">Food</Dropdown.Item>
+          <Dropdown.Item eventKey="Hotels">Hotels</Dropdown.Item>
+          <Dropdown.Item eventKey="Flights">Flights</Dropdown.Item>
+        </DropdownButton>
+        <FlightSearch />
       </div>
     );
   }
