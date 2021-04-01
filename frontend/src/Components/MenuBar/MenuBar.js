@@ -33,9 +33,9 @@ const Menubar = (props) => {
               <NavDropdown.Item href="/search/flights">Search Flights</NavDropdown.Item>
               <NavDropdown.Item href="/searchHotel">Search Hotels</NavDropdown.Item>
               <NavDropdown.Item href="/searchDining">Search Dining</NavDropdown.Item>
-              <NavDropdown.Item href={"/attractionsearch"}>Search Attractions</NavDropdown.Item>
+              <NavDropdown.Item href="/attractionsearch">Search Attractions</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+              <NavDropdown.Item href="/search">Search</NavDropdown.Item>
             </NavDropdown>
           </Nav>
           <Nav>

@@ -1,10 +1,6 @@
 const express = require('express')
 const db = require('../db');
-const { route } = require('./homepage');
 let router = express.Router()
-require('dotenv').config()
-const yelp = require('yelp-fusion');
-const client = yelp.client(process.env.YELP_SECRET);
 
 router.route("/createtrip").post((req, res) => {
   let users = [];
@@ -70,45 +66,6 @@ router.route("/updatetrip/:tripid").post((req, res) => {
   });
 });
 
-router.route("/getConfirmedFeatures/:tripid").get((req, res) => {
-  const query = `select * from TripFeatures where TripId = '${req.params.tripid}' AND Confirmed = 'true';`;
-  db.query(query, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    }
-    else {
-      res.send(data)
-    }
-  })
-});
-
-router.route("/confirmFeature/:tripid/:featureid").post((req, res) => {
-  const query = `update TripFeatures set Confirmed = 'true' where TripId = '${req.params.tripid}' and FeatureId = '${req.params.featureid}'`;
-  db.query(query, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    }
-    else {
-      res.send(data)
-    }
-  })
-});
-
-router.route("/unconfirmFeature/:tripid/:featureid").post((req, res) => {
-  const query = `update TripFeatures set Confirmed = 'false' where TripId = '${req.params.tripid}' and FeatureId = '${req.params.featureid}'`;
-  db.query(query, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    }
-    else {
-      res.send(data)
-    }
-  })
-});
-
 router.route("/gettrip/:tripid").get((req, res) => {
   const query = `select * from Trip where TripId = '${req.params.tripid}';`;
   db.query(query, (err, data) => {
@@ -134,7 +91,7 @@ router.route("/deletetrip/:tripid").delete((req, res) => {
       //Deleting flight entries
       const flightDeleteQuery = `Delete from Flight where FlightId = ${data[0].OutboundFlightId} or FlightId = ${data[0].InboundFlightId};`
       db.query(flightDeleteQuery, (err2, data2) => {
-        if (err) {
+        if(err) {
           console.log(err2);
           res.send(err2);
         }
@@ -142,7 +99,7 @@ router.route("/deletetrip/:tripid").delete((req, res) => {
           //Deleting trip user entires
           const tripUserDeleteQuery = `Delete from TripUser where Tripid = '${req.params.tripid}';`
           db.query(tripUserDeleteQuery, (err3, data3) => {
-            if (err) {
+            if(err) {
               console.log(err3);
               res.send(err3);
             }
@@ -150,7 +107,7 @@ router.route("/deletetrip/:tripid").delete((req, res) => {
               //Deleting trip entry
               const tripDeleteQuery = `Delete from Trip where TripId = '${req.params.tripid}'`
               db.query(tripDeleteQuery, (err4, data4) => {
-                if (err) {
+                if(err) {
                   console.log(err4);
                   res.send(err4);
                 }
@@ -272,161 +229,4 @@ router.route("/removeuser/:tripid/:userid").delete((req, res) => {
   })
 });
 
-<<<<<<< HEAD
-router.route("/vote").post((req, res) => {
-  if(req.body.tripid == null || req.body.userid == null
-    || req.body.featureid == null || req.body.isflight == null
-    || req.body.score == null) {
-      return res.status(400).send("400 Invalid parameters.")
-  }
-
-  const checkQuery = `SELECT * FROM Votes WHERE UserId='${req.body.userid}' AND TripId='${req.body.tripid}' AND FeatureId='${req.body.featureid}' AND IsFlight=${req.body.isflight}`
-  db.query(checkQuery, (err, data) => {
-    if(err) {
-      console.log(err)
-      return res.status(500).send(err)
-    }
-
-    if(data.length == 0) {
-      // has not voted yet
-      const query = `INSERT INTO Votes(UserId, TripId, FeatureId, IsFlight, Score) values ('${req.body.userid}', '${req.body.tripid}', '${req.body.featureid}', ${req.body.isflight}, ${req.body.score})`
-      db.query(query, (err, data) => {
-        if(err) {
-          return res.status(500).send(err)
-        } else {
-          return res.status(200).send(data)
-        }
-      })
-    } else if(data.length == 1) {
-      //updating existing vote
-      const query = `UPDATE Votes SET Score=${req.body.score} WHERE UserId='${req.body.userid}' AND TripId='${req.body.tripid}' AND FeatureId='${req.body.featureid}' AND IsFlight=${req.body.isflight}`
-      db.query(query, (err, data) => {
-        if(err) {
-          return res.status(500).send(err)
-        } else {
-          return res.status(200).send(data)
-        }
-      })
-    } else {
-      //weird error that should never happen
-      return res.status(500).send("Multiple votes recorded. Yikes.")
-    }
-  })
-})
-
-//gets a record of all votes for a feature
-router.route("/:tripid/vote/:featureid").get((req, res) => {
-  const checkQuery = `SELECT * FROM Votes WHERE TripId='${req.params.tripid}' AND FeatureId='${req.params.featureid}'`
-  db.query(checkQuery, (err, data) => {
-    if(err) {
-      return res.status(500).send(err)
-    } else {
-      return res.status(200).send(data)
-    }
-  })
-})
-
-//gets a specific vote for a user
-router.route("/:tripid/vote/:featureid").get((req, res) => {
-  if(req.headers.userid == null) {
-    return res.status(400).send("Missing user id.")
-  }
-
-  const checkQuery = `SELECT * FROM Votes WHERE TripId='${req.params.tripid}' AND FeatureId='${req.params.featureid} AND UserId='${req.headers.userid}'`
-  db.query(checkQuery, (err, data) => {
-    if(err) {
-      return res.status(500).send(err)
-    } else {
-      return res.status(200).send(data)
-    }
-  })
-})
-
-//gets total score for a feature
-router.route("/:tripid/vote/:featureid").get((req, res) => {
-  const checkQuery = `SELECT SUM(Score) FROM Votes WHERE TripId='${req.params.tripid}' AND FeatureId='${req.params.featureid}'`
-  db.query(checkQuery, (err, data) => {
-    if(err) {
-      return res.status(500).send(err)
-    } else {
-      return res.status(200).send(data)
-    }
-  })
-})
-
-//for a specific trip, get all the features and it's details
-router.route("/:tripid/votes").get((req, res) => {
-  const checkQuery = `SELECT v.FeatureId, SUM(v.Score) as Score, tf.FeatureName, tf.FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight FROM Votes v JOIN TripFeatures tf ON v.FeatureId=tf.FeatureId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId`
-  db.query(checkQuery, (err, data) => {
-    if(err) {
-      return res.status(500).send(err)
-    } else {
-      return res.status(200).send(data)
-    }
-  })
-})
-
-=======
-router.route("/myeditabletrips").get((req, res) => {
-  var query_string = 'SELECT * FROM Trip WHERE TripId '
-  query_string += `IN (SELECT TripUser.TripId FROM TripUser WHERE TripUser.UserId = "${req.headers.userid}" AND (TripUser.Role = "Owner" OR TripUser.Role = "Editor"))`
-  db.query(query_string, (err,data) => {
-    if(err) {
-      console.log("sql error" + err)
-      return
-    };
-    console.log('Data received from Db:');
-    console.log(data);
-    res.send(data)
-  });
-});
-
-router.route("/getTripFeatures/:tripid").get((req, res) => {
-  const query = `select * from TripFeatures where TripId = '${req.params.tripid}';`;
-  db.query(query, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    }
-    else {
-      if (data.length === 0) {
-        res.status(404).send("Trip features not found for the given trip.");
-      }
-      else {
-        var diningOptions = []
-        var promises = []
-        var otherFeatures = []
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].FeatureType == "Dining") {
-            promises.push(
-              client.business(data[i].FeatureId).then(response => {
-                console.log("request to yelp")
-                // console.log(response.jsonBody);
-                diningOptions.push(response.jsonBody)
-                // console.log(diningOptions)
-              })
-            )
-        
-            
-          }
-          else {
-            otherFeatures.push(data[i])
-          }
-
-          console.log(diningOptions)
-        }
-
-
-        var features = {
-          dining: diningOptions,
-          otherFeatures: otherFeatures
-        }
-        // console.log(diningOptions)
-        Promise.all(promises).then(() => res.send(features))
-        // res.send(data);
-      }
-    }
-  })
-});
->>>>>>> 8f0df1dc2949a74ad41c6b07a5c64a224bc3353b
 module.exports = router;
