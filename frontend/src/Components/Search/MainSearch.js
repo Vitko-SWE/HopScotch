@@ -99,6 +99,7 @@ export default function MainSearch() {
         },
       }).then((res) => {
         console.log(res.data);
+        alert("The tour/activity has been added to the selected trip.");
       }).catch((err) => {
         console.log(err);
       });
@@ -116,6 +117,7 @@ export default function MainSearch() {
         },
       }).then((res) => {
         console.log(res.data);
+        alert("The point of interest has been added to the selected trip.");
       }).catch((err) => {
         console.log(err);
       });

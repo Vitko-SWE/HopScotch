@@ -7,7 +7,7 @@ export default function SelectTripDropdown(props) {
 
     const {user, getAccessTokenSilently} = useAuth0();
     const trips = useState({items: []});
-    
+
     const handleSelect = (item) => {
         console.log(item.TripId)
 
@@ -26,6 +26,7 @@ export default function SelectTripDropdown(props) {
                 Authorization: `Bearer ${res}`,
                 },
             }).then((res) => {
+              alert("The hotel has been added to the selected trip.");
             }).catch((err) => {
                 console.log(err);
             });
