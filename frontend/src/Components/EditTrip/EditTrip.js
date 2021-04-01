@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Container, Row, Col, Form, Button, Card, } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card, CardDeck } from 'react-bootstrap';
 import "./EditTrip.css";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import DatePicker from "react-datepicker";
+import VotingCard from "./components/VotingCard";
 import { RiExternalLinkLine } from 'react-icons/ri';
 import { FaYelp } from 'react-icons/fa'
 import Rating from '../Search/Rating'
@@ -22,6 +23,7 @@ export default function EditTrip(props) {
   const [tripViewers, getTripViewers] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [votes, setVotes] = useState([]);
   const history = useHistory();
 
   useEffect(() => {
@@ -31,6 +33,7 @@ export default function EditTrip(props) {
     updateTripOwners();
     updateTripEditors();
     updateTripViewers();
+    updateVotingCards();
     getTripFeatures();
     updateConfirmedFeatures();
   }, []);
@@ -168,6 +171,20 @@ export default function EditTrip(props) {
       });
     });
   };
+
+  const updateVotingCards = () => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then(res => {
+      axios.get(`/api/trips/${props.match.params.tripid}/votes`, {
+        headers: {
+          Authorization: `Bearer ${res}`
+        }
+      }).then(res => {
+        setVotes(res.data)
+      }).catch(err => {
+        console.log(err)
+      })
+    })
+  }
 
   const handleAddOwners = (e) => {
     e.preventDefault();
@@ -458,6 +475,32 @@ export default function EditTrip(props) {
       </div>
       {userRole !== "Viewer" && (
         <div class="pt-5 pb-5">
+          {(userRole == "Editor" || userRole == "Owner") && (
+            <div>
+              <h3>Voting</h3>
+
+              {votes.length > 0 ? (
+                <CardDeck className="ml-5 mr-5 mt-3 justify-content-center">
+                  {votes.map((item, i) => {
+                    return (<VotingCard
+                      key={i}
+                      title={item.FeatureName}
+                      type={item.FeatureType}
+                      score={item.Score}
+                      voters={item.Voters.split(",")}
+                      tripid={props.match.params.tripid}
+                      featureid={item.FeatureId}
+                      isflight={item.IsFlight}
+                    />)
+                  })}
+                </CardDeck>
+              ) : (
+                <h6>No votes availible. Why not add something?</h6>
+              )}
+
+              <hr />
+            </div>
+          )}
           <Container>
             <Row>
               <Col><h3>Search for: </h3></Col>
