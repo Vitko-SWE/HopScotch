@@ -16,6 +16,7 @@ import SearchDining from './Components/Search/SearchDining'
 import DiningResults from './Components/Search/SearchDiningResults'
 import SearchHotel from './Components/SearchHotel/SearchHotel'
 import AttractionSearch from './Components/AttractionSearch/AttractionSearch';
+import MainSearch from './Components/Search/MainSearch';
 import { createBrowserHistory } from 'history';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import VotingCard from './Components/EditTrip/components/VotingCard';
@@ -47,6 +48,7 @@ function App() {
           <ProtectedRoute path="/search/flights" component={FlightSearch} exact />
           <ProtectedRoute path="/search/flights/results" component={FlightSearchResults} exact />
           <ProtectedRoute path="/attractionsearch/"  component={AttractionSearch} exact/>
+          <ProtectedRoute path="/search/"  component={MainSearch} exact/>
           <Route path="/testrender/votingcard" component={VotingCard} exact />
         </Switch>
       </div>
