@@ -43,6 +43,7 @@ export default function FlightCard_TripSelectButton(props) {
                             Authorization: `Bearer ${authToken}`
                         }
                     }).then(res => {
+                        alert("The flight has been added to the selected trip.");
                         history.push({
                             pathname: `/edittrip/${item.TripId}`
                         });
