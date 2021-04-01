@@ -326,7 +326,7 @@ router.route("/:tripid/vote/:featureid").get((req, res) => {
 })
 
 //gets a specific vote for a user
-router.route("/:tripid/vote/:featureid").get((req, res) => {
+router.route("/:tripid/voteuser/:featureid").get((req, res) => {
   if(req.headers.userid == null) {
     return res.status(400).send("Missing user id.")
   }
