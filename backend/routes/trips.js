@@ -360,15 +360,14 @@ router.route("/:tripid/votes").get((req, res) => {
     if(err) {
       return res.status(500).send(err)
     } else {
-      //return res.status(200).send(data)
       const checkFlightsQuery = `SELECT v.FeatureId, SUM(v.Score) as Score, CONCAT(f.Airline, ' ', f.Origin) as FeatureName, "Flight" as FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight FROM Votes v JOIN Flight f ON v.FeatureId=f.FlightId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId`
       db.query(checkFlightsQuery, (err, data2) => {
         if(err) {
           return res.status(500).send(err);
         }
         else {
-          console.log(data2);
-          res.send(data);
+          const retArr = data.concat(data2)
+          return res.send(retArr)
         }
       })
     }
