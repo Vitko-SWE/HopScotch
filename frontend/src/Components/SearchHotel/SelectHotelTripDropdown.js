@@ -7,7 +7,7 @@ export default function SelectTripDropdown(props) {
 
     const {user, getAccessTokenSilently} = useAuth0();
     const trips = useState({items: []});
-    
+
     const handleSelect = (item) => {
         console.log(item.TripId)
 

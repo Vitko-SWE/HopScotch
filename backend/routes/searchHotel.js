@@ -30,7 +30,7 @@ router.route("/search").get((req, res) => {
                         })
                     );
                 }
-                Promise.allSettled(sendBackPromises).then(() => 
+                Promise.allSettled(sendBackPromises).then(() =>
                     res.send(sendBack)
                 );
             });
@@ -40,7 +40,6 @@ router.route("/search").get((req, res) => {
 
 router.route("/selectHotel").post((req, res) => {
     console.log(req.body);
-    
     var query_string = `INSERT INTO TripFeatures VALUES ("${req.body.FeatureId}", "${req.body.FeatureType}", 0, "${req.body.Address}", 0, 0, "${req.body.BookingUrl}", ${req.body.TripId}, "${req.body.FeatureName}", null, false)`;
 
     db.query(query_string, (err, data) => {
@@ -51,7 +50,7 @@ router.route("/selectHotel").post((req, res) => {
         console.log(data)
         res.send(data);
     })
-    
+
 
 
 })
