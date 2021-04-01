@@ -21,6 +21,7 @@ export default function SelectTripDropdown(props) {
                 Authorization: `Bearer ${res}`,
                 },
             }).then((res) => {
+                alert("The dining option has been added to your trip!")
             }).catch((err) => {
                 console.log(err);
             });

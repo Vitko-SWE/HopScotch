@@ -3,11 +3,12 @@ const db = require('./db');
 const myTrips = require("./routes/homepage");
 const userService = require('./routes/users');
 const tripsService = require('./routes/trips');
-const searchService = require('./routes/search');
+const searchService = require('./routes/search')
+const searchHotelService = require('./routes/searchHotel')
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 const cors = require('cors');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+// const { createProxyMiddleware } = require('http-proxy-middleware');
 const path = require('path');
 
 require('dotenv').config()
@@ -41,7 +42,9 @@ app.use(jwtCheck);
 app.use("/api/homepage", myTrips)
 app.use("/api/user", userService);
 app.use("/api/trips", tripsService);
+app.use("/static/airlinelogos", express.static("./airlineLogos"))
 app.use("/api/search", searchService);
+app.use("/api/hotel", searchHotelService);
 
 if (process.env.NODE_ENV == "production") {
     const publicPath = path.join(__dirname, './frontend');
