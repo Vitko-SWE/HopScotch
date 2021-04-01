@@ -342,7 +342,7 @@ router.route("/:tripid/voteuser/:featureid").get((req, res) => {
 })
 
 //gets total score for a feature
-router.route("/:tripid/vote/:featureid").get((req, res) => {
+router.route("/:tripid/voteScore/:featureid").get((req, res) => {
   const checkQuery = `SELECT SUM(Score) FROM Votes WHERE TripId='${req.params.tripid}' AND FeatureId='${req.params.featureid}'`
   db.query(checkQuery, (err, data) => {
     if(err) {
@@ -355,12 +355,22 @@ router.route("/:tripid/vote/:featureid").get((req, res) => {
 
 //for a specific trip, get all the features and it's details
 router.route("/:tripid/votes").get((req, res) => {
-  const checkQuery = `SELECT v.FeatureId, SUM(v.Score) as Score, tf.FeatureName, tf.FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight FROM Votes v JOIN TripFeatures tf ON v.FeatureId=tf.FeatureId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId`
-  db.query(checkQuery, (err, data) => {
+  const checkTripFeaturesQuery = `SELECT v.FeatureId, SUM(v.Score) as Score, tf.FeatureName, tf.FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight FROM Votes v JOIN TripFeatures tf ON v.FeatureId=tf.FeatureId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId`
+  db.query(checkTripFeaturesQuery, (err, data) => {
     if(err) {
       return res.status(500).send(err)
     } else {
-      return res.status(200).send(data)
+      //return res.status(200).send(data)
+      const checkFlightsQuery = `SELECT v.FeatureId, SUM(v.Score) as Score, CONCAT(f.Airline, ' ', f.Origin) as FeatureName, "Flight" as FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight FROM Votes v JOIN Flight f ON v.FeatureId=f.FlightId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId`
+      db.query(checkFlightsQuery, (err, data2) => {
+        if(err) {
+          return res.status(500).send(err);
+        }
+        else {
+          console.log(data2);
+          res.send(data);
+        }
+      })
     }
   })
 })
