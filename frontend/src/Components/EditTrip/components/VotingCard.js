@@ -34,6 +34,7 @@ export default function VotingCard(props) {
                 setLockout(true)
                 setLoading(false)
                 if(res.status == 200) {
+                    console.log(res)
                     alert("Vote recorded!") //TODO: get rid of this    
                 } else {
                     alert("Error.")

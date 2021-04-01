@@ -16,6 +16,7 @@ export default function FlightCard_TripSelectButton(props) {
 
     const handleClick = item => {
         getAccessTokenSilently({ audience: "https://hopscotch/api" }).then(res => {
+            const authToken = res;
             axios.post(`/api/search/selectFlight`, {
                 FlightData: btoa(JSON.stringify(props.trip)),
                 TripId: item.TripId,
@@ -26,14 +27,29 @@ export default function FlightCard_TripSelectButton(props) {
                 User: user.sub
             }, {
                 headers: {
-                    Authorization: `Bearer ${res}`
+                    Authorization: `Bearer ${authToken}`
                 }
             }).then(res => {
+                //TODO: get feature id
                 if (res.status == 200) {
-                    alert("Success!")
-                    history.push({
-                        pathname: `/edittrip/${item.TripId}`
-                    });
+                    axios.post("/api/trips/vote", {
+                        tripid: item.TripId,
+                        userid: user.sub,
+                        featureid: res.data.insertId,
+                        isflight: 1,
+                        score: 1
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${authToken}`
+                        }
+                    }).then(res => {
+                        history.push({
+                            pathname: `/edittrip/${item.TripId}`
+                        });
+                    }).catch(err => {
+                        console.log(err)
+                        alert("error")
+                    })
                 } else {
                     alert("error")
                 }

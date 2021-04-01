@@ -272,7 +272,6 @@ router.route("/removeuser/:tripid/:userid").delete((req, res) => {
   })
 });
 
-<<<<<<< HEAD
 router.route("/vote").post((req, res) => {
   if(req.body.tripid == null || req.body.userid == null
     || req.body.featureid == null || req.body.isflight == null
@@ -366,7 +365,6 @@ router.route("/:tripid/votes").get((req, res) => {
   })
 })
 
-=======
 router.route("/myeditabletrips").get((req, res) => {
   var query_string = 'SELECT * FROM Trip WHERE TripId '
   query_string += `IN (SELECT TripUser.TripId FROM TripUser WHERE TripUser.UserId = "${req.headers.userid}" AND (TripUser.Role = "Owner" OR TripUser.Role = "Editor"))`
@@ -428,5 +426,4 @@ router.route("/getTripFeatures/:tripid").get((req, res) => {
     }
   })
 });
->>>>>>> 8f0df1dc2949a74ad41c6b07a5c64a224bc3353b
 module.exports = router;
