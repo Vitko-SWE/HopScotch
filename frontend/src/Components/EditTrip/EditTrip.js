@@ -179,6 +179,7 @@ export default function EditTrip(props) {
           Authorization: `Bearer ${res}`
         }
       }).then(res => {
+        console.log(res.data);
         setVotes(res.data)
       }).catch(err => {
         console.log(err)

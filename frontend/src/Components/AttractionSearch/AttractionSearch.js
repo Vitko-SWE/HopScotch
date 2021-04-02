@@ -65,6 +65,7 @@ export default function AttractionSearch() {
 
   const addTourToTrip = (item, result) => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      const authToken = res;
       axios.post("/api/search/addtour/", {
         tripid: item.TripId,
         id: result.id,
@@ -79,6 +80,22 @@ export default function AttractionSearch() {
         },
       }).then((res) => {
         console.log(res.data);
+        axios.post("/api/trips/vote", {
+          tripid: item.TripId,
+          userid: user.sub,
+          featureid: result.id,
+          isflight: 0,
+          score: 1
+      }, {
+          headers: {
+              Authorization: `Bearer ${authToken}`
+          }
+      }).then(res3 => {
+      })
+      .catch((err) =>{
+          console.log(err);
+      });
+        
       }).catch((err) => {
         console.log(err);
       });
@@ -87,15 +104,32 @@ export default function AttractionSearch() {
 
   const addPOIToTrip = (item, result) => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      const authToken = res;
       axios.post("/api/search/addpoi/", {
         tripid: item.TripId,
         id: result.id,
         geoCode: result.geoCode,
+        name: result.name
       }, {
         headers: {
           Authorization: `Bearer ${res}`,
         },
       }).then((res) => {
+        axios.post("/api/trips/vote", {
+          tripid: item.TripId,
+          userid: user.sub,
+          featureid: result.id,
+          isflight: 0,
+          score: 1
+      }, {
+          headers: {
+              Authorization: `Bearer ${authToken}`
+          }
+      }).then(res3 => {
+      })
+      .catch((err) =>{
+          console.log(err);
+      });
         console.log(res.data);
       }).catch((err) => {
         console.log(err);
