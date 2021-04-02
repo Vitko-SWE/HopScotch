@@ -7,8 +7,9 @@ import { useHistory } from 'react-router';
 export default function SelectTripDropdown(props) {
     const {user, getAccessTokenSilently} = useAuth0();
     const trips = useState({items: []});
+
     const history = useHistory();
-    
+
     const handleSelect = (item) => {
         console.log(item.TripId)
 
@@ -25,6 +26,7 @@ export default function SelectTripDropdown(props) {
                 Authorization: `Bearer ${res}`,
                 },
             }).then((res) => {
+
                 axios.post("/api/trips/vote", {
                     tripid: item.TripId,
                     userid: user.sub,
@@ -40,7 +42,7 @@ export default function SelectTripDropdown(props) {
                 .catch((err) =>{
                     console.log(err);
                 });
-                alert("The dining option has been added to your trip!")
+              alert("The dining option has been added to the selected trip.");
             }).catch((err) => {
                 console.log(err);
             });
