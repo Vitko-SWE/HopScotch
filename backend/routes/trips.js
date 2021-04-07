@@ -368,38 +368,39 @@ router.route("/:tripid/votes").get((req, res) => {
         else {
           const retArr = data.concat(data2);
           console.log(retArr);
+          return res.send(retArr)
 
-          var diningFeatures = []
-          var promises = []
-          var otherFeatures = []
+          // var diningFeatures = []
+          // var promises = []
+          // var otherFeatures = []
 
-          for(let i = 0; i < retArr.length; i++) {
-            if (data[i].FeatureType == "Dining") {
-              promises.push(
-                client.business(data[i].FeatureId).then(response => {
-                  console.log(response.jsonBody);
-                  var toPush = {
-                    FeatureId: data[i].FeatureId,
-                    Score: data[i].Score,
-                    FeatureName: response.jsonBody.name,
-                    FeatureType: data[i].FeatureType,
-                    Voters: data[i].Voters,
-                    IsFlight: 0
-                  };
+          // for(let i = 0; i < retArr.length; i++) {
+            // if (data[i].FeatureType == "Dining") {
+            //   promises.push(
+            //     client.business(data[i].FeatureId).then(response => {
+            //       console.log(response.jsonBody);
+            //       var toPush = {
+            //         FeatureId: data[i].FeatureId,
+            //         Score: data[i].Score,
+            //         FeatureName: response.jsonBody.name,
+            //         FeatureType: data[i].FeatureType,
+            //         Voters: data[i].Voters,
+            //         IsFlight: 0
+            //       };
 
-                  diningFeatures.push(toPush);
-                })
-              )
-            }
-            else {
-              otherFeatures.push(data[i]);
-            }
-          }
-          Promise.all(promises).then(() => {
-            otherFeatures = otherFeatures.concat(diningFeatures);
-            console.log(otherFeatures);
-            res.send(otherFeatures);
-          });
+            //       diningFeatures.push(toPush);
+            //     })
+            //   )
+            // }
+            // else {
+              // otherFeatures.push(data[i]);
+            // }
+          // }
+          // Promise.all(promises).then(() => {
+          //   otherFeatures = otherFeatures.concat(diningFeatures);
+          //   console.log(otherFeatures);
+          //   res.send(otherFeatures);
+          // });
         }
       })
     }
