@@ -375,7 +375,7 @@ router.route("/:tripid/votes").get((req, res) => {
           // var otherFeatures = []
 
           // for(let i = 0; i < retArr.length; i++) {
-            // if (data[i].FeatureType && data[i].FeatureType == "Dining") {
+            // if (data[i].FeatureType == "Dining") {
             //   promises.push(
             //     client.business(data[i].FeatureId).then(response => {
             //       console.log(response.jsonBody);
