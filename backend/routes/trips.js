@@ -246,6 +246,24 @@ router.route("/getuserrole/:tripid/:userid").get((req, res) => {
   })
 });
 
+router.route("/getuserrole/:userid").get((req, res) => {
+  const query = `select * from TripUser where UserId = '${req.params.userid}';`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      if (data.length === 0) {
+        res.status(404).send("User not found for given trip.");
+      }
+      else {
+        res.send(data);
+      }
+    }
+  })
+});
+
 router.route("/edituserrole/:tripid/:userid").post((req, res) => {
   const query = `update TripUser set Role = '${req.body.newrole}' where TripId = '${req.params.tripid}' and UserId = '${req.params.userid}';`;
   db.query(query, (err, data) => {
