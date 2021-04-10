@@ -4,6 +4,9 @@ import React from 'react'
 import { useEffect } from 'react';
 import { useLayoutEffect } from 'react';
 import { useState } from 'react';
+import { Container } from 'react-bootstrap';
+import { Search } from 'react-bootstrap-icons';
+import SearchFilter from '../Search/components/SearchFilter';
 import FlightCard from './components/FlightCard'
 
 export default function FlightSearchResults(props) {
@@ -41,7 +44,9 @@ export default function FlightSearchResults(props) {
     }
 
     return (
-        <div>
+        <div style={{display: "flex", alignItems: "flex-start"}}>
+            <SearchFilter />
+            <Container fluid>
             {state.data.data.map((item, i) => {
                 return(
                     <FlightCard key={item.id} 
@@ -53,6 +58,7 @@ export default function FlightSearchResults(props) {
                     />
                 )
             })}
+            </Container>
         </div>
     )
 }

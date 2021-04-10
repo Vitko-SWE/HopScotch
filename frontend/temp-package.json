@@ -27,7 +27,6 @@
         "react-router-dom": "^5.2.0",
         "react-router-nomatch": "^2.0.1",
         "react-scripts": "4.0.2",
-        "react-sticky-box": "^0.9.3",
         "web-vitals": "^1.0.1"
       },
       "devDependencies": {
@@ -18070,19 +18069,6 @@
         "node": ">=0.10.0"
       }
     },
-    "node_modules/react-sticky-box": {
-      "version": "0.9.3",
-      "resolved": "https://registry.npmjs.org/react-sticky-box/-/react-sticky-box-0.9.3.tgz",
-      "integrity": "sha512-Y/qO7vTqAvXuRR6G6ZCW4fX2Bz0GZRwiiLTVeZN5CVz9wzs37ev0Xj3KSKF/PzF0jifwATivI4t24qXG8rSz4Q==",
-      "dependencies": {
-        "@babel/runtime": "^7.1.5",
-        "resize-observer-polyfill": "^1.5.1"
-      },
-      "peerDependencies": {
-        "prop-types": "^15.6.2",
-        "react": "^0.14.0 || ^15.0.0 || ^16.0.0"
-      }
-    },
     "node_modules/react-transition-group": {
       "version": "4.4.1",
       "resolved": "https://registry.npmjs.org/react-transition-group/-/react-transition-group-4.4.1.tgz",
@@ -18612,11 +18598,6 @@
       "resolved": "https://registry.npmjs.org/requires-port/-/requires-port-1.0.0.tgz",
       "integrity": "sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=",
       "license": "MIT"
-    },
-    "node_modules/resize-observer-polyfill": {
-      "version": "1.5.1",
-      "resolved": "https://registry.npmjs.org/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz",
-      "integrity": "sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg=="
     },
     "node_modules/resolve": {
       "version": "1.20.0",
@@ -35955,15 +35936,6 @@
         }
       }
     },
-    "react-sticky-box": {
-      "version": "0.9.3",
-      "resolved": "https://registry.npmjs.org/react-sticky-box/-/react-sticky-box-0.9.3.tgz",
-      "integrity": "sha512-Y/qO7vTqAvXuRR6G6ZCW4fX2Bz0GZRwiiLTVeZN5CVz9wzs37ev0Xj3KSKF/PzF0jifwATivI4t24qXG8rSz4Q==",
-      "requires": {
-        "@babel/runtime": "^7.1.5",
-        "resize-observer-polyfill": "^1.5.1"
-      }
-    },
     "react-transition-group": {
       "version": "4.4.1",
       "resolved": "https://registry.npmjs.org/react-transition-group/-/react-transition-group-4.4.1.tgz",
@@ -36348,11 +36320,6 @@
       "version": "1.0.0",
       "resolved": "https://registry.npmjs.org/requires-port/-/requires-port-1.0.0.tgz",
       "integrity": "sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8="
-    },
-    "resize-observer-polyfill": {
-      "version": "1.5.1",
-      "resolved": "https://registry.npmjs.org/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz",
-      "integrity": "sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg=="
     },
     "resolve": {
       "version": "1.20.0",

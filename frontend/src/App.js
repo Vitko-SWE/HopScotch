@@ -22,6 +22,7 @@ import { withAuthenticationRequired } from '@auth0/auth0-react';
 import VotingCard from './Components/EditTrip/components/VotingCard';
 import FlightSearch from './Components/FlightSearch/FlightSearch';
 import FlightSearchResults from "./Components/FlightSearchResults/FlightSearchResults.js";
+import SearchFilter from './Components/Search/components/SearchFilter';
 
 export const history = createBrowserHistory();
 
@@ -33,7 +34,7 @@ function App() {
   return (
     <Router history={history}>
       <div className="App">
-        <MenuBar/>
+        <MenuBar className="mb-0"/>
         <Switch>
           <Route path="/" component={Landing} exact />
           <Route path="/directions" render={() => {window.location.href="Directions.html"}} />
@@ -49,7 +50,8 @@ function App() {
           <ProtectedRoute path="/search/flights/results" component={FlightSearchResults} exact />
           <ProtectedRoute path="/attractionsearch/"  component={AttractionSearch} exact/>
           <ProtectedRoute path="/search/"  component={MainSearch} exact/>
-          <Route path="/testrender/votingcard" component={VotingCard} exact />
+          {/* <Route path="/testrender/votingcard" component={VotingCard} exact /> */}
+          <ProtectedRoute path="/testrender/searchfilter" component={SearchFilter} exact />
         </Switch>
       </div>
     </Router>
