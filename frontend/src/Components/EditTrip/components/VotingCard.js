@@ -62,7 +62,7 @@ export default function VotingCard(props) {
     }
 
     return (
-        <div>
+        <>
             <Card>
                 <Card.Header>
                     <Card.Title>
@@ -111,6 +111,11 @@ export default function VotingCard(props) {
                     <Button variant="danger" onClick={handleThumbsDown} disabled={lockout}>
                         <HandThumbsDown size={36} />
                     </Button>
+
+                    <hr />
+                    <h6>Owner Actions</h6>
+                    <Button className="mr-2" variant="warning">Confirm</Button>
+                    <Button variant="outline-danger">Delete</Button>
                 </Card.Footer>
                 
                 <Collapse in={loading}>
@@ -119,6 +124,6 @@ export default function VotingCard(props) {
                     </Card.Footer>
                 </Collapse>
             </Card>
-        </div>
+        </>
     )
 }
