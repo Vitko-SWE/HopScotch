@@ -9,6 +9,8 @@ import VotingCard from "./components/VotingCard";
 import { RiExternalLinkLine } from 'react-icons/ri';
 import { FaYelp } from 'react-icons/fa'
 import Rating from '../Search/Rating'
+import Budgeting from "./components/Budgeting";
+import uuid from "react-uuid";
 import '../EditTrip/EditTrip.css'
 
 export default function EditTrip(props) {
@@ -430,9 +432,9 @@ export default function EditTrip(props) {
 
   return (
     <div>
-      <div class="intro pt-5 pb-5">
-        <h1 class="pb-3">{tripInfo.Name}</h1>
-        <h3 class="pb-3">Your role: <strong>{userRole}</strong></h3>
+      <div className="intro pt-5 pb-5">
+        <h1 className="pb-3">{tripInfo.Name}</h1>
+        <h3 className="pb-3">Your role: <strong>{userRole}</strong></h3>
         <Link to="/directions"><Button variant="primary">Directions</Button></Link>
         <Container>
           <Row>
@@ -446,9 +448,9 @@ export default function EditTrip(props) {
             </Col>
             <Col>
               <p><strong>Features:</strong> {tripFeatures.dining.length > 0 && tripFeatures.dining.map((item, index) => (
-                <li>Dining: {item.name}</li>))}
+                <li key={uuid()}>Dining: {item.name}</li>))}
                 {tripFeatures.otherFeatures.length > 0 && tripFeatures.otherFeatures.map((item, index) => (
-                  <li>{item.FeatureType}: {item.FeatureName}</li>))}
+                  <li key={uuid()}>{item.FeatureType}: {item.FeatureName}</li>))}
 
               </p>
               <p><strong>Locked?</strong> {tripInfo.IsLocked === 0 ? "No" : "Yes"}</p>
@@ -475,31 +477,36 @@ export default function EditTrip(props) {
         </Container>
       </div>
       {userRole !== "Viewer" && (
-        <div class="pt-5 pb-5">
+        <div className="pt-5 pb-5">
           {(userRole == "Editor" || userRole == "Owner") && (
             <div>
-              <h3>Voting</h3>
+              <div>
+                <Budgeting tripid={props.match.params.tripid} tripfeatures={tripFeatures} />
+              </div>
+              <div>
+                <h3>Voting</h3>
 
-              {votes.length > 0 ? (
-                <CardDeck className="ml-5 mr-5 mt-3 justify-content-center">
-                  {votes.map((item, i) => {
-                    return (<VotingCard
-                      key={i}
-                      title={item.FeatureName}
-                      type={item.FeatureType}
-                      score={item.Score}
-                      voters={item.Voters.split(",")}
-                      tripid={props.match.params.tripid}
-                      featureid={item.FeatureId}
-                      isflight={item.IsFlight}
-                    />)
-                  })}
-                </CardDeck>
-              ) : (
-                <h6>No votes availible. Why not add something?</h6>
-              )}
+                {votes.length > 0 ? (
+                  <CardDeck className="ml-5 mr-5 mt-3 justify-content-center">
+                    {votes.map((item, i) => {
+                      return (<VotingCard
+                        key={i}
+                        title={item.FeatureName}
+                        type={item.FeatureType}
+                        score={item.Score}
+                        voters={item.Voters.split(",")}
+                        tripid={props.match.params.tripid}
+                        featureid={item.FeatureId}
+                        isflight={item.IsFlight}
+                      />)
+                    })}
+                  </CardDeck>
+                ) : (
+                  <h6>No votes availible. Why not add something?</h6>
+                )}
 
-              <hr />
+                <hr />
+              </div>
             </div>
           )}
           <Container>
@@ -513,7 +520,7 @@ export default function EditTrip(props) {
             </Row>
           </Container>
           <hr />
-          <h3 class="pb-3">Actions</h3>
+          <h3 className="pb-3">Actions</h3>
           {userRole === "Owner" && (
             <Container>
               <Row>
@@ -558,7 +565,7 @@ export default function EditTrip(props) {
                       </Form.Text>
                       <Form.Control as="select">
                         {tripUsers.map((user) => (
-                          <option value={user.UserId}>{`${user.Name} (${user.EmailAddress})`}</option>
+                          <option key={uuid()} value={user.UserId}>{`${user.Name} (${user.EmailAddress})`}</option>
                         ))}
                       </Form.Control>
                     </Form.Group>
@@ -624,9 +631,9 @@ export default function EditTrip(props) {
           </div>
           <hr />
           <h5>Dining Features Details</h5>
-          <div class="card-display">
+          <div className="card-display">
             {tripFeatures.dining.length > 0 && tripFeatures.dining.map((item, index) =>
-              <Card className="custom_card" style={{ width: '19%' }}>
+              <Card key={uuid()} className="custom_card" style={{ width: '19%' }}>
                 <Card.Img style={{ width: '100%', height: '280px' }} variant="top" src={item.image_url} />
                 <Card.Body>
                   <Card.Title>{item.name}</Card.Title>
@@ -642,15 +649,15 @@ export default function EditTrip(props) {
                   </Card.Body>
                   <Button variant="danger" className="delete-btn">Delete Feature</Button>
                   <Button>Vote</Button>
-                  {confirmedFeatures.find(feature => feature.FeatureId === item.id && feature.Confirmed === 'true') ? 
+                  {confirmedFeatures.find(feature => feature.FeatureId === item.id && feature.Confirmed === 'true') ?
                   <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" fill="green" class="bi bi-bookmark-check-fill" viewBox="0 0 16 16">
-                      <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zm8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" fill="green" className="bi bi-bookmark-check-fill" viewBox="0 0 16 16">
+                      <path fillRule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zm8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z" />
                     </svg> Confirmed!
-                  </div> : 
+                  </div> :
                   <div>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" fill="red" class="bi bi-bookmark-x-fill" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zM6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293 6.854 5.146z" />
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" fill="red" className="bi bi-bookmark-x-fill" viewBox="0 0 16 16">
+                        <path fillRule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zM6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293 6.854 5.146z" />
                       </svg> Pending
                   </div>}
                   {userRole === "Owner" ? <div>
@@ -666,7 +673,7 @@ export default function EditTrip(props) {
           <div className="card-display">
 
             {tripFeatures.otherFeatures.length > 0 && tripFeatures.otherFeatures.map((item, index) =>
-              <Card className="custom_card" style={{ width: '19%' }}>
+              <Card key={uuid()} className="custom_card" style={{ width: '19%' }}>
                 <Card.Img style={{ width: '100%', height: '280px' }} variant="top" src={item.PictureURL} />
                 <Card.Body>
                   <Card.Title>{item.FeatureName}</Card.Title>
@@ -683,13 +690,13 @@ export default function EditTrip(props) {
                   <Button>Vote</Button>
                   {item.Confirmed === 'true' ?
                   <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" fill="green" class="bi bi-bookmark-check-fill" viewBox="0 0 16 16">
-                      <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zm8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" fill="green" className="bi bi-bookmark-check-fill" viewBox="0 0 16 16">
+                      <path fillRule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zm8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z" />
                     </svg> Confirmed!
-                  </div> : 
+                  </div> :
                   <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" fill="red" class="bi bi-bookmark-x-fill" viewBox="0 0 16 16">
-                      <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zM6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293 6.854 5.146z" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" fill="red" className="bi bi-bookmark-x-fill" viewBox="0 0 16 16">
+                      <path fillRule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zM6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293 6.854 5.146z" />
                     </svg> Pending
                   </div>}
                   {userRole === "Owner" ? <div>
