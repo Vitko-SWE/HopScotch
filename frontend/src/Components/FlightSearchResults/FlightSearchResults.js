@@ -4,23 +4,45 @@ import React from 'react'
 import { useEffect } from 'react';
 import { useLayoutEffect } from 'react';
 import { useState } from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Pagination } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
 import SearchFilter from '../Search/components/SearchFilter';
 import FlightCard from './components/FlightCard'
 
 export default function FlightSearchResults(props) {
-    const {state} = props.location
+    const [flightItns, setFlightItins] = useState(props.location.state.data.data);
     const { user, getAccessTokenSilently } = useAuth0();
     const [trips, setTrips] = useState([]);
-
-    console.log(state)
+    const [currentPage, setPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [pages, setPages] = useState([]);
+    const [flightSlice, setFlightSlice] = useState([]);
 
     useEffect(() => {
-        if(trips.length == 0) {
-            getUserTrips();
+        getUserTrips();
+        setupPages();
+    }, [trips, currentPage]);
+
+    const setupPages = () => {
+        const indexOfLastFlight = currentPage * itemsPerPage;
+        const indexOfFirstFlight = indexOfLastFlight - itemsPerPage;
+        setFlightSlice(flightItns.slice(indexOfFirstFlight, indexOfLastFlight));
+
+        var tempPages = []
+        for(var i = 1; i <= Math.ceil(flightItns.length/itemsPerPage); i++) {
+            tempPages.push(
+                <Pagination.Item key={i} active={i == currentPage}>
+                    {i}
+                </Pagination.Item>
+            );
         }
-    });
+
+        setPages(tempPages);
+    }
+
+    const handlePageTurn = e => {
+        setPage(parseInt(e.target.innerText))
+    }
 
     const getUserTrips = () => {
         getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
@@ -31,12 +53,8 @@ export default function FlightSearchResults(props) {
                 }
             }).then(async (res) => {
                 await setTrips(res.data)
-                console.log("RES")
-                console.log(res)
             }).catch((err) => {
                 console.log(err)
-            }).finally(() => {
-                console.log("is this working?")
             })
         }).catch(err => {
             console.log(err)
@@ -47,17 +65,18 @@ export default function FlightSearchResults(props) {
         <div style={{display: "flex", alignItems: "flex-start"}}>
             <SearchFilter />
             <Container fluid>
-            {state.data.data.map((item, i) => {
+            {flightSlice.map((item, i) => {
                 return(
                     <FlightCard key={item.id} 
                         itineraries={item.itineraries} 
                         price={item.price} 
                         airlines={item.validatingAirlineCodes}
-                        trips={state.trips}
+                        trips={trips}
                         data={item}
                     />
                 )
             })}
+            <Pagination className="mt-1 justify-content-center" onClick={handlePageTurn}>{pages}</Pagination>
             </Container>
         </div>
     )

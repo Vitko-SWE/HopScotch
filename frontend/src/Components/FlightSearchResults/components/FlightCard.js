@@ -13,7 +13,7 @@ export default function FlightCard(props) {
 
     useEffect(() => { setButtonTrips(props.trips) }, [props.trips])
 
-    console.log(props)
+    // console.log(props)
 
     return (
         <div>
