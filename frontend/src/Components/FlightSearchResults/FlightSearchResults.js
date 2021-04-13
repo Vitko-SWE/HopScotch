@@ -61,9 +61,13 @@ export default function FlightSearchResults(props) {
         })
     }
 
+    const testFilters = filters => {
+        console.log(filters)
+    }
+
     return (
         <div style={{display: "flex", alignItems: "flex-start"}}>
-            <SearchFilter />
+            <SearchFilter price stops carriers ratings distance relativePrice filterFunc={testFilters} />
             <Container fluid>
             {flightSlice.map((item, i) => {
                 return(
