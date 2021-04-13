@@ -25,7 +25,7 @@ export default function SearchFilter(props) {
         }
 
         if(props.stops) {
-            if(results.maxStops.value == "Nonstop") {
+            if(results.maxStops.value == "No Max") {
                 filters.maxStops = null
             } else {
                 filters.maxStops = parseInt(results.maxStops.value)
@@ -85,7 +85,7 @@ export default function SearchFilter(props) {
                             <Form.Group controlId="maxStops">
                                 <Form.Label>Max Stops</Form.Label>
                                 <Form.Control as="select">
-                                    <option value="Nonstop">No Max</option>
+                                    <option>No Max</option>
                                     <option value="0">Nonstop Only</option>
                                     <option value="1">1 Stop</option>
                                     <option value="2">2 Stops</option>
@@ -96,7 +96,11 @@ export default function SearchFilter(props) {
                     )}
 
                     {props.carriers && ( // Carriers
-                        <h6>No idea how to implement this one. Rip.</h6>
+                        <Row><Col>
+                            <h5>Select Carriers</h5>
+                            <h6>No idea how to implement this one. Rip.</h6>
+                            <hr />
+                        </Col></Row>
                     )}
 
                     {props.ratings && ( // Rating
