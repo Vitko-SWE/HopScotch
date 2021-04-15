@@ -67,11 +67,11 @@ export default function FlightCard_TripSelectButton(props) {
     return (
         <DropdownButton title="Select">
             <Dropdown.Header>Add this flight to a trip:</Dropdown.Header>
-            {buttonTrips.length >= 0 && buttonTrips.map((item, i) => {
-                return (
-                    <Dropdown.Item key={item.TripId} onClick={() => handleClick(item)} as="button">{item.Name}</Dropdown.Item>
-                )
-            })}
+            {buttonTrips.length >= 0 && buttonTrips.map((item, i) => (
+                !item.IsLocked ?   
+                    <div><Dropdown.Item key={item.TripId} onClick={() => handleClick(item)} as="button">{item.Name}</Dropdown.Item></div> :
+                    <div><Dropdown.Item disabled>{item.Name}</Dropdown.Item></div>
+            ))}
         </DropdownButton>
     )
 }

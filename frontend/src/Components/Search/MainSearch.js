@@ -275,7 +275,9 @@ export default function MainSearch() {
                         <Dropdown.Header>You do not have any editable trips.</Dropdown.Header>
                       )}
                       {attTrips.length !== 0 && attTrips.map((item) => (
-                          <Dropdown.Item onClick={() => addTourToTrip(item, result)} as="button">{item.Name}</Dropdown.Item>
+                        !item.IsLocked ?
+                          <div><Dropdown.Item onClick={() => addTourToTrip(item, result)} as="button">{item.Name}</Dropdown.Item></div> :
+                          <div><Dropdown.Item disabled>{item.Name}</Dropdown.Item></div>
                         ))
                       }
                     </DropdownButton>

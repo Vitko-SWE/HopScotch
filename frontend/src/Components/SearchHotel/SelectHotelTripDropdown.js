@@ -58,7 +58,9 @@ export default function SelectTripDropdown(props) {
         <DropdownButton id="dropdown-item-button" title="Select Trip to add to">
             <Dropdown.Header>Add hotel to trip</Dropdown.Header>
             {props.trips.map((item) => (
-                   <Dropdown.Item onClick={() => handleSelect(item)} as="button">{item.Name}</Dropdown.Item>
+                !item.IsLocked ?
+                   <div><Dropdown.Item onClick={() => handleSelect(item)} as="button">{item.Name}</Dropdown.Item></div> :
+                   <div><Dropdown.Item disabled>{item.Name}</Dropdown.Item></div>
                 ))}
         </DropdownButton>
     );
