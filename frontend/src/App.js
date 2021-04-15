@@ -22,6 +22,7 @@ import { withAuthenticationRequired } from '@auth0/auth0-react';
 import VotingCard from './Components/EditTrip/components/VotingCard';
 import FlightSearch from './Components/FlightSearch/FlightSearch';
 import FlightSearchResults from "./Components/FlightSearchResults/FlightSearchResults.js";
+import AgendaView from './Components/AgendaView/AgendaView';
 
 export const history = createBrowserHistory();
 
@@ -49,6 +50,7 @@ function App() {
           <ProtectedRoute path="/search/flights/results" component={FlightSearchResults} exact />
           <ProtectedRoute path="/attractionsearch/"  component={AttractionSearch} exact/>
           <ProtectedRoute path="/search/"  component={MainSearch} exact/>
+          <ProtectedRoute path="/AgendaView"  component={AgendaView} exact/>
           <Route path="/testrender/votingcard" component={VotingCard} exact />
         </Switch>
       </div>

@@ -28,7 +28,7 @@ router.route("/searchDining").get((req, resp) => {
 
 router.route("/selectDining").post((req, resp) => {
   console.log(req.body.TripId)
-    var query_string = `INSERT INTO TripFeatures VALUES ("${req.body.FeatureId}", "${req.body.FeatureType}", 0, "", 0, 0, null, ${req.body.TripId}, null, null, false)`;
+    var query_string = `INSERT INTO TripFeatures VALUES ("${req.body.FeatureId}", "${req.body.FeatureType}", 0, "", "${req.body.StartDateTime}", "${req.body.EndDateTime}", null, ${req.body.TripId}, null, null, false)`;
     console.log("posting new dining feature")
     db.query(query_string, (err, data) => {
         if (err) {
