@@ -481,7 +481,7 @@ export default function EditTrip(props) {
           {(userRole == "Editor" || userRole == "Owner") && (
             <div>
               <div>
-                <Budgeting tripid={props.match.params.tripid} tripfeatures={tripFeatures} />
+                <Budgeting tripid={props.match.params.tripid} tripfeatures={tripFeatures} tripInfo={tripInfo} />
               </div>
               <div>
                 <h3>Voting</h3>

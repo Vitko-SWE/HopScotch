@@ -2,7 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import { Button, Form, Container, Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import uuid from "react-uuid";
 
 export default function Budgeting(props) {
@@ -10,15 +10,36 @@ export default function Budgeting(props) {
   const [totals, setTotals] = useState((
     <div></div>
   ));
+  const history = useHistory();
 
   useEffect(() => {
     priceCalculator();
-  }, [props.tripfeatures]);
+  }, [props.tripfeatures, props.tripInfo]);
 
   const handleChangeBudget = (e) => {
     e.preventDefault();
     const results = e.currentTarget;
-    console.log(results.budgetChange.value);
+
+    if (results.budgetChange.value === "" || isNaN(results.budgetChange.value)) {
+      alert("Please enter a valid number.");
+    }
+    else {
+      getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+        axios.post(`/api/trips/editbudget/${props.tripid}`, {
+          budget: results.budgetChange.value,
+        }, {
+          headers: {
+            Authorization: `Bearer ${res}`,
+          },
+        }).then((res) => {
+          console.log(res);
+          history.push(`/edittrip/${props.tripid}`);
+        }).catch((err) => {
+          console.log(err);
+          //alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
+        });
+      });
+    }
   };
 
   const priceCalculator = () => {
@@ -51,6 +72,7 @@ export default function Budgeting(props) {
         <div>
           <p><strong>Min Estimated Total:</strong> {minCount}</p>
           <p><strong>Max Estimated Total:</strong> {maxCount}</p>
+          <p><strong>Budget:</strong> {props.tripInfo.Budget}</p>
         </div>
       ));
     }
@@ -70,17 +92,19 @@ export default function Budgeting(props) {
   return (
     <div>
       <h3>Budgeting</h3>
-      <Form onSubmit={handleChangeBudget}>
-        <Form.Group controlId="budgetChange">
-          <Form.Label>Edit Overall Budget</Form.Label>
-          <Form.Control required defaultValue={""} />
-        </Form.Group>
-        <Button variant="primary" type="submit">Submit</Button>
-        {" "}
-        <Link to={`/edittrip/${props.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
-      </Form>
       <Container>
         <Row>
+          <Col>
+            <Form onSubmit={handleChangeBudget}>
+              <Form.Group controlId="budgetChange">
+                <Form.Label>Edit Overall Budget</Form.Label>
+                <Form.Control required defaultValue={props.tripInfo.Budget} />
+              </Form.Group>
+              <Button variant="primary" type="submit">Submit</Button>
+              {" "}
+              <Link to={`/edittrip/${props.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
+            </Form>
+          </Col>
           <Col>
             <h5>Expenses</h5>
             {props.tripfeatures.dining.length > 0 && props.tripfeatures.dining.map((item, index) => (

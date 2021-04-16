@@ -259,6 +259,19 @@ router.route("/edituserrole/:tripid/:userid").post((req, res) => {
   })
 });
 
+router.route("/editbudget/:tripid").post((req, res) => {
+  const query = `update Trip set Budget = ${req.body.budget} where TripId = '${req.params.tripid}';`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      res.send(data);
+    }
+  });
+});
+
 router.route("/removeuser/:tripid/:userid").delete((req, res) => {
   const query = `delete from TripUser where TripId = '${req.params.tripid}' and UserId = '${req.params.userid}';`;
   db.query(query, (err, data) => {
@@ -446,8 +459,8 @@ router.route("/getTripFeatures/:tripid").get((req, res) => {
                 // console.log(diningOptions)
               })
             )
-        
-            
+
+
           }
           else {
             otherFeatures.push(data[i])
