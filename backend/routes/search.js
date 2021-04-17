@@ -28,7 +28,7 @@ router.route("/searchDining").get((req, resp) => {
 
 router.route("/selectDining").post((req, resp) => {
   console.log(req.body.TripId)
-    var query_string = `INSERT INTO TripFeatures VALUES ("${req.body.FeatureId}", "${req.body.FeatureType}", 0, "", 0, 0, null, ${req.body.TripId}, null, null, false)`;
+    var query_string = `INSERT INTO TripFeatures VALUES ("${req.body.FeatureId}", "${req.body.FeatureType}", ${req.body.price}, "", 0, 0, null, ${req.body.TripId}, null, null, false)`;
     console.log("posting new dining feature")
     db.query(query_string, (err, data) => {
         if (err) {
@@ -210,7 +210,7 @@ router.route("/flights").get(async (req, res) => {
     const retDate = req.query.retDate;
     const numPass = req.query.numPass;
 
-    if(originCode == undefined || destCode == undefined || 
+    if(originCode == undefined || destCode == undefined ||
         deptDate == undefined || retDate == undefined ||
          numPass == undefined) {
         console.log("Invalid parameters.");

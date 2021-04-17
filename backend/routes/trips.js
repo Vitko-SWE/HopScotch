@@ -434,6 +434,19 @@ router.route("/myeditabletrips").get((req, res) => {
   });
 });
 
+router.route("/getfeaturespure/:tripid").get((req, res) => {
+  const query = `select * from TripFeatures where TripId = '${req.params.tripid}';`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      res.send(data);
+    }
+  });
+});
+
 router.route("/getTripFeatures/:tripid").get((req, res) => {
   const query = `select * from TripFeatures where TripId = '${req.params.tripid}';`;
   db.query(query, (err, data) => {

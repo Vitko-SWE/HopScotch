@@ -10,11 +10,37 @@ export default function Budgeting(props) {
   const [totals, setTotals] = useState((
     <div></div>
   ));
+  const [features, setFeatures] = useState([]);
   const history = useHistory();
 
   useEffect(() => {
     priceCalculator();
-  }, [props.tripfeatures, props.tripInfo]);
+    updateFeatures();
+  }, [props.tripFeatures, props.tripInfo]);
+
+  const updateFeatures = (e) => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.get(`/api/trips/getfeaturespure/${props.tripid}`, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        for (let i = 0; i < res.data.length; i++) {
+          if (res.data[i].FeatureType === "Dining") {
+            for (let j = 0; j < props.tripFeatures.dining.length; j++) {
+              if (props.tripFeatures.dining[j].id === res.data[i].FeatureId) {
+                res.data[i].FeatureName = props.tripFeatures.dining[j].name;
+                break;
+              }
+            }
+          }
+        }
+        setFeatures(res.data);
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
+  };
 
   const handleChangeBudget = (e) => {
     e.preventDefault();
@@ -35,55 +61,72 @@ export default function Budgeting(props) {
           console.log(res);
           history.push(`/edittrip/${props.tripid}`);
         }).catch((err) => {
-          console.log(err);
-          //alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
+          alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
         });
       });
     }
   };
 
+  const handleChangeExpenses = (e) => {
+    e.preventDefault();
+    const results = e.currentTarget;
+    const convData = [];
+    for (let i = 0; i < results.length - 2; i++) {
+      if (results[i].value === "" || isNaN(results[i].value)) {
+        alert("Please enter valid numbers.");
+        return;
+      }
+      convData.push({
+        id: results[i].id.substring(7),
+        price: results[i].value,
+      });
+    }
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.post(`/api/features/editprices/${props.tripid}`, {
+        input: convData,
+      }, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        console.log(res);
+        history.push(`/edittrip/${props.tripid}`);
+      }).catch((err) => {
+        alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
+      });
+    });
+  };
+
   const priceCalculator = () => {
-    if (props.tripfeatures.dining.length > 0) {
-      let minCount = 0;
-      let maxCount = 0;
-      for (let i = 0; i < props.tripfeatures.dining.length; i++) {
-        if (props.tripfeatures.dining[i].price === "$") {
-          minCount += 1;
-          maxCount += 10;
-        }
-        else if (props.tripfeatures.dining[i].price === "$$") {
-          minCount += 11;
-          maxCount += 30;
-        }
-        else if (props.tripfeatures.dining[i].price === "$$$") {
-          minCount += 31;
-          maxCount += 60;
-        }
-        else if (props.tripfeatures.dining[i].price === "$$$$") {
-          minCount += 61;
-          maxCount += 100;
-        }
-      }
-      for (let i = 0; i < props.tripfeatures.otherFeatures.length; i++) {
-        minCount += props.tripfeatures.otherFeatures[i].Price;
-        maxCount += props.tripfeatures.otherFeatures[i].Price;
-      }
+    let count = 0;
+    for (let i = 0; i < features.length; i++) {
+      count += features[i].Price;
+    }
+
+    if (count === props.tripInfo.Budget) {
       setTotals((
         <div>
-          <p><strong>Min Estimated Total:</strong> {minCount}</p>
-          <p><strong>Max Estimated Total:</strong> {maxCount}</p>
+          <p><strong>Total:</strong> {count}</p>
           <p><strong>Budget:</strong> {props.tripInfo.Budget}</p>
+          <p><strong>You are right on your budget.</strong></p>
+        </div>
+      ));
+    }
+    else if (count > props.tripInfo.Budget) {
+      setTotals((
+        <div>
+          <p><strong>Total:</strong> {count}</p>
+          <p><strong>Budget:</strong> {props.tripInfo.Budget}</p>
+          <p  style={{color: "red"}}><strong>You have exceeded your budget by ${(count - props.tripInfo.Budget).toFixed(2)}!</strong></p>
         </div>
       ));
     }
     else {
-      let count = 0;
-      for (let i = 0; i < props.tripfeatures.otherFeatures.length; i++) {
-        count += props.tripfeatures.otherFeatures[i].Price;
-      }
       setTotals((
         <div>
           <p><strong>Total:</strong> {count}</p>
+          <p><strong>Budget:</strong> {props.tripInfo.Budget}</p>
+          <p style={{color: "green"}}><strong>You are under your budget by ${(props.tripInfo.Budget - count).toFixed(2)}!</strong></p>
         </div>
       ));
     }
@@ -107,12 +150,19 @@ export default function Budgeting(props) {
           </Col>
           <Col>
             <h5>Expenses</h5>
-            {props.tripfeatures.dining.length > 0 && props.tripfeatures.dining.map((item, index) => (
-              <li key={uuid()}>{item.name}: {item.price}</li>
-            ))}
-            {props.tripfeatures.otherFeatures.length > 0 && props.tripfeatures.otherFeatures.map((item, index) => (
-                <li key={uuid()}>{item.FeatureName}: {item.Price}</li>
-            ))}
+            <Form onSubmit={handleChangeExpenses}>
+              {features.length > 0 && features.map((item, index) => (
+                <li key={uuid()}>
+                  {item.FeatureName}:{" "}
+                  <Form.Group controlId={`expense${item.FeatureId}`}>
+                    <Form.Control required defaultValue={item.Price} />
+                  </Form.Group>
+                </li>
+              ))}
+              <Button variant="primary" type="submit">Submit</Button>
+              {" "}
+              <Link to={`/edittrip/${props.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
+            </Form>
           </Col>
           <Col>
             <h5>Totals</h5>
