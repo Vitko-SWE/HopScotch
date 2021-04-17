@@ -85,12 +85,6 @@ export default function SelectTripDropdown(props) {
             <Modal.Title>Please select trip, date, and time</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {/* <DropdownButton id="dropdown-item-button" title="Select">
-                    <Dropdown.Header>Add dining to trip</Dropdown.Header>
-                    {props.trips.map((item) => (
-                        <Dropdown.Item onClick={() => handleSelect(item)} as="button">{item.Name}</Dropdown.Item>
-                        ))}
-                </DropdownButton> */}
                 <Container>
                     <Row>
                         <Col xs={6} md={4}>
@@ -133,12 +127,6 @@ export default function SelectTripDropdown(props) {
             </Button>
             </Modal.Footer>
         </Modal>
-        {/* <DropdownButton id="dropdown-item-button" title="Select">
-            <Dropdown.Header>Add dining to trip</Dropdown.Header>
-            {props.trips.map((item) => (
-                   <Dropdown.Item onClick={() => handleSelect(item)} as="button">{item.Name}</Dropdown.Item>
-                ))}
-        </DropdownButton> */}
         </>
     );
   }
