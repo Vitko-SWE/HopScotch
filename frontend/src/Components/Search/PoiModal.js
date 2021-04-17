@@ -1,80 +1,63 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
-import axios from 'axios'
-import { Dropdown, DropdownButton, Modal, Button, ListGroup, Col, Form } from 'react-bootstrap'
-import { useHistory } from 'react-router';
 import DatePicker from "react-datepicker";
-import { Container } from 'react-bootstrap';
-import { Row } from 'react-bootstrap';
+import { Button, Modal, ListGroup, Col, Form, Container, Row} from "react-bootstrap"
 
-export default function SelectTripDropdown(props) {
-    const {user, getAccessTokenSilently} = useAuth0();
+
+
+export default function PoiModal(props) {
+    const { user, getAccessTokenSilently } = useAuth0();
     const [show, setShow] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [tripSelected, setTripSelected] = useState(-1)
 
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    const trips = useState({items: []});
 
-    const history = useHistory();
+    const handleShow = () => {
+        if (props.trips.length === 0) {
+          alert("You do not have any editable trips")
+        }
+        else {
+          setShow(true)
+        }
+    }
 
     const handleTripChange = async (trip) => {
-        
-        console.log("trip if: " + trip.TripId)
         setTripSelected(trip.TripId)
-        
-        console.log(tripSelected)
     }
 
-    const handleSelect = (item) => {
-        console.log("trips to submit: " + tripSelected)
-        console.log(startDate)
-        console.log(endDate)
+
+    const addPOIToTrip = () => {
+
         setShow(false)
-
-
-        const newFeature = {
-            FeatureId: props.diningOption.id,
-            FeatureType: "Dining",
+        getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+          axios.post("/api/search/addpoi/", {
+            tripid: tripSelected,
             StartDateTime: startDate,
             EndDateTime: endDate,
-            TripId: tripSelected
-        }
-
-        getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-            const authToken = res;
-            axios.post('/api/search/selectDining', newFeature, {
-                headers: {
-                Authorization: `Bearer ${res}`,
-                },
-            }).then((res) => {
-
-                axios.post("/api/trips/vote", {
-                    tripid: tripSelected,
-                    userid: user.sub,
-                    featureid: props.diningOption.id,
-                    isflight: 0,
-                    score: 1
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${authToken}`
-                    }
-                }).then(res3 => {
-                })
-                .catch((err) =>{
-                    console.log(err);
-                });
-            //   alert("The dining option has been added to the selected trip.");
-            }).catch((err) => {
-                console.log(err);
-            });
+            id: props.result.id,
+            geoCode: props.result.geoCode,
+          }, {
+            headers: {
+              Authorization: `Bearer ${res}`,
+            },
+          }).then((res) => {
+            console.log(res.data);
+            alert("The point of interest has been added to the selected trip.");
+          }).catch((err) => {
+            console.log(err);
+          });
         });
+      };
 
-    }
 
-    return (
+    
+      
+
+
+      return (
         <>
         <Button variant="primary" onClick={handleShow}>
             Add to trip
@@ -85,12 +68,6 @@ export default function SelectTripDropdown(props) {
             <Modal.Title>Please select trip, date, and time</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {/* <DropdownButton id="dropdown-item-button" title="Select">
-                    <Dropdown.Header>Add dining to trip</Dropdown.Header>
-                    {props.trips.map((item) => (
-                        <Dropdown.Item onClick={() => handleSelect(item)} as="button">{item.Name}</Dropdown.Item>
-                        ))}
-                </DropdownButton> */}
                 <Container>
                     <Row>
                         <Col xs={6} md={4}>
@@ -128,17 +105,16 @@ export default function SelectTripDropdown(props) {
             <Button variant="secondary" onClick={handleClose}>
                 Close
             </Button>
-            <Button variant="primary" onClick={handleSelect}>
+            <Button variant="primary" onClick={addPOIToTrip}>
                 Save
             </Button>
             </Modal.Footer>
         </Modal>
-        {/* <DropdownButton id="dropdown-item-button" title="Select">
-            <Dropdown.Header>Add dining to trip</Dropdown.Header>
-            {props.trips.map((item) => (
-                   <Dropdown.Item onClick={() => handleSelect(item)} as="button">{item.Name}</Dropdown.Item>
-                ))}
-        </DropdownButton> */}
         </>
     );
-  }
+
+
+       
+}
+
+

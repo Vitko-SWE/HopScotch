@@ -171,7 +171,7 @@ router.route("/attractionsearch").post((req, res) => {
 
 router.route("/addtour").post((req, res) => {
   axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${encodeURIComponent(req.body.geoCode.latitude + "," + req.body.geoCode.longitude)}&key=AIzaSyDhf9OqY8Z3uNub0hgRYttINkf1gXOGZH4`).then((resploc) => {
-    db.query(`insert into TripFeatures(FeatureId, FeatureType, Price, Location, StartDateTime, EndDateTime, BookingURL, TripId, FeatureName, PictureURL, Confirmed) values("${req.body.id}", "Tour/Activity", ${req.body.price}, "${resploc.data.results[0].formatted_address}", 0, 0, "${req.body.bookingLink}", ${req.body.tripid}, "${req.body.name}", "${req.body.picURL}", false);`, (err, data) => {
+    db.query(`insert into TripFeatures(FeatureId, FeatureType, Price, Location, StartDateTime, EndDateTime, BookingURL, TripId, FeatureName, PictureURL, Confirmed) values("${req.body.id}", "Tour/Activity", ${req.body.price}, "${resploc.data.results[0].formatted_address}", "${req.body.StartDateTime}", "${req.body.EndDateTime}", "${req.body.bookingLink}", ${req.body.tripid}, "${req.body.name}", "${req.body.picURL}", false);`, (err, data) => {
       if (err) {
         console.log(err);
         res.send(err);
@@ -188,7 +188,7 @@ router.route("/addtour").post((req, res) => {
 
 router.route("/addpoi").post((req, res) => {
   axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${encodeURIComponent(req.body.geoCode.latitude + "," + req.body.geoCode.longitude)}&key=AIzaSyDhf9OqY8Z3uNub0hgRYttINkf1gXOGZH4`).then((resploc) => {
-    db.query(`insert into TripFeatures(FeatureId, FeatureType, Price, Location, StartDateTime, EndDateTime, BookingURL, TripId, FeatureName) values("${req.body.id}", "Point of Interest", 0, "${resploc.data.results[0].formatted_address}", 0, 0, NULL, ${req.body.tripid}, "${req.body.name}");`, (err, data) => {
+    db.query(`insert into TripFeatures(FeatureId, FeatureType, Price, Location, StartDateTime, EndDateTime, BookingURL, TripId, FeatureName) values("${req.body.id}", "Point of Interest", 0, "${resploc.data.results[0].formatted_address}", "${req.body.StartDateTime}", "${req.body.EndDateTime}", NULL, ${req.body.tripid}, "${req.body.name}");`, (err, data) => {
       if (err) {
         console.log(err);
         res.send(err);

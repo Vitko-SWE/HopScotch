@@ -17,11 +17,13 @@ export default function AgendaView(props) {
     const [showAgenda, setShowAgenda] =  useState(false)
     const [flights, setFlights] = useState([])
     const [dining, setDining] = useState([])
+    const [features, setFeatures] = useState([])
     
 
     useEffect (() => {
         getFlights()
         getDiningFeatures()
+        getOtherFeatures()
     }, [])
 
     
@@ -51,7 +53,7 @@ export default function AgendaView(props) {
             }
         }
 
-        let features = props.features.otherFeatures
+        // let features = props.features.otherFeatures
 
         for (let i = 0; i < features.length; i++) {
             let date = new Date(features[i].StartDateTime)
@@ -102,8 +104,14 @@ export default function AgendaView(props) {
           }
         })
 
-        let flightObject = JSON.parse(atob(res.data.FlightData))
-        setFlights(flightObject.itineraries)
+        console.log("flights")
+        console.log(res.data)
+
+        if (res.data !== "") {
+            let flightObject = JSON.parse(atob(res.data.FlightData))
+            console.log(flightObject)
+            setFlights(flightObject.itineraries)
+        }
 
     }
 
@@ -124,7 +132,7 @@ export default function AgendaView(props) {
 
         for (let i = 0; i < props.features.dining.length; i++) {
             for (let j = 0; j < res.data.length; j++) {
-                console.log(props.features.dining[i].id)
+                // console.log(props.features.dining[i].id)
                 if (props.features.dining[i].id === res.data[j].FeatureId) {
                     console.log("inside")
                     let date = new Date(res.data[j].StartDateTime)
@@ -147,6 +155,22 @@ export default function AgendaView(props) {
 
         setDining(diningFeatures)
 
+    }
+
+    const getOtherFeatures = async () => {
+        let accessToken = null
+        accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+        const token = `Bearer ${accessToken}`
+        let res = null
+        
+        res = await axios.get(`/api/features/getOtherFeatures/${props.tripInfo.TripId}`, {
+          headers: {
+            Authorization: token,
+          }
+        })
+        setFeatures(res.data)
+
+        
     }
 
     return (

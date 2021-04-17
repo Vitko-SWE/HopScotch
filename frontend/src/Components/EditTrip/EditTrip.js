@@ -443,7 +443,6 @@ export default function EditTrip(props) {
       <div class="intro pt-5 pb-5">
         <h1 class="pb-3">{tripInfo.Name}</h1>
         <h3 class="pb-3">Your role: <strong>{userRole}</strong></h3>
-        <Link to="/AgendaView" ><Button variant="primary">Agenda view</Button></Link>
         <Link to="/directions"><Button variant="primary">Directions</Button></Link>
         <Container>
           <Row>
