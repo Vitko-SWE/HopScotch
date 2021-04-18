@@ -127,6 +127,9 @@ class TripCards extends Component {
                   <Card.Text>
                     Days Remaining: {Math.ceil((new Date(trip.StartDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}
                   </Card.Text>
+                  <Card.Text>
+                    {trip.IsLocked ? 'Locked' : 'Unlocked'}
+                  </Card.Text>
                 </Card.Body>
                 <Card.Footer>
                   <Link to={`/edittrip/${trip.TripId}`}><Button className="edit-button"  variant="primary" size="lg" block>Edit</Button></Link>

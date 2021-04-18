@@ -5,6 +5,7 @@ import { Dropdown, DropdownButton } from 'react-bootstrap'
 import { useHistory } from 'react-router';
 
 export default function SelectTripDropdown(props) {
+    console.log(props)
     const {user, getAccessTokenSilently} = useAuth0();
     const trips = useState({items: []});
 
@@ -67,7 +68,9 @@ export default function SelectTripDropdown(props) {
         <DropdownButton id="dropdown-item-button" title="Select">
             <Dropdown.Header>Add dining to trip</Dropdown.Header>
             {props.trips.map((item) => (
-                   <Dropdown.Item onClick={() => handleSelect(item)} as="button">{item.Name}</Dropdown.Item>
+                !item.IsLocked ?
+                   <div><Dropdown.Item onClick={() => handleSelect(item)} as="button">{item.Name}</Dropdown.Item></div> :
+                   <div><Dropdown.Item disabled>{item.Name}</Dropdown.Item></div>
                 ))}
         </DropdownButton>
     );

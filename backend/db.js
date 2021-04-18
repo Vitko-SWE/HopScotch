@@ -4,7 +4,8 @@ var mysql  = mysql.createConnection({
     host            : 'tuffin.abderus.dreamhost.com',
     user            : 'hopscotchuser',
     password        : 'Hunter123',
-    database        : 'hopscotch'
+    database        : 'hopscotch',
+    multipleStatements: true
   });
   
   mysql.connect(function(err) {
