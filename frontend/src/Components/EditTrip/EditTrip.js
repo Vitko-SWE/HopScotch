@@ -6,6 +6,11 @@ import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import VotingCard from "./components/VotingCard";
+import { RiExternalLinkLine } from 'react-icons/ri';
+import { FaYelp } from 'react-icons/fa'
+import Rating from '../Search/Rating'
+import Budgeting from "./components/Budgeting";
+import uuid from "react-uuid";
 import '../EditTrip/EditTrip.css'
 import AgendaView from '../AgendaView/AgendaView'
 export default function EditTrip(props) {
@@ -447,7 +452,7 @@ export default function EditTrip(props) {
             <Button variant="primary" onClick={() => unlockTrip()}>Unlock Trip</Button>
           </div>
         }
-        
+
         <br /><br />
         <Link to="/directions"><Button variant="primary">Directions</Button></Link>
         <Container>
@@ -462,9 +467,9 @@ export default function EditTrip(props) {
             </Col>
             <Col>
               <p><strong>Features:</strong> {tripFeatures.dining.length > 0 && tripFeatures.dining.map((item, index) => (
-                <li>Dining: {item.name}</li>))}
+                <li key={uuid()}>Dining: {item.name}</li>))}
                 {tripFeatures.otherFeatures.length > 0 && tripFeatures.otherFeatures.map((item, index) => (
-                  <li>{item.FeatureType}: {item.FeatureName}</li>))}
+                  <li key={uuid()}>{item.FeatureType}: {item.FeatureName}</li>))}
 
               </p>
               <p><strong>Locked?</strong> {tripInfo.IsLocked === 0 ? "No" : "Yes"}</p>
@@ -494,7 +499,11 @@ export default function EditTrip(props) {
         <div class="pt-5 pb-5">
           {(userRole == "Editor" || userRole == "Owner") && !tripInfo.IsLocked && (
             <div>
-              <h3>Voting</h3>
+              <div>
+                <Budgeting tripFeatures={tripFeatures} tripid={props.match.params.tripid} tripInfo={tripInfo} />
+              </div>
+              <div>
+                <h3>Voting</h3>
 
               {votes.length > 0 ? (
                 <CardDeck className="ml-5 mr-5 mt-3 justify-content-center">
@@ -518,7 +527,8 @@ export default function EditTrip(props) {
                 <h6>No votes availible. Why not add something?</h6>
               )}
 
-              <hr />
+                <hr />
+              </div>
             </div>
           )}
           {userRole === "Owner" && !tripInfo.IsLocked && (

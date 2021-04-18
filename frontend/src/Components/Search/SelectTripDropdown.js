@@ -36,13 +36,27 @@ export default function SelectTripDropdown(props) {
         setShow(false)
 
 
+        if (props.diningOption.price === "$") {
+          props.diningOption.price = 5;
+        }
+        else if (props.diningOption.price === "$$") {
+          props.diningOption.price = 20;
+        }
+        else if (props.diningOption.price === "$$$") {
+          props.diningOption.price = 45;
+        }
+        else if (props.diningOption.price === "$$$$") {
+          props.diningOption.price = 80;
+        }
+
         const newFeature = {
             FeatureId: props.diningOption.id,
             FeatureType: "Dining",
             StartDateTime: startDate,
             EndDateTime: endDate,
-            TripId: tripSelected
-        }
+            TripId: tripSelected,
+            price: props.diningOption.price,
+        };
 
         getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
             const authToken = res;
@@ -51,13 +65,12 @@ export default function SelectTripDropdown(props) {
                 Authorization: `Bearer ${res}`,
                 },
             }).then((res) => {
-
                 axios.post("/api/trips/vote", {
                     tripid: tripSelected,
                     userid: user.sub,
                     featureid: props.diningOption.id,
                     isflight: 0,
-                    score: 1
+                    score: 1,
                 }, {
                     headers: {
                         Authorization: `Bearer ${authToken}`
