@@ -41,7 +41,7 @@ export default function MainSearch() {
     updateAttTrips();
   }, []);
 
-  
+
   const updateAttTrips = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
       axios.get(`/api/trips/myeditabletrips`, {

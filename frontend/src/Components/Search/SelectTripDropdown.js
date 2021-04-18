@@ -8,6 +8,7 @@ import { Container } from 'react-bootstrap';
 import { Row } from 'react-bootstrap';
 
 export default function SelectTripDropdown(props) {
+    console.log(props)
     const {user, getAccessTokenSilently} = useAuth0();
     const [show, setShow] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
@@ -21,10 +22,10 @@ export default function SelectTripDropdown(props) {
     const history = useHistory();
 
     const handleTripChange = async (trip) => {
-        
+
         console.log("trip if: " + trip.TripId)
         setTripSelected(trip.TripId)
-        
+
         console.log(tripSelected)
     }
 
@@ -105,15 +106,15 @@ export default function SelectTripDropdown(props) {
                                 <DatePicker selected={endDate} showTimeSelect onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
                             </Form.Group>
                         </Col>
-                        
+
                     </Row>
                     <Row>
                         <Col >
                             <Form.Group controlId="disclaimer" >
                                 <Form.Label>This is not a reservation, it's just a tool to help you organize your trip</Form.Label><br />
-                                
+
                             </Form.Group>
-                           
+
                         </Col>
                     </Row>
                 </Container>

@@ -37,7 +37,7 @@ class TripCards extends Component {
     accessToken = await this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"})
     const token = `Bearer ${accessToken}`
     let res = null
-    
+
     res = await axios.get(`/api/trips/getuserrole/${this.state.user_object.user.sub}`, {
       headers: {
         Authorization: token,
@@ -91,7 +91,7 @@ class TripCards extends Component {
 
 }
 
- 
+
 
   handleSort = (str) => {
     if (str == "alpha") {
@@ -170,7 +170,7 @@ class TripCards extends Component {
             </Card>
           ))}
         </div>
-    
+
     ))
   }
 

@@ -83,8 +83,8 @@ router.route("/getConfirmedFeatures/:tripid").get((req, res) => {
   })
 });
 
-router.route("/confirmFeature/:tripid/:featureid").post((req, res) => {
-  const query = `update TripFeatures set Confirmed = 'true' where TripId = '${req.params.tripid}' and FeatureId = '${req.params.featureid}'`;
+router.route("/lockTrip/:tripid").post((req, res) => {
+  const query = `update Trip set IsLocked = 1 where TripId = '${req.params.tripid}'`;
   db.query(query, (err, data) => {
     if (err) {
       console.log(err);
@@ -96,8 +96,8 @@ router.route("/confirmFeature/:tripid/:featureid").post((req, res) => {
   })
 });
 
-router.route("/unconfirmFeature/:tripid/:featureid").post((req, res) => {
-  const query = `update TripFeatures set Confirmed = 'false' where TripId = '${req.params.tripid}' and FeatureId = '${req.params.featureid}'`;
+router.route("/unlockTrip/:tripid").post((req, res) => {
+  const query = `update Trip set IsLocked = 0 where TripId = '${req.params.tripid}'`;
   db.query(query, (err, data) => {
     if (err) {
       console.log(err);
@@ -107,6 +107,76 @@ router.route("/unconfirmFeature/:tripid/:featureid").post((req, res) => {
       res.send(data)
     }
   })
+});
+
+router.route("/confirmFeature/:tripid/:featureid").post((req, res) => {
+  if (!(req.body.confirmed == "true" || req.body.confirmed == "false")) {
+    console.log("Invalid parameters.")
+    res.status(400).send("Invalid parameters.")
+    return;
+  }
+
+  if (req.body.isFlight == null) {
+    console.log("Invalid parameters.")
+    res.status(400).send("Invalid parameters.")
+    return;
+  }
+
+  if (req.body.isFlight == true) {
+    const query = `update Flight set Confirmed = '${req.body.confirmed}' where TripID = '${req.params.tripid}' and FlightId = '${req.params.featureid}'`;
+    db.query(query, (err, data) => {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      }
+      else {
+        res.send(data)
+      }
+    })
+  } else {
+    const query = `update TripFeatures set Confirmed = '${req.body.confirmed}' where TripId = '${req.params.tripid}' and FeatureId = '${req.params.featureid}'`;
+    db.query(query, (err, data) => {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      }
+      else {
+        res.send(data)
+      }
+    })
+  }
+});
+
+router.route("/deleteFeature/:tripid/:featureid").post((req, res) => {
+  if (req.body.isFlight == null) {
+    console.log("Invalid parameters.")
+    res.status(400).send("Invalid parameters.")
+    return;
+  }
+
+  if (req.body.isFlight == true) {
+    const query = `DELETE FROM Votes WHERE TripID = '${req.params.tripid}' and FeatureId = '${req.params.featureid}';\nDELETE FROM Flight WHERE TripID = '${req.params.tripid}' and FlightId = '${req.params.featureid}';`;
+    db.query(query, (err, data) => {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      }
+      else {
+        res.send(data)
+      }
+    })
+  } else {
+    const query = `DELETE FROM Votes WHERE TripId = '${req.params.tripid}' and FeatureId = '${req.params.featureid}';\nDELETE FROM TripFeatures WHERE TripID = '${req.params.tripid}' and FlightId = '${req.params.featureid}';`;
+    db.query(query, (err, data) => {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      }
+      else {
+        res.send(data)
+      }
+    })
+  }
 });
 
 router.route("/gettrip/:tripid").get((req, res) => {
@@ -291,34 +361,34 @@ router.route("/removeuser/:tripid/:userid").delete((req, res) => {
 });
 
 router.route("/vote").post((req, res) => {
-  if(req.body.tripid == null || req.body.userid == null
+  if (req.body.tripid == null || req.body.userid == null
     || req.body.featureid == null || req.body.isflight == null
     || req.body.score == null) {
-      return res.status(400).send("400 Invalid parameters.")
+    return res.status(400).send("400 Invalid parameters.")
   }
 
   const checkQuery = `SELECT * FROM Votes WHERE UserId='${req.body.userid}' AND TripId='${req.body.tripid}' AND FeatureId='${req.body.featureid}' AND IsFlight=${req.body.isflight}`
   db.query(checkQuery, (err, data) => {
-    if(err) {
+    if (err) {
       console.log(err)
       return res.status(500).send(err)
     }
 
-    if(data.length == 0) {
+    if (data.length == 0) {
       // has not voted yet
       const query = `INSERT INTO Votes(UserId, TripId, FeatureId, IsFlight, Score) values ('${req.body.userid}', '${req.body.tripid}', '${req.body.featureid}', ${req.body.isflight}, ${req.body.score})`
       db.query(query, (err, data) => {
-        if(err) {
+        if (err) {
           return res.status(500).send(err)
         } else {
           return res.status(200).send(data)
         }
       })
-    } else if(data.length == 1) {
+    } else if (data.length == 1) {
       //updating existing vote
       const query = `UPDATE Votes SET Score=${req.body.score} WHERE UserId='${req.body.userid}' AND TripId='${req.body.tripid}' AND FeatureId='${req.body.featureid}' AND IsFlight=${req.body.isflight}`
       db.query(query, (err, data) => {
-        if(err) {
+        if (err) {
           return res.status(500).send(err)
         } else {
           return res.status(200).send(data)
@@ -335,7 +405,7 @@ router.route("/vote").post((req, res) => {
 router.route("/:tripid/vote/:featureid").get((req, res) => {
   const checkQuery = `SELECT * FROM Votes WHERE TripId='${req.params.tripid}' AND FeatureId='${req.params.featureid}'`
   db.query(checkQuery, (err, data) => {
-    if(err) {
+    if (err) {
       return res.status(500).send(err)
     } else {
       return res.status(200).send(data)
@@ -345,13 +415,13 @@ router.route("/:tripid/vote/:featureid").get((req, res) => {
 
 //gets a specific vote for a user
 router.route("/:tripid/voteuser/:featureid").get((req, res) => {
-  if(req.headers.userid == null) {
+  if (req.headers.userid == null) {
     return res.status(400).send("Missing user id.")
   }
 
   const checkQuery = `SELECT * FROM Votes WHERE TripId='${req.params.tripid}' AND FeatureId='${req.params.featureid} AND UserId='${req.headers.userid}'`
   db.query(checkQuery, (err, data) => {
-    if(err) {
+    if (err) {
       return res.status(500).send(err)
     } else {
       return res.status(200).send(data)
@@ -363,7 +433,7 @@ router.route("/:tripid/voteuser/:featureid").get((req, res) => {
 router.route("/:tripid/voteScore/:featureid").get((req, res) => {
   const checkQuery = `SELECT SUM(Score) FROM Votes WHERE TripId='${req.params.tripid}' AND FeatureId='${req.params.featureid}'`
   db.query(checkQuery, (err, data) => {
-    if(err) {
+    if (err) {
       return res.status(500).send(err)
     } else {
       return res.status(200).send(data)
@@ -373,14 +443,14 @@ router.route("/:tripid/voteScore/:featureid").get((req, res) => {
 
 //for a specific trip, get all the features and it's details
 router.route("/:tripid/votes").get((req, res) => {
-  const checkTripFeaturesQuery = `SELECT v.FeatureId, SUM(v.Score) as Score, tf.FeatureName, tf.FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight FROM Votes v JOIN TripFeatures tf ON v.FeatureId=tf.FeatureId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId`
+  const checkTripFeaturesQuery = `SELECT v.FeatureId, SUM(v.Score) as Score, tf.FeatureName, tf.FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight, tf.BookingURL, tf.Confirmed FROM Votes v JOIN TripFeatures tf ON v.FeatureId=tf.FeatureId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId`
   db.query(checkTripFeaturesQuery, (err, data) => {
-    if(err) {
+    if (err) {
       return res.status(500).send(err)
     } else {
-      const checkFlightsQuery = `SELECT v.FeatureId, SUM(v.Score) as Score, CONCAT(f.Airline, ' ', f.Origin) as FeatureName, "Flight" as FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight FROM Votes v JOIN Flight f ON v.FeatureId=f.FlightId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId`
+      const checkFlightsQuery = `SELECT v.FeatureId, SUM(v.Score) as Score, CONCAT(f.Airline, ' ', f.Origin) as FeatureName, "Flight" as FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight, f.BookingURL, f.Confirmed FROM Votes v JOIN Flight f ON v.FeatureId=f.FlightId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId`
       db.query(checkFlightsQuery, (err, data2) => {
-        if(err) {
+        if (err) {
           return res.status(500).send(err);
         }
         else {
@@ -393,26 +463,26 @@ router.route("/:tripid/votes").get((req, res) => {
           // var otherFeatures = []
 
           // for(let i = 0; i < retArr.length; i++) {
-            // if (data[i].FeatureType == "Dining") {
-            //   promises.push(
-            //     client.business(data[i].FeatureId).then(response => {
-            //       console.log(response.jsonBody);
-            //       var toPush = {
-            //         FeatureId: data[i].FeatureId,
-            //         Score: data[i].Score,
-            //         FeatureName: response.jsonBody.name,
-            //         FeatureType: data[i].FeatureType,
-            //         Voters: data[i].Voters,
-            //         IsFlight: 0
-            //       };
+          // if (data[i].FeatureType == "Dining") {
+          //   promises.push(
+          //     client.business(data[i].FeatureId).then(response => {
+          //       console.log(response.jsonBody);
+          //       var toPush = {
+          //         FeatureId: data[i].FeatureId,
+          //         Score: data[i].Score,
+          //         FeatureName: response.jsonBody.name,
+          //         FeatureType: data[i].FeatureType,
+          //         Voters: data[i].Voters,
+          //         IsFlight: 0
+          //       };
 
-            //       diningFeatures.push(toPush);
-            //     })
-            //   )
-            // }
-            // else {
-              // otherFeatures.push(data[i]);
-            // }
+          //       diningFeatures.push(toPush);
+          //     })
+          //   )
+          // }
+          // else {
+          // otherFeatures.push(data[i]);
+          // }
           // }
           // Promise.all(promises).then(() => {
           //   otherFeatures = otherFeatures.concat(diningFeatures);
@@ -428,8 +498,8 @@ router.route("/:tripid/votes").get((req, res) => {
 router.route("/myeditabletrips").get((req, res) => {
   var query_string = 'SELECT * FROM Trip WHERE TripId '
   query_string += `IN (SELECT TripUser.TripId FROM TripUser WHERE TripUser.UserId = "${req.headers.userid}" AND (TripUser.Role = "Owner" OR TripUser.Role = "Editor"))`
-  db.query(query_string, (err,data) => {
-    if(err) {
+  db.query(query_string, (err, data) => {
+    if (err) {
       console.log("sql error" + err)
       return
     };
@@ -464,8 +534,8 @@ router.route("/getTripFeatures/:tripid").get((req, res) => {
                 // console.log(diningOptions)
               })
             )
-        
-            
+
+
           }
           else {
             otherFeatures.push(data[i])

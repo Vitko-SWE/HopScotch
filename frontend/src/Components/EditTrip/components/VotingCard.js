@@ -4,6 +4,7 @@ import React from 'react'
 import { useState } from 'react';
 import { Card, Button, Collapse, Spinner } from 'react-bootstrap'
 import { HandThumbsUp, HandThumbsDown } from "react-bootstrap-icons";
+import { RiExternalLinkLine } from 'react-icons/ri';
 
 export default function VotingCard(props) {
     const { user, getAccessTokenSilently } = useAuth0()
@@ -13,10 +14,10 @@ export default function VotingCard(props) {
     const handleVote = (score) => {
         if (props.tripid == null || props.featureid == null
             || props.isflight == null) {
-                setLoading(false)
-                setLockout(true)
-                alert("error")
-                return
+            setLoading(false)
+            setLockout(true)
+            alert("error")
+            return
         }
 
         getAccessTokenSilently({ audience: "https://hopscotch/api" }).then(res => {
@@ -33,7 +34,7 @@ export default function VotingCard(props) {
             }).then(res => {
                 setLockout(true)
                 setLoading(false)
-                if(res.status == 200) {
+                if (res.status == 200) {
                     console.log(res)
                     alert("Vote recorded!") //TODO: get rid of this    
                 } else {
@@ -61,8 +62,93 @@ export default function VotingCard(props) {
         handleVote(-1)
     }
 
+    const handleConfAction = action => {
+        if (props.tripid == null || props.featureid == null
+            || props.isflight == null) {
+            setLoading(false)
+            setLockout(true)
+            alert("error")
+            return
+        }
+
+        getAccessTokenSilently({ audience: "https://hopscotch/api" }).then(res => {
+            axios.post(`/api/trips/confirmFeature/${props.tripid}/${props.featureid}`, {
+                confirmed: action,
+                isFlight: props.isflight
+            }, {
+                headers: {
+                    Authorization: `Bearer ${res}`
+                }
+            }).then(res => {
+                setLockout(true)
+                setLoading(false)
+                if (res.status == 200) {
+                    console.log(res)
+                    alert("Confirmed!") //TODO: get rid of this    
+                } else {
+                    alert("Error.")
+                }
+            }).catch(err => {
+                console.log(err)
+                setLoading(false)
+                alert("error")
+            })
+        }).catch(err => {
+            console.log(err)
+            setLoading(false)
+            alert("error")
+        })
+    }
+
+    const handleConfirm = e => {
+        setLoading(true)
+        handleConfAction("true")
+    }
+
+    const handleUnconfirm = e => {
+        setLoading(true)
+        handleConfAction("false")
+    }
+
+    const handleDelete = e => {
+        if (props.tripid == null || props.featureid == null
+            || props.isflight == null) {
+            setLoading(false)
+            setLockout(true)
+            alert("error")
+            return
+        }
+
+        getAccessTokenSilently({ audience: "https://hopscotch/api" }).then(res => {
+            axios.post(`/api/trips/deleteFeature/${props.tripid}/${props.featureid}`, {
+                isFlight: props.isflight
+            }, {
+                headers: {
+                    Authorization: `Bearer ${res}`
+                }
+            }).then(res => {
+                setLockout(true)
+                setLoading(false)
+                if (res.status == 200) {
+                    console.log(res)
+                    alert("Deleted!") //TODO: get rid of this    
+                } else {
+                    alert("Error.")
+                }
+            }).catch(err => {
+                console.log(err)
+                setLoading(false)
+                alert("error")
+            })
+        }).catch(err => {
+            console.log(err)
+            setLoading(false)
+            alert("error")
+        })
+    }
+
     return (
-        <div>
+        <>
             <Card>
                 <Card.Header>
                     <Card.Title>
@@ -93,13 +179,25 @@ export default function VotingCard(props) {
                         <div>
                             <h7>Voters: </h7>
                             {props.voters.map((item, i) => {
-                                return(
+                                return (
                                     <div key={i}>{item} </div>
                                 )
                             })}
                         </div>
                     ) : (
                         <h7>Voters not found.</h7>
+                    )}
+
+                    {props.bookingURL ? (
+                        <>
+                            <hr />
+                            <a href={props.bookingURL} target="_blank">
+                                <RiExternalLinkLine size={50} style={{ fill: 'red' }} />
+                            </a>
+                            <p>Read more about booking</p>
+                        </>
+                    ) : (
+                        <h6>Booking URL not specified.</h6>
                     )}
                 </Card.Body>
 
@@ -111,14 +209,23 @@ export default function VotingCard(props) {
                     <Button variant="danger" onClick={handleThumbsDown} disabled={lockout}>
                         <HandThumbsDown size={36} />
                     </Button>
+
+                    <hr />
+                    <h6>Owner Actions</h6>
+                    {props.confirmed == "true" ? (
+                        <Button className="mr-2" variant="outline-warning" onClick={handleUnconfirm} >Unconfirm</Button>
+                    ) : (
+                        <Button className="mr-2" variant="warning" onClick={handleConfirm} >Confirm</Button>
+                    )}
+                    <Button variant="outline-danger" onClick={handleDelete}>Delete</Button>
                 </Card.Footer>
-                
+
                 <Collapse in={loading}>
                     <Card.Footer>
                         <Spinner animation="border" />
                     </Card.Footer>
                 </Collapse>
             </Card>
-        </div>
+        </>
     )
 }

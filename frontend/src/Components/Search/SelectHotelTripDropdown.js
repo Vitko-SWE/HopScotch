@@ -18,10 +18,10 @@ export default function SelectTripDropdown(props) {
     const handleShow = () => setShow(true);
 
     const handleTripChange = async (trip) => {
-        
+
         console.log("trip if: " + trip.TripId)
         setTripSelected(trip.TripId)
-        
+
         console.log(tripSelected)
     }
 
@@ -86,15 +86,15 @@ export default function SelectTripDropdown(props) {
                                 <DatePicker selected={endDate} showTimeSelect onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
                             </Form.Group>
                         </Col>
-                        
+
                     </Row>
                     <Row>
                         <Col >
                             <Form.Group controlId="disclaimer" >
                                 <Form.Label>This is not a reservation, it's just a tool to help you organize your trip</Form.Label><br />
-                                
+
                             </Form.Group>
-                           
+
                         </Col>
                     </Row>
                 </Container>
@@ -109,7 +109,7 @@ export default function SelectTripDropdown(props) {
             </Modal.Footer>
         </Modal>
         </>
-        
+
         // <DropdownButton id="dropdown-item-button" title="Select Trip to add to">
         //     <Dropdown.Header>Add hotel to trip</Dropdown.Header>
         //     {props.trips.map((item) => (
