@@ -117,7 +117,7 @@ export default function Budgeting(props) {
         <div>
           <p><strong>Total:</strong> {count}</p>
           <p><strong>Budget:</strong> {props.tripInfo.Budget}</p>
-          <p  style={{color: "red"}}><strong>You have exceeded your budget by ${(count - props.tripInfo.Budget).toFixed(2)}!</strong></p>
+          <p style={{color: "red"}}><strong>You have exceeded your budget by ${(count - props.tripInfo.Budget).toFixed(2)}!</strong></p>
         </div>
       ));
     }
