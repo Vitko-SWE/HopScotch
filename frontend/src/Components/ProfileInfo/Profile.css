@@ -6,7 +6,7 @@
 
 .Profile_Card {
     width: 32rem;
-    margin-left: 43rem;
+    margin: 0 auto;
     /* margin-bottom: 5cm; */
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5);
     transition: 0.3s;
