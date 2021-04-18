@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, InputGroup, FormControl, Dropdown, DropdownButton, Card } from "react-bootstrap";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { BsSearch } from 'react-icons/bs'
 import { FaYelp } from 'react-icons/fa';
@@ -10,6 +9,8 @@ import SelectTripDropdown from './SelectTripDropdown';
 import SelectHotelTripDropdown from './SelectHotelTripDropdown';
 import FlightSearch from '../FlightSearch/FlightSearch';
 import "./Card.css";
+import AttractionModal from "../Search/AttractionModal"
+import PoiModal from "../Search/PoiModal"
 
 export default function MainSearch() {
   // General Globals
@@ -39,6 +40,8 @@ export default function MainSearch() {
   useEffect(() => {
     updateAttTrips();
   }, []);
+
+
   const updateAttTrips = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
       axios.get(`/api/trips/myeditabletrips`, {
@@ -83,46 +86,7 @@ export default function MainSearch() {
       });
     });
   };
-  const addTourToTrip = (item, result) => {
-    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.post("/api/search/addtour/", {
-        tripid: item.TripId,
-        id: result.id,
-        geoCode: result.geoCode,
-        bookingLink: result.bookingLink,
-        price: result.price.amount,
-        picURL: result.pictures[0],
-        name: result.name
-      }, {
-        headers: {
-          Authorization: `Bearer ${res}`,
-        },
-      }).then((res) => {
-        console.log(res.data);
-        alert("The tour/activity has been added to the selected trip.");
-      }).catch((err) => {
-        console.log(err);
-      });
-    });
-  };
-  const addPOIToTrip = (item, result) => {
-    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.post("/api/search/addpoi/", {
-        tripid: item.TripId,
-        id: result.id,
-        geoCode: result.geoCode,
-      }, {
-        headers: {
-          Authorization: `Bearer ${res}`,
-        },
-      }).then((res) => {
-        console.log(res.data);
-        alert("The point of interest has been added to the selected trip.");
-      }).catch((err) => {
-        console.log(err);
-      });
-    });
-  };
+
 
   // Food Functions
   const getFoodTrips = async () => {
@@ -270,17 +234,9 @@ export default function MainSearch() {
                     <Card.Title>{result.name}</Card.Title>
                     <Card.Text><strong>Price:</strong> {result.price.amount + " " + result.price.currencyCode}</Card.Text>
                     <Card.Text><a href={result.bookingLink}>Booking Link</a></Card.Text>
-                    <DropdownButton id="dropdown-item-button" title="Add to trip">
-                      {attTrips.length === 0 && (
-                        <Dropdown.Header>You do not have any editable trips.</Dropdown.Header>
-                      )}
-                      {attTrips.length !== 0 && attTrips.map((item) => (
-                        !item.IsLocked ?
-                          <div><Dropdown.Item onClick={() => addTourToTrip(item, result)} as="button">{item.Name}</Dropdown.Item></div> :
-                          <div><Dropdown.Item disabled>{item.Name}</Dropdown.Item></div>
-                        ))
-                      }
-                    </DropdownButton>
+                  </Card.Body>
+                  <Card.Body>
+                    <AttractionModal trips={attTrips} result={result}/>
                   </Card.Body>
                 </Card>
               ))}
@@ -296,15 +252,9 @@ export default function MainSearch() {
                   <Card.Body>
                     <Card.Title>{result.name}</Card.Title>
                     <Card.Text><strong>Type:</strong> {result.category}</Card.Text>
-                    <DropdownButton id="dropdown-item-button" title="Add to trip">
-                      {attTrips.length === 0 && (
-                        <Dropdown.Header>You do not have any editable trips.</Dropdown.Header>
-                      )}
-                      {attTrips.length !== 0 && attTrips.map((item) => (
-                          <Dropdown.Item onClick={() => addPOIToTrip(item, result)} as="button">{item.Name}</Dropdown.Item>
-                        ))
-                      }
-                    </DropdownButton>
+                  </Card.Body>
+                  <Card.Body>
+                    <PoiModal trips={attTrips} result={result} />
                   </Card.Body>
                 </Card>
               ))}

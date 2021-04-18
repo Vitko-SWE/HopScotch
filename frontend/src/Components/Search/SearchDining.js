@@ -1,7 +1,7 @@
 import React, { useEffect, useState} from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios'
-import { Button, Form, Card, ListGroup, ListGroupItem, InputGroup, FormControl} from 'react-bootstrap';
+import { Button, Form, Card, ListGroup, ListGroupItem, InputGroup, FormControl, Alert} from 'react-bootstrap';
 import '../Search/SearchDiningResults.css'
 import { FaYelp } from 'react-icons/fa';
 import { BsSearch } from 'react-icons/bs'
@@ -17,10 +17,14 @@ export default function SearchDining () {
     const trips = useState({items: []});
     const [dining, setDining] = useState("")
     const [location, setLocation] = useState("")
+    const [error, setError] = useState(false)
+
     
 
     const handleSearch = () => {
         getTrips();
+        setError(false)
+        setError(false)
         getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
             axios.get('/api/search/searchDining', {
                 headers: {
@@ -33,11 +37,13 @@ export default function SearchDining () {
                 searchResult[1]({items: res.data})
                 
                 if (res.data.length === 0) {
-                    alert("Oops, it looks like we couldn't find anything for this location");
+                    // alert("Oops, it looks like we couldn't find anything for this location");
+                    setError(true)
                 }
             }).catch((err) => {
                 console.log(err);
-                alert("Oops, it looks like we couldn't find anything for this location");
+                // alert("Oops, it looks like we couldn't find anything for this location");
+                setError(true)
             });
         });
     }
@@ -92,6 +98,11 @@ export default function SearchDining () {
                         </Button>
                     </InputGroup.Append>
                 </InputGroup>
+                {error ? 
+                <Alert variant="danger" onClose={() => setError(false)}dismissible>
+                    Oops, it looks like we couldn't find anything for this location
+                </Alert> : <div></div>}
+
             </div>
         )
     }

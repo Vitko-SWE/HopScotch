@@ -1,5 +1,5 @@
 import React, { useState, Component } from 'react'
-import { Button, Modal, Form } from 'react-bootstrap';
+import { Button, Modal, Form, Spinner } from 'react-bootstrap';
 import { withAuth0 } from "@auth0/auth0-react";
 import axios from 'axios'
 import {
@@ -30,6 +30,7 @@ class AccountInformation extends Component {
             selectedFile: null,
             userImage: null,
             user_object: this.props.auth0,
+            loading: true
         }
 
         this.handleShow1 = this.handleShow1.bind(this)
@@ -87,6 +88,7 @@ class AccountInformation extends Component {
         var storageref = app.storage()
         storageref.ref(this.state.user_object.user.sub + `/Profile Picture/picture`).getDownloadURL().then((url) => {
             this.setState({ userImage: url })
+            this.setState({loading: false})
             //console.log("On load pic: " + this.state.userImage);
         });
     }
@@ -254,8 +256,14 @@ class AccountInformation extends Component {
     }
 
     render() {
+        let loadingSpinner =  <Spinner animation="border" role="status" variant="primary">
+                            <span className="sr-only">Loading...</span>
+                          </Spinner>;
         return (
+            <div>
+                 
             <div className="AccountInfo">
+                {this.state.loading ? <div style={{margin: "0 auto"}}>{loadingSpinner}</div>: 
                 <div className="Profile_Card">
                     <Card >
                         <Image className="circular-pic" src={this.state.userImage || DefaultHead} roundedCircle />
@@ -356,6 +364,10 @@ class AccountInformation extends Component {
                             </Modal>
                         </Card.Body>
                     </Card>
+    
+                    
+                    </div>
+                    }
                 </div>
             </div>
         );
