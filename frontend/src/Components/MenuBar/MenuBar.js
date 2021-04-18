@@ -8,8 +8,11 @@ import {
     Link
   } from "react-router-dom";
 
-import {Nav, Navbar, NavDropdown, Form, Button, FormControl} from 'react-bootstrap'
+import {Nav, Navbar, NavDropdown, Form, Button, FormControl, Badge} from 'react-bootstrap'
 import { useAuth0 } from "@auth0/auth0-react";
+import { IoMdNotificationsOutline } from 'react-icons/io'
+import { Dropdown, Toast } from 'react-bootstrap';
+import Notifications from "../Notifications/Notifications"
 
 
 const Menubar = (props) => {
@@ -35,10 +38,12 @@ const Menubar = (props) => {
               <NavDropdown.Item href="/searchDining">Search Dining</NavDropdown.Item>
               <NavDropdown.Item href="/attractionsearch">Search Attractions</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="/search">Search</NavDropdown.Item>
+              <NavDropdown.Item><Link to="/search" >Search</Link></NavDropdown.Item>
             </NavDropdown>
           </Nav>
           <Nav>
+            <Notifications/>
+           
             <Nav.Link >
               <Link className="account-details" to="/Account" >Account Details</Link>
             </Nav.Link>
