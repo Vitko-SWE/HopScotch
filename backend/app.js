@@ -5,7 +5,8 @@ const userService = require('./routes/users');
 const tripsService = require('./routes/trips');
 const searchService = require('./routes/search')
 const searchHotelService = require('./routes/searchHotel')
-const featureService = require("./routes/features");
+const flightService = require('./routes/flights')
+const featureService = require('./routes/features')
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 const cors = require('cors');
@@ -46,6 +47,7 @@ app.use("/api/trips", tripsService);
 app.use("/static/airlinelogos", express.static("./airlineLogos"))
 app.use("/api/search", searchService);
 app.use("/api/hotel", searchHotelService);
+app.use("/api/flights", flightService);
 app.use("/api/features", featureService);
 
 if (process.env.NODE_ENV == "production") {

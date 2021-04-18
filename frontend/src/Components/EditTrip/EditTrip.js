@@ -12,7 +12,7 @@ import Rating from '../Search/Rating'
 import Budgeting from "./components/Budgeting";
 import uuid from "react-uuid";
 import '../EditTrip/EditTrip.css'
-
+import AgendaView from '../AgendaView/AgendaView'
 export default function EditTrip(props) {
   const { user, getAccessTokenSilently } = useAuth0();
   const [tripInfo, getTripInfo] = useState({});
@@ -26,6 +26,7 @@ export default function EditTrip(props) {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [votes, setVotes] = useState([]);
+  const [agendaView, setAgendaView] = useState(false)
   const history = useHistory();
 
   useEffect(() => {
@@ -427,9 +428,18 @@ export default function EditTrip(props) {
     });
   }
 
+  const handleAgendaView = () => {
+    setAgendaView(!agendaView)
+  }
+
 
   return (
     <div>
+      {agendaView ? <Button variant="primary" onClick={handleAgendaView}>Switch to edit view</Button>:
+        <Button variant="primary" onClick={handleAgendaView}>Switch to agenda view</Button>}
+  
+      {agendaView ? <AgendaView features={tripFeatures} tripInfo={tripInfo}/> :
+      <div>
       <div class="intro pt-5 pb-5">
         <h1 class="pb-3">{tripInfo.Name}</h1>
         <h3 class="pb-3">Your role: <strong>{userRole}</strong></h3>
@@ -637,6 +647,7 @@ export default function EditTrip(props) {
           )}
         </div>
       )}
+      </div>}
     </div>
   );
 };
