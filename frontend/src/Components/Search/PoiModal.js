@@ -74,7 +74,9 @@ export default function PoiModal(props) {
                             <ListGroup>
                                 <ListGroup.Item variant="primary"><strong>Choose Trip</strong></ListGroup.Item>
                                 {props.trips.map((item) => (
-                                    <ListGroup.Item action  variant="light" onClick={() => handleTripChange(item)} as="button">{item.Name}</ListGroup.Item>
+                                    !item.IsLocked ?
+                                    <div><ListGroup.Item action variant="light" onClick={() => handleTripChange(item)} as="button">{item.Name}</ListGroup.Item></div> :
+                                    <div><ListGroup.Item disabled><del>{item.Name}</del></ListGroup.Item></div>                                    
                                     ))}
                             </ListGroup>
                         </Col>
