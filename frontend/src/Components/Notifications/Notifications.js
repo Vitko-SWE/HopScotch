@@ -37,7 +37,6 @@ export default function Notifications() {
     const handleToastClose = (index) => {
         console.log("in handle close")
         console.log(index)
-        let toastStates = toast;
         let arr = notification.slice()
         arr.splice(index, 1)
         console.log(arr)
