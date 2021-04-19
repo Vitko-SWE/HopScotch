@@ -188,7 +188,7 @@ export default function VotingCard(props) {
                         <h7>Voters not found.</h7>
                     )}
 
-                    {props.bookingURL ? (
+                    {(props.bookingURL && props.bookingURL != "undefined") ? (
                         <>
                             <hr />
                             <a href={props.bookingURL} target="_blank">
@@ -197,7 +197,10 @@ export default function VotingCard(props) {
                             <p>Read more about booking</p>
                         </>
                     ) : (
-                        <h6>Booking URL not specified.</h6>
+                        <>
+                            <hr />
+                            <h6>Booking URL not specified.</h6>
+                        </>
                     )}
                 </Card.Body>
 

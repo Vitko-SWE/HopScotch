@@ -246,6 +246,7 @@ router.route("/selectFlight").post(async (req, res) => {
     const Origin = req.body.Origin;
     const Destination = req.body.Destination;
     const User = req.body.User
+    const BookingURL = req.body.BookingURL
 
     if(FlightData == null || TripId == null || Price == null
         || Airline == null || Origin == null || Destination == null) {
@@ -254,7 +255,7 @@ router.route("/selectFlight").post(async (req, res) => {
         return;
     }
 
-    const query_string = `INSERT INTO Flight(TripID, Price, Airline, Origin, Destination, FlightData, User) VALUES (${TripId}, ${Price}, "${Airline}", "${Origin}", "${Destination}", "${FlightData}", "${User}")`;
+    const query_string = `INSERT INTO Flight(TripID, Price, Airline, Origin, Destination, FlightData, User, BookingURL) VALUES (${TripId}, ${Price}, "${Airline}", "${Origin}", "${Destination}", "${FlightData}", "${User}", "${BookingURL}")`;
     db.query(query_string, (err, data) => {
         if(err) {
             console.log(err);
