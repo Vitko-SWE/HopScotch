@@ -3,6 +3,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Dropdown, Toast, Badge, Alert } from 'react-bootstrap';
 import { IoMdNotificationsOutline } from 'react-icons/io'
 import axios from 'axios'
+import uuid from 'react-uuid'
+// import { delete } from '../../../../backend/routes/notifications';
 
 export default function Notifications() {
     const {user, getAccessTokenSilently} = useAuth0();
@@ -25,14 +27,14 @@ export default function Notifications() {
     ]
 
     useEffect (() => {
-        setInterval(initToastStates, 60000)
+        setInterval(getNotifications, 60000)
     //   callInit()
     }, [])
     
 
    
 
-    const initToastStates = async () => {
+    const getNotifications = async () => {
         let accessToken = null
         accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
         const token = `Bearer ${accessToken}`
@@ -48,36 +50,49 @@ export default function Notifications() {
         console.log(res.data.slice())
         setNotification(res.data.slice())
 
-        if (notification.length > 0) {
+        if (res.data.length > 0) {
             setDisplayNotification(true)
         }
 
     }
 
-    // const callInit = () => {
-    //     setInterval(initToastStates, 10000);
-    // }
 
-    const handleToastClose = (index) => {
+    const handleToastClose = async (index) => {
         console.log("in handle close")
-        console.log(index)
         let arr = notification.slice()
         arr.splice(index, 1)
-        console.log(arr)
         setNotification(arr)
+
+
         console.log(notification.length)
 
         if (arr.length == 0) {
             setDisplayNotification(false)
         }
+
+        deleteNotification(index)
         
+    }
+
+    const deleteNotification = async (index) => {
+        let notificationId = notification[index].NotificationId;
+
+        let accessToken = null
+        accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+        const token = `Bearer ${accessToken}`
+        let res = null
+    
+        res = await axios.delete(`/api/notifications/deleteNotification/${notificationId}`, {
+          headers: {
+            Authorization: token,
+          }
+        })
+
     }
 
     return (
         <div>
             <Badge pill variant="dark">
-              {/* <IoMdNotificationsOutline size={20} style={{marginTop: "0.3cm", fill: 'white' }} />
-              <span>9</span> */}
               <Dropdown drop="left" >
                 <Dropdown.Toggle as={IoMdNotificationsOutline} size={20} style={{marginTop: "0.25cm", fill: 'white' }}variant="success" >
                 </Dropdown.Toggle>

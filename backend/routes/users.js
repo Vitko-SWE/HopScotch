@@ -135,4 +135,16 @@ router.route("/changePassword")
             })
 });
 
+router.route("/getTripUsers/:TripId")
+    .get((req, res) => {
+        var query = `SELECT * FROM TripUser WHERE TripId = "${req.params.TripId}"`
+        console.log(req.params.TripId)
+        db.query(query, (err, data) => {
+            if (err)
+                return err;
+            res.send(data);
+        })
+    })
+
+
 module.exports = router;
