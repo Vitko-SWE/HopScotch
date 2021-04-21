@@ -5,6 +5,7 @@ let router = express.Router()
 require('dotenv').config()
 const yelp = require('yelp-fusion');
 const client = yelp.client(process.env.YELP_SECRET);
+const PDFDocument = require('pdfkit');
 
 router.route("/createtrip").post((req, res) => {
   let users = [];
@@ -370,7 +371,7 @@ router.route("/removeuser/:tripid/:userid").delete((req, res) => {
     else {
       res.send(data);
     }
-  })
+  });
 });
 
 router.route("/vote").post((req, res) => {
@@ -582,4 +583,24 @@ router.route("/getTripFeatures/:tripid").get((req, res) => {
     }
   })
 });
+
+/* GET PDF of schedule */
+router.get('/:id/pdf', (req, res) => {
+  const query = `select * from Trip where TripId = '${req.params.tripid}';`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      const doc = new PDFDocument;
+      doc.pipe(res);
+
+      doc.fontSize(24).text(`Bruh`);
+
+      doc.end();
+    }
+  });
+});
+
 module.exports = router;
