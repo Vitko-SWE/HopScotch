@@ -29,7 +29,7 @@ router.route("/searchDining").get((req, resp) => {
 
 router.route("/selectDining").post((req, resp) => {
   console.log(req.body.TripId)
-    var query_string = `INSERT INTO TripFeatures VALUES ("${req.body.FeatureId}", "${req.body.FeatureType}", ${req.body.price}, "", "${req.body.StartDateTime}", "${req.body.EndDateTime}", '${req.body.BookingURL}', ${req.body.TripId}, ${SqlString.escape(req.body.FeatureName)}, '${req.body.PictureURL}', false)`;
+    var query_string = `INSERT INTO TripFeatures VALUES ("${req.body.FeatureId}", "${req.body.FeatureType}", ${req.body.price}, "", "${req.body.StartDateTime}", "${req.body.EndDateTime}", '${req.body.BookingURL}', ${req.body.TripId}, ${SqlString.escape(req.body.FeatureName)}, '${req.body.PictureURL}', "false")`;
     console.log("posting new dining feature")
     db.query(query_string, (err, data) => {
         if (err) {
