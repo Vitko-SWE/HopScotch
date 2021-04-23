@@ -189,6 +189,18 @@ export default function VotingCard(props) {
                             <h7>Voters not found.</h7>
                         )}
 
+                        {!props.popularity == 0 ? (
+                            <div>
+                                <br />
+                                <h5>{props.popularity} other users have selected this trip feature!</h5>
+                            </div>
+                        ) : (
+                            <div>
+                                <br />
+                                <h5>No other users have selected this trip feature.</h5>
+                            </div>
+                        )}
+
                         {(props.bookingURL && props.bookingURL != "undefined") ? (
                             <>
                                 <hr />
@@ -204,31 +216,39 @@ export default function VotingCard(props) {
                             </>
                         )}
 
-                        <hr />
+                    {(!props.locked ?
+                        <div>
+                            <hr />
 
-                        <Button className="mr-3" variant="success" onClick={handleThumbsUp} disabled={lockout}>
-                            <HandThumbsUp size={36} />
-                        </Button>
+                            <Button className="mr-3" variant="success" onClick={handleThumbsUp} disabled={lockout}>
+                                <HandThumbsUp size={36} />
+                            </Button>
 
-                        <Button variant="danger" onClick={handleThumbsDown} disabled={lockout}>
-                            <HandThumbsDown size={36} />
-                        </Button>
+                            <Button variant="danger" onClick={handleThumbsDown} disabled={lockout}>
+                                <HandThumbsDown size={36} />
+                            </Button>
+                        </div> : null
+                    )}
                     </Card.Body>
                 </Collapse>
 
                 <Collapse in={lockout}>
                     <Card.Text className="mt-3">Component Confirmed!</Card.Text>
                 </Collapse>
-
-                <Card.Footer>
-                    <h6>Owner Actions</h6>
-                    {props.confirmed == "true" ? (
-                        <Button className="mr-2" variant="outline-warning" onClick={handleUnconfirm} >Unconfirm</Button>
-                    ) : (
-                        <Button className="mr-2" variant="warning" onClick={handleConfirm} >Confirm</Button>
-                    )}
-                    <Button variant="outline-danger" onClick={handleDelete}>Delete</Button>
-                </Card.Footer>
+                
+                {(!props.locked ?
+                    <div>
+                        <Card.Footer>
+                            <h6>Owner Actions</h6>
+                            {props.confirmed == "true" ? (
+                                <Button className="mr-2" variant="outline-warning" onClick={handleUnconfirm} >Unconfirm</Button>
+                            ) : (
+                                <Button className="mr-2" variant="warning" onClick={handleConfirm} >Confirm</Button>
+                            )}
+                            <Button variant="outline-danger" onClick={handleDelete}>Delete</Button>
+                        </Card.Footer>
+                    </div> : null
+                )}
 
                 <Collapse in={loading}>
                     <Card.Footer>

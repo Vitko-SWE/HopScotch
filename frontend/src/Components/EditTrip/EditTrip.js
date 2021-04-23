@@ -499,7 +499,7 @@ export default function EditTrip(props) {
           </div>
           {userRole !== "Viewer" && (
             <div class="pt-5 pb-5">
-              {(userRole == "Editor" || userRole == "Owner") && !tripInfo.IsLocked && (
+              {(userRole == "Editor" || userRole == "Owner") && (
                 <div>
                   <div>
                     <Budgeting tripFeatures={tripFeatures} tripid={props.match.params.tripid} tripInfo={tripInfo} />
@@ -515,18 +515,20 @@ export default function EditTrip(props) {
                             title={item.FeatureName}
                             type={item.FeatureType}
                             score={item.Score}
+                            popularity={item.Popularity}
                             voters={item.Voters.split(",")}
                             tripid={props.match.params.tripid}
                             featureid={item.FeatureId}
                             isflight={item.IsFlight}
                             bookingURL={item.BookingURL}
                             confirmed={item.Confirmed}
+                            locked={tripInfo.IsLocked}
                             updateFunc={updateVotingCards}
                           />)
                         })}
                       </CardDeck>
                     ) : (
-                      <h6>No votes availible. Why not add something?</h6>
+                      <h6>No votes available. Why not add something?</h6>
                     )}
 
                     <hr />
