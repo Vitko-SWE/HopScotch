@@ -373,6 +373,19 @@ router.route("/removeuser/:tripid/:userid").delete((req, res) => {
   })
 });
 
+router.route("/getpopularity/:featureid").get((req, res) => {
+  const query = `select count(*) from TripFeatures where FeatureId = '${req.params.featureid}';`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      res.send(data);
+    }
+  })
+});
+
 router.route("/vote").post((req, res) => {
   if (req.body.tripid == null || req.body.userid == null
     || req.body.featureid == null || req.body.isflight == null
@@ -456,12 +469,12 @@ router.route("/:tripid/voteScore/:featureid").get((req, res) => {
 
 //for a specific trip, get all the features and it's details
 router.route("/:tripid/votes").get((req, res) => {
-  const checkTripFeaturesQuery = `SELECT v.FeatureId, SUM(v.Score) as Score, tf.FeatureName, tf.FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight, tf.BookingURL, tf.Confirmed FROM Votes v JOIN TripFeatures tf ON v.FeatureId=tf.FeatureId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId`
+  const checkTripFeaturesQuery = `SELECT * FROM (SELECT v.FeatureId, SUM(v.Score) as Score, tf.FeatureName, tf.FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight, tf.BookingURL, tf.Confirmed FROM Votes v JOIN TripFeatures tf ON v.FeatureId=tf.FeatureId AND v.TripId = tf.TripId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId, v.TripId) AS A JOIN (select FeatureId, (COUNT(distinct TripId) - 1) as Popularity from Votes GROUP BY FeatureId) AS B ON A.FeatureId=B.FeatureId`
   db.query(checkTripFeaturesQuery, (err, data) => {
     if (err) {
       return res.status(500).send(err)
     } else {
-      const checkFlightsQuery = `SELECT v.FeatureId, SUM(v.Score) as Score, CONCAT(f.Airline, ' ', f.Origin) as FeatureName, "Flight" as FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight, f.BookingURL, f.Confirmed FROM Votes v JOIN Flight f ON v.FeatureId=f.FlightId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId`
+      const checkFlightsQuery = `SELECT * FROM (SELECT v.FeatureId, SUM(v.Score) as Score, CONCAT(f.Airline, ' ', f.Origin) as FeatureName, "Flight" as FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight, f.BookingURL, f.Confirmed FROM Votes v JOIN Flight f ON v.FeatureId=f.FlightId AND v.TripId = f.TripId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId, v.TripId) AS A JOIN (select FeatureId, (COUNT(distinct TripId) - 1) as Popularity from Votes GROUP BY FeatureId) AS B ON A.FeatureId=B.FeatureId`
       db.query(checkFlightsQuery, (err, data2) => {
         if (err) {
           return res.status(500).send(err);
