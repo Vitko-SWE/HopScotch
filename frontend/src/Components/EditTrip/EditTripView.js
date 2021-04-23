@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios'
-import { Image, Container, Row, Col, Button, Badge, Card, Dropdown, DropdownButton } from 'react-bootstrap'
+import { Container, Row, Col, Button, Badge, Card} from 'react-bootstrap'
 import flight_wallpaper from './flight_wallpaper.jpg'
-import { IoRestaurant } from 'react-icons/io'
 import { FiEdit3 } from 'react-icons/fi';
 import { IoRestaurantSharp } from 'react-icons/io5'
-import { MdFlight, MdDirectionsCar, MdViewAgenda } from 'react-icons/md'
+import { MdFlight, MdDirectionsCar} from 'react-icons/md'
 import { GrAttraction } from 'react-icons/gr'
 import {FaHotel } from 'react-icons/fa'
 import { BiDollarCircle } from 'react-icons/bi'
 import { GiVote } from 'react-icons/gi'
 import { SiGooglecalendar } from 'react-icons/si'
-import { GrEdit } from 'react-icons/gr'
-import AgendaView from '../AgendaView/AgendaView'
 import { Link } from "react-router-dom";
 export default function EditTripView (props) {
     const {user, getAccessTokenSilently} = useAuth0();
@@ -63,9 +60,6 @@ export default function EditTripView (props) {
                     <Card.Text>Last updated 3 mins ago</Card.Text>
                 </Card.ImgOverlay>
             </Card>
-            {/* <Image src={flight_wallpaper} fluid style={{width: "100%", height: "15cm"}}/> */}
-            {/* <strong></strong> */}
-            
             <Container fluid style={{width: "70%", height: "10cm"}}>
                 <Row style={{marginTop: "1cm"}}>
                     <Col>
@@ -74,17 +68,9 @@ export default function EditTripView (props) {
                         </Link>
                     </Col>
                     <Col>
-                        <Dropdown>
-                            <Dropdown.Toggle variant="outline-info" id="dropdown-basic" size="lg" style={{width: "8cm"}}>
-                                <strong><Badge variant="dark"><FiEdit3 size={22}/></Badge>  Trip Actions</strong>
-                            </Dropdown.Toggle>
-
-                            <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1">Update Trip Information</Dropdown.Item>
-                                <Dropdown.Item href="#/action-2">Add/Remove Users</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">Update User Roles</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
+                        <Link to={`/editview/editTripDetails/${props.match.params.tripid}`}>
+                            <Button variant="outline-info" size="lg" style={{width: "8cm"}}><strong><Badge variant="dark"><FiEdit3 size={22}/></Badge>  Edit Trip Details/Users</strong></Button>
+                        </Link>
                     </Col>
                     <Col>
                         <Link to={`/agendaView/${props.match.params.tripid}`}><Button variant="outline-info" size="lg" style={{width: "8cm"}}><strong><Badge variant="dark"><SiGooglecalendar size={22}/></Badge> Agenda View</strong></Button></Link>
