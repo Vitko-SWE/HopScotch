@@ -373,19 +373,6 @@ router.route("/removeuser/:tripid/:userid").delete((req, res) => {
   })
 });
 
-router.route("/getpopularity/:featureid").get((req, res) => {
-  const query = `select count(*) from TripFeatures where FeatureId = '${req.params.featureid}';`;
-  db.query(query, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    }
-    else {
-      res.send(data);
-    }
-  })
-});
-
 router.route("/vote").post((req, res) => {
   if (req.body.tripid == null || req.body.userid == null
     || req.body.featureid == null || req.body.isflight == null

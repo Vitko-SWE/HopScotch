@@ -28,7 +28,6 @@ export default function EditTrip(props) {
   const [votes, setVotes] = useState([]);
   const [agendaView, setAgendaView] = useState(false)
   const history = useHistory();
-  const [counter, getPopularity] = useState("");
 
   useEffect(() => {
     setTimeout(() => {
@@ -43,21 +42,6 @@ export default function EditTrip(props) {
       // updateConfirmedFeatures();
     }, 3000);
   });
-
-  const updatePopularity = (featureid) => {
-    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get(`/api/trips/getpopularity/${featureid}`, {
-        headers: {
-          Authorization: `Bearer ${res}`,
-        },
-      }).then((res) => {
-        console.log(res.data[0]["count(*)"])
-        getPopularity(res.data[0]["count(*)"]);
-      }).catch((err) => {
-        console.log(err);
-      });
-    });
-  };
 
   const updateConfirmedFeatures = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
