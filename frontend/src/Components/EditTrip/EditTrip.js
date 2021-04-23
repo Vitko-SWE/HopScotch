@@ -499,9 +499,9 @@ export default function EditTrip(props) {
         <div class="pt-5 pb-5">
           {(userRole == "Editor" || userRole == "Owner") && !tripInfo.IsLocked && (
             <div>
-              <div>
+              {/* <div>
                 <Budgeting tripFeatures={tripFeatures} tripid={props.match.params.tripid} tripInfo={tripInfo} />
-              </div>
+              </div> */}
               <div>
                 <h3>Voting</h3>
 

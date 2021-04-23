@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import DatePicker from "react-datepicker";
 import { Button, Modal, ListGroup, Col, Form, Container, Row} from "react-bootstrap"
+import uuid from 'react-uuid';
 
 
 
@@ -12,6 +13,7 @@ export default function PoiModal(props) {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [tripSelected, setTripSelected] = useState(-1)
+    const [trip, setTrip] = useState({})
 
     const handleClose = () => setShow(false);
 
@@ -26,38 +28,122 @@ export default function PoiModal(props) {
 
     const handleTripChange = async (trip) => {
         setTripSelected(trip.TripId)
+        setTrip(trip)
     }
 
 
-    const addPOIToTrip = () => {
+    const addPOIToTrip = async () => {
 
         setShow(false)
-        getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-          axios.post("/api/search/addpoi/", {
+
+        let newPOI = {
             tripid: tripSelected,
             StartDateTime: startDate,
             EndDateTime: endDate,
             id: props.result.id,
             geoCode: props.result.geoCode,
-          }, {
-            headers: {
-              Authorization: `Bearer ${res}`,
-            },
-          }).then((res) => {
-            console.log(res.data);
-            alert("The point of interest has been added to the selected trip.");
-          }).catch((err) => {
-            console.log(err);
-          });
-        });
+        }
+
+        try {
+            let accessToken = null
+            accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+            const token = `Bearer ${accessToken}`
+            let promise = null
+
+            promise = await axios.post("/api/search/addpoi/", newPOI, {
+                headers: {
+                    Authorization: token,
+                }
+            })
+
+            if (promise.status === 200) {
+                postNotification()
+                alert("The tour/activity has been added to the selected trip.")
+            }
+            else {
+                alert("Looks like there was an error saving your attraction")
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+        // getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+        //   axios.post("/api/search/addpoi/", {
+        //     tripid: tripSelected,
+        //     StartDateTime: startDate,
+        //     EndDateTime: endDate,
+        //     id: props.result.id,
+        //     geoCode: props.result.geoCode,
+        //   }, {
+        //     headers: {
+        //       Authorization: `Bearer ${res}`,
+        //     },
+        //   }).then((res) => {
+        //     console.log(res.data);
+        //     alert("The point of interest has been added to the selected trip.");
+        //   }).catch((err) => {
+        //     console.log(err);
+        //   });
+        // });
       };
 
+      const postNotification = async() => {
+        let newNotification = {
+            UserId: user.sub,
+            NotificationTitle: "Point of Intrest Feature Update",
+            NotificationBody: `${props.result.name} has been added to your ${trip.Name} trip.`,
+            TripName: trip.Name,
+            TripId: trip.TripId,
+            NotificationId: uuid()
+        }
 
-    
-      
+        let users = await getTripUsers(trip.TripId);
+        let accessToken = null
+        accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+        const token = `Bearer ${accessToken}`
+        let promise = null
 
+        console.log("users")
+        console.log(users)
 
-      return (
+        for (let i = 0; i < users.length; i++) {
+            try {
+                promise = await axios.post(`/api/notifications/insertNotification`, newNotification, {
+                    headers: {
+                        Authorization: token,
+                    }
+                })
+
+                if (promise.status === 200) {
+                    alert("Your point of interest was added to your chosen trip")
+                }
+                else {
+                    alert("Oops, looks like we an error")
+                }
+
+                console.log(" posting Notifications")
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    const getTripUsers = async (tripId) => {
+        let accessToken = null
+        accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+        const token = `Bearer ${accessToken}`
+        let promise = null
+
+        promise = await axios.get(`/api/user/getTripUsers/${tripId}`, {
+            headers: {
+                Authorization: token,
+            }
+        })
+
+        return promise.data;
+    }
+
+    return (
         <>
         <Button variant="primary" onClick={handleShow}>
             Add to trip

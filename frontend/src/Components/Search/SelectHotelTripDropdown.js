@@ -4,6 +4,9 @@ import axios from 'axios'
 import { Dropdown, DropdownButton } from 'react-bootstrap'
 import { Modal, Button, ListGroup, Col, Form, Container, Row } from 'react-bootstrap'
 import DatePicker from "react-datepicker";
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import uuid from 'react-uuid';
+
 
 export default function SelectTripDropdown(props) {
 
@@ -13,6 +16,9 @@ export default function SelectTripDropdown(props) {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [tripSelected, setTripSelected] = useState(-1)
+    const [trip, setTrip] = useState({})
+    const [success, setSuccess] = useState(false)
+    
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -21,12 +27,13 @@ export default function SelectTripDropdown(props) {
 
         console.log("trip if: " + trip.TripId)
         setTripSelected(trip.TripId)
+        setTrip(trip)
 
         console.log(tripSelected)
     }
 
-    const handleSelect = (item) => {
-        console.log(item.TripId)
+    const handleSelect = async (item) => {
+        // console.log(item.TripId)
 
         const newFeature = {
             FeatureId: props.hotelOption.place_id,
@@ -41,19 +48,100 @@ export default function SelectTripDropdown(props) {
 
         setShow(false)
 
-        getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-            axios.post('/api/hotel/selectHotel', newFeature, {
+        try {
+            let accessToken = null
+            accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+            const token = `Bearer ${accessToken}`
+            let promise = null
+
+            promise = await axios.post('/api/hotel/selectHotel', newFeature, {
                 headers: {
-                Authorization: `Bearer ${res}`,
-                },
-            }).then((res) => {
-              alert("The hotel has been added to the selected trip.");
-            }).catch((err) => {
-                console.log(err);
-            });
-        });
+                    Authorization: token,
+                }
+            })
+
+
+            if (promise.status === 200) {
+                setSuccess(true)
+                alert("The hotel has been added to the selected trip.");
+                postNotification()
+            }
+            else {
+                alert("Ohh boy, looks like we have an error");
+            }
+    
+        } catch (error) {
+            console.log(error)
+            
+        }
+
+        // getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+        //     axios.post('/api/hotel/selectHotel', newFeature, {
+        //         headers: {
+        //         Authorization: `Bearer ${res}`,
+        //         },
+        //     }).then((res) => {
+        //       alert("The hotel has been added to the selected trip.");
+        //     }).catch((err) => {
+        //         console.log(err);
+        //     });
+        // });
 
     }
+
+
+
+
+    const postNotification = async() => {
+        let newNotification = {
+            UserId: user.sub,
+            NotificationTitle: "Hotel Update",
+            NotificationBody: `A new hotel was added to your ${trip.Name} trip.`,
+            TripName: trip.Name,
+            TripId: trip.TripId,
+            NotificationId: uuid()
+        }
+
+        let users = await getTripUsers(trip.TripId);
+        let accessToken = null
+        accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+        const token = `Bearer ${accessToken}`
+        let promise = null
+
+        console.log("users")
+        console.log(users)
+
+        for (let i = 0; i < users.length; i++) {
+            try {
+                promise = await axios.post(`/api/notifications/insertNotification`, newNotification, {
+                    headers: {
+                        Authorization: token,
+                    }
+                })
+
+                console.log("posting Notifications in hotels")
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    const getTripUsers = async (tripId) => {
+        let accessToken = null
+        accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+        const token = `Bearer ${accessToken}`
+        let promise = null
+
+        promise = await axios.get(`/api/user/getTripUsers/${tripId}`, {
+            headers: {
+                Authorization: token,
+            }
+        })
+
+        return promise.data;
+    }
+
+   
 
     return (
         <>
@@ -102,10 +190,10 @@ export default function SelectTripDropdown(props) {
                 </Container>
             </Modal.Body>
             <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
+            <Button variant="secondary" onClick={() => handleClose()}>
                 Close
             </Button>
-            <Button variant="primary" onClick={handleSelect}>
+            <Button variant="primary" onClick={() => handleSelect()}>
                 Save
             </Button>
             </Modal.Footer>

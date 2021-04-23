@@ -11,38 +11,136 @@ export default function Budgeting(props) {
     <div></div>
   ));
   const [features, setFeatures] = useState([]);
+  const [tripInfo, setTripInfo] = useState({})
+  const [tripFeatures, setTripFeatures] = useState({ dining: [], otherFeatures: [] });
   const history = useHistory();
 
-  useEffect(() => {
-    priceCalculator();
-    updateFeatures();
-  }, [props.tripFeatures, props.tripInfo]);
+  useEffect(async () => {
+    await getDiningFeatures();
+    await getTripInfo();
+    await updateFeatures();
+    await priceCalculator();
+  }, []);
 
-  const updateFeatures = (e) => {
-    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get(`/api/trips/getfeaturespure/${props.tripid}`, {
-        headers: {
-          Authorization: `Bearer ${res}`,
-        },
-      }).then((res) => {
-        for (let i = 0; i < res.data.length; i++) {
-          if (res.data[i].FeatureType === "Dining") {
-            for (let j = 0; j < props.tripFeatures.dining.length; j++) {
-              if (props.tripFeatures.dining[j].id === res.data[i].FeatureId) {
-                res.data[i].FeatureName = props.tripFeatures.dining[j].name;
-                break;
-              }
-            }
-          }
+  const getDiningFeatures = async ()  => {
+    let accessToken = null
+    accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+    const token = `Bearer ${accessToken}`
+    let res = null
+
+    try {
+        res = await axios.get(`/api/trips/getTripFeatures/${props.match.params.tripid}`, {
+            headers: {
+                Authorization: token,
+            },
+        })
+
+        if (res.status === 200) {
+            setTripFeatures({ dining: res.data.dining, otherFeatures: res.data.otherFeatures })
+            return res.data
         }
-        setFeatures(res.data);
-      }).catch((err) => {
-        console.log(err);
-      });
-    });
+        else {
+            console.log("Error: Can't fetch features")
+        }
+        
+    } catch (error) {
+        console.log(error)
+    }
+  }
+
+  const getTripInfo = async () => {
+    try {
+        let accessToken = null
+        accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+        const token = `Bearer ${accessToken}`
+        let res = null
+
+    
+        res = await axios.get(`/api/trips/gettrip/${props.match.params.tripid}`, {
+            headers: {
+              Authorization: token,
+            }
+          })
+  
+          if (res.status === 200) {
+            let data = res.data
+              setTripInfo(data)
+              console.log("in trip info")
+              console.log(res.data.Budget)
+              return res.data
+          }
+          else {
+              console.log("Error: fetching trip")
+          }
+    } catch (error) {
+        console.log(error)
+    }
+    
+    
   };
 
-  const handleChangeBudget = (e) => {
+  const updateFeatures = async (e) => {
+
+    try {
+      let accessToken = null
+      accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+      const token = `Bearer ${accessToken}`
+      let res = null
+
+      res = await axios.get(`/api/trips/getfeaturespure/${props.match.params.tripid}`, {
+            headers: {
+              Authorization: token,
+            },
+      })
+
+      let tripFeatures = await getDiningFeatures()
+
+      if (res.status === 200 ) {
+              for (let i = 0; i < res.data.length; i++) {
+                if (res.data[i].FeatureType === "Dining") {
+                  for (let j = 0; j < tripFeatures.dining.length; j++) {
+                    if (tripFeatures.dining[j].id === res.data[i].FeatureId) {
+                      res.data[i].FeatureName = tripFeatures.dining[j].name;
+                      break;
+                    }
+                  }
+                }
+              }
+              let data = await res.data
+              setFeatures(data);
+              return res.data
+      }
+      else {
+        console.log(`Error: stutus ${res.status} ${res.statusText} in budgeting`)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+    
+    // getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+    //   axios.get(`/api/trips/getfeaturespure/${props.tripid}`, {
+    //     headers: {
+    //       Authorization: `Bearer ${res}`,
+    //     },
+    //   }).then((res) => {
+    //     for (let i = 0; i < res.data.length; i++) {
+    //       if (res.data[i].FeatureType === "Dining") {
+    //         for (let j = 0; j < props.tripFeatures.dining.length; j++) {
+    //           if (props.tripFeatures.dining[j].id === res.data[i].FeatureId) {
+    //             res.data[i].FeatureName = props.tripFeatures.dining[j].name;
+    //             break;
+    //           }
+    //         }
+    //       }
+    //     }
+    //     setFeatures(res.data);
+    //   }).catch((err) => {
+    //     console.log(err);
+    //   });
+    // });
+  };
+
+  const handleChangeBudget = async (e) => {
     e.preventDefault();
     const results = e.currentTarget;
 
@@ -50,24 +148,49 @@ export default function Budgeting(props) {
       alert("Please enter a valid number.");
     }
     else {
-      getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-        axios.post(`/api/trips/editbudget/${props.tripid}`, {
-          budget: results.budgetChange.value,
-        }, {
-          headers: {
-            Authorization: `Bearer ${res}`,
-          },
-        }).then((res) => {
-          console.log(res);
-          history.push(`/edittrip/${props.tripid}`);
-        }).catch((err) => {
-          alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
-        });
-      });
+      try {
+        let accessToken = null
+        accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+        const token = `Bearer ${accessToken}`
+        let res = null
+
+    
+        res = await axios.post(`/api/trips/editbudget/${props.match.params.tripid}`, {
+                budget: results.budgetChange.value,
+              }, {
+                headers: {
+                  Authorization: token,
+                },
+              })
+  
+          if (res.status === 200) {
+            console.log(res);
+            history.push(`/editview/budgeting/${props.match.params.tripid}`);
+          }
+          else {
+            alert(`${res.status}: ${res.statusText}\n${res.data}`);
+          }
+    } catch (error) {
+        console.log(error)
+    }
+      // getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      //   axios.post(`/api/trips/editbudget/${props.tripid}`, {
+      //     budget: results.budgetChange.value,
+      //   }, {
+      //     headers: {
+      //       Authorization: `Bearer ${res}`,
+      //     },
+      //   }).then((res) => {
+      //     console.log(res);
+      //     history.push(`/edittrip/${props.tripid}`);
+      //   }).catch((err) => {
+      //     alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
+      //   });
+      // });
     }
   };
 
-  const handleChangeExpenses = (e) => {
+  const handleChangeExpenses = async (e) => {
     e.preventDefault();
     const results = e.currentTarget;
     const convData = [];
@@ -81,43 +204,73 @@ export default function Budgeting(props) {
         price: results[i].value,
       });
     }
-    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.post(`/api/features/editprices/${props.tripid}`, {
-        input: convData,
-      }, {
-        headers: {
-          Authorization: `Bearer ${res}`,
-        },
-      }).then((res) => {
-        console.log(res);
-        history.push(`/edittrip/${props.tripid}`);
-      }).catch((err) => {
-        alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
-      });
-    });
+
+    try {
+      let accessToken = null
+      accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+      const token = `Bearer ${accessToken}`
+      let res = null
+
+  
+      res = await axios.post(`/api/features/editprices/${props.match.params.tripid}`, {
+              input: convData,
+            }, {
+              headers: {
+                Authorization: token,
+              },
+            })
+
+        if (res.status === 200) {
+          console.log(res);
+          history.push(`/editview/budgeting${props.match.params.tripid}`);
+        }
+        else {
+          alert(`${res.status}: ${res.statusText}\n${res.data}`);
+        }
+      } catch (error) {
+          console.log(error)
+      }
+    // getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+    //   axios.post(`/api/features/editprices/${props.tripid}`, {
+    //     input: convData,
+    //   }, {
+    //     headers: {
+    //       Authorization: `Bearer ${res}`,
+    //     },
+    //   }).then((res) => {
+    //     console.log(res);
+    //     history.push(`/edittrip/${props.tripid}`);
+    //   }).catch((err) => {
+    //     alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
+    //   });
+    // });
   };
 
-  const priceCalculator = () => {
+  const priceCalculator = async () => {
+    let features = await updateFeatures()
+    let tripInfo = await getTripInfo()
+   
+   
     let count = 0;
     for (let i = 0; i < features.length; i++) {
       count += features[i].Price;
     }
 
-    if (count === props.tripInfo.Budget) {
+    if (count === tripInfo.Budget) {
       setTotals((
         <div>
           <p><strong>Total:</strong> {count}</p>
-          <p><strong>Budget:</strong> {props.tripInfo.Budget}</p>
+          <p><strong>Budget:</strong> {tripInfo.Budget}</p>
           <p><strong>You are right on your budget.</strong></p>
         </div>
       ));
     }
-    else if (count > props.tripInfo.Budget) {
+    else if (count > tripInfo.Budget) {
       setTotals((
         <div>
           <p><strong>Total:</strong> {count}</p>
-          <p><strong>Budget:</strong> {props.tripInfo.Budget}</p>
-          <p style={{color: "red"}}><strong>You have exceeded your budget by ${(count - props.tripInfo.Budget).toFixed(2)}!</strong></p>
+          <p><strong>Budget:</strong> {tripInfo.Budget}</p>
+          <p style={{color: "red"}}><strong>You have exceeded your budget by ${(count - tripInfo.Budget).toFixed(2)}!</strong></p>
         </div>
       ));
     }
@@ -125,8 +278,8 @@ export default function Budgeting(props) {
       setTotals((
         <div>
           <p><strong>Total:</strong> {count}</p>
-          <p><strong>Budget:</strong> {props.tripInfo.Budget}</p>
-          <p style={{color: "green"}}><strong>You are under your budget by ${(props.tripInfo.Budget - count).toFixed(2)}!</strong></p>
+          <p><strong>Budget:</strong> {tripInfo.Budget}</p>
+          <p style={{color: "green"}}><strong>You are under your budget by ${(tripInfo.Budget - count).toFixed(2)}!</strong></p>
         </div>
       ));
     }
@@ -141,11 +294,11 @@ export default function Budgeting(props) {
             <Form onSubmit={handleChangeBudget}>
               <Form.Group controlId="budgetChange">
                 <Form.Label>Edit Overall Budget</Form.Label>
-                <Form.Control required defaultValue={props.tripInfo.Budget} />
+                <Form.Control required defaultValue={tripInfo.Budget} />
               </Form.Group>
               <Button variant="primary" type="submit">Submit</Button>
               {" "}
-              <Link to={`/edittrip/${props.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
+              <Link to={`/editview/${props.match.params.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
             </Form>
           </Col>
           <Col>
@@ -161,7 +314,7 @@ export default function Budgeting(props) {
               ))}
               <Button variant="primary" type="submit">Submit</Button>
               {" "}
-              <Link to={`/edittrip/${props.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
+              <Link to={`/editview/${props.match.params.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
             </Form>
           </Col>
           <Col>

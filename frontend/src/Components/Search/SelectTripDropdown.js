@@ -81,7 +81,6 @@ export default function SelectTripDropdown(props) {
                 }
             })
 
-
             promise = await axios.post("/api/trips/vote", vote, {
                 headers: {
                     Authorization: token,
@@ -89,9 +88,6 @@ export default function SelectTripDropdown(props) {
             })
 
             postNotification()
-
-
-            
         } catch (error) {
             console.log(error)
         }
@@ -173,8 +169,6 @@ export default function SelectTripDropdown(props) {
                 Authorization: token,
             }
         })
-
-        
 
         return promise.data;
     }
