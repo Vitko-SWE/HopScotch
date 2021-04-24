@@ -23,6 +23,7 @@ import VotingCard from './Components/EditTrip/components/VotingCard';
 import FlightSearch from './Components/FlightSearch/FlightSearch';
 import FlightSearchResults from "./Components/FlightSearchResults/FlightSearchResults.js";
 import AgendaView from './Components/AgendaView/AgendaView';
+import ErrorAlert from './Components/ErrorAlert';
 
 export const history = createBrowserHistory();
 
@@ -52,6 +53,7 @@ function App() {
           <ProtectedRoute path="/search/"  component={MainSearch} exact/>
           <ProtectedRoute path="/AgendaView"  component={AgendaView} exact/>
           <Route path="/testrender/votingcard" component={VotingCard} exact />
+          <Route path="/testrender/alert" component={ErrorAlert} exact />
         </Switch>
       </div>
     </Router>

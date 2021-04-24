@@ -41,7 +41,7 @@ export default function EditTrip(props) {
       updateVotingCards();
       getTripFeatures();
       // updateConfirmedFeatures();
-    }, 3000);
+    }, 5000);
   });
 
   const updateConfirmedFeatures = () => {
