@@ -24,6 +24,7 @@
     "nodemon": "^2.0.7",
     "pdfkit": "^0.12.1",
     "request": "^2.88.2",
+    "sqlstring": "^2.3.1",
     "yelp-fusion": "^3.0.0"
   },
   "devDependencies": {

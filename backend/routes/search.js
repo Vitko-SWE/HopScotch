@@ -6,6 +6,7 @@ const yelp = require('yelp-fusion');
 const { response } = require('express');
 require('dotenv').config()
 const client = yelp.client(process.env.YELP_SECRET);
+const SqlString = require('sqlstring');
 
 var Amadeus = require('amadeus');
 var amadeus = new Amadeus({
@@ -28,7 +29,7 @@ router.route("/searchDining").get((req, resp) => {
 
 router.route("/selectDining").post((req, resp) => {
   console.log(req.body.TripId)
-    var query_string = `INSERT INTO TripFeatures VALUES ("${req.body.FeatureId}", "${req.body.FeatureType}", ${req.body.price}, "", "${req.body.StartDateTime}", "${req.body.EndDateTime}", null, ${req.body.TripId}, null, null, false)`;
+    var query_string = `INSERT INTO TripFeatures VALUES ("${req.body.FeatureId}", "${req.body.FeatureType}", ${req.body.price}, "", "${req.body.StartDateTime}", "${req.body.EndDateTime}", '${req.body.BookingURL}', ${req.body.TripId}, ${SqlString.escape(req.body.FeatureName)}, '${req.body.PictureURL}', "false")`;
     console.log("posting new dining feature")
     db.query(query_string, (err, data) => {
         if (err) {
@@ -245,6 +246,7 @@ router.route("/selectFlight").post(async (req, res) => {
     const Origin = req.body.Origin;
     const Destination = req.body.Destination;
     const User = req.body.User
+    const BookingURL = req.body.BookingURL
 
     if(FlightData == null || TripId == null || Price == null
         || Airline == null || Origin == null || Destination == null) {
@@ -253,7 +255,7 @@ router.route("/selectFlight").post(async (req, res) => {
         return;
     }
 
-    const query_string = `INSERT INTO Flight(TripID, Price, Airline, Origin, Destination, FlightData, User) VALUES (${TripId}, ${Price}, "${Airline}", "${Origin}", "${Destination}", "${FlightData}", "${User}")`;
+    const query_string = `INSERT INTO Flight(TripID, Price, Airline, Origin, Destination, FlightData, User, BookingURL) VALUES (${TripId}, ${Price}, "${Airline}", "${Origin}", "${Destination}", "${FlightData}", "${User}", "${BookingURL}")`;
     db.query(query_string, (err, data) => {
         if(err) {
             console.log(err);

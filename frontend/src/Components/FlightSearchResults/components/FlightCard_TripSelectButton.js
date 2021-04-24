@@ -16,6 +16,7 @@ export default function FlightCard_TripSelectButton(props) {
 
     const handleClick = item => {
         getAccessTokenSilently({ audience: "https://hopscotch/api" }).then(res => {
+            console.log(props.bookingURL)
             const authToken = res;
             axios.post(`/api/search/selectFlight`, {
                 FlightData: btoa(JSON.stringify(props.trip)),
@@ -24,7 +25,8 @@ export default function FlightCard_TripSelectButton(props) {
                 Airline: props.airline,
                 Origin: props.origin,
                 Destination: props.destination,
-                User: user.sub
+                User: user.sub,
+                BookingURL: props.bookingURL
             }, {
                 headers: {
                     Authorization: `Bearer ${authToken}`

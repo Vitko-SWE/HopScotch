@@ -5,6 +5,7 @@ import { Row, Col, Container, Button, Collapse, Card, Image } from 'react-bootst
 import FlightCard_SegmentDetails from './FlightCard_SegmentDetails';
 import FlightCard_TripSelectButton from './FlightCard_TripSelectButton';
 const airlines = require('../airlines.json')
+const airlineURLs = require('../airlineURLs.json')
 
 export default function FlightCard(props) {
     const [deptOpen, setDeptOpen] = useState(false);
@@ -13,7 +14,7 @@ export default function FlightCard(props) {
 
     useEffect(() => { setButtonTrips(props.trips) }, [props.trips])
 
-    console.log(props)
+    console.log(airlineURLs.find(x => x.code == props.airlines[0])?.url)
 
     return (
         <div>
@@ -59,6 +60,7 @@ export default function FlightCard(props) {
                                 airline={props.airlines[0]}
                                 origin={props.itineraries[0].segments[0].departure.iataCode}
                                 destination={props.itineraries[1].segments[0].departure.iataCode}
+                                bookingURL={airlineURLs.find(x => x.code == props.airlines[0])?.url}
                             />
                         }
                     </Col>

@@ -457,12 +457,12 @@ router.route("/:tripid/voteScore/:featureid").get((req, res) => {
 
 //for a specific trip, get all the features and it's details
 router.route("/:tripid/votes").get((req, res) => {
-  const checkTripFeaturesQuery = `SELECT v.FeatureId, SUM(v.Score) as Score, tf.FeatureName, tf.FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight, tf.BookingURL, tf.Confirmed FROM Votes v JOIN TripFeatures tf ON v.FeatureId=tf.FeatureId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId`
+  const checkTripFeaturesQuery = `SELECT * FROM (SELECT v.FeatureId, SUM(v.Score) as Score, tf.FeatureName, tf.FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight, tf.BookingURL, tf.Confirmed FROM Votes v JOIN TripFeatures tf ON v.FeatureId=tf.FeatureId AND v.TripId = tf.TripId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId, v.TripId) AS A JOIN (select FeatureId, (COUNT(distinct TripId) - 1) as Popularity from Votes GROUP BY FeatureId) AS B ON A.FeatureId=B.FeatureId`
   db.query(checkTripFeaturesQuery, (err, data) => {
     if (err) {
       return res.status(500).send(err)
     } else {
-      const checkFlightsQuery = `SELECT v.FeatureId, SUM(v.Score) as Score, CONCAT(f.Airline, ' ', f.Origin) as FeatureName, "Flight" as FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight, f.BookingURL, f.Confirmed FROM Votes v JOIN Flight f ON v.FeatureId=f.FlightId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId`
+      const checkFlightsQuery = `SELECT * FROM (SELECT v.FeatureId, SUM(v.Score) as Score, CONCAT(f.Airline, ' ', f.Origin) as FeatureName, "Flight" as FeatureType, GROUP_CONCAT(u.Name) as Voters, v.IsFlight, f.BookingURL, f.Confirmed FROM Votes v JOIN Flight f ON v.FeatureId=f.FlightId AND v.TripId = f.TripId JOIN User u ON v.UserId=u.UserId WHERE v.TripId=${req.params.tripid} GROUP BY v.FeatureId, v.TripId) AS A JOIN (select FeatureId, (COUNT(distinct TripId) - 1) as Popularity from Votes GROUP BY FeatureId) AS B ON A.FeatureId=B.FeatureId`
       db.query(checkFlightsQuery, (err, data2) => {
         if (err) {
           return res.status(500).send(err);
@@ -471,38 +471,6 @@ router.route("/:tripid/votes").get((req, res) => {
           const retArr = data.concat(data2);
           console.log(retArr);
           return res.send(retArr)
-
-          // var diningFeatures = []
-          // var promises = []
-          // var otherFeatures = []
-
-          // for(let i = 0; i < retArr.length; i++) {
-          // if (data[i].FeatureType == "Dining") {
-          //   promises.push(
-          //     client.business(data[i].FeatureId).then(response => {
-          //       console.log(response.jsonBody);
-          //       var toPush = {
-          //         FeatureId: data[i].FeatureId,
-          //         Score: data[i].Score,
-          //         FeatureName: response.jsonBody.name,
-          //         FeatureType: data[i].FeatureType,
-          //         Voters: data[i].Voters,
-          //         IsFlight: 0
-          //       };
-
-          //       diningFeatures.push(toPush);
-          //     })
-          //   )
-          // }
-          // else {
-          // otherFeatures.push(data[i]);
-          // }
-          // }
-          // Promise.all(promises).then(() => {
-          //   otherFeatures = otherFeatures.concat(diningFeatures);
-          //   console.log(otherFeatures);
-          //   res.send(otherFeatures);
-          // });
         }
       })
     }
