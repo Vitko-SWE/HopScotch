@@ -573,7 +573,7 @@ router.post('/:tripid/pdf', (req, res) => {
 
       let collabs = "Trip Collaborators: ";
       for (let i = 0; i < req.body.people.length; i++) {
-        collabs += req.body.people[i].Name;
+        collabs += (req.body.people[i].Name + (i === req.body.people.length - 1 ? "" : ", "));
       }
       doc.fontSize(16).text(collabs);
 
