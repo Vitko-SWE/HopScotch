@@ -4,52 +4,69 @@ import StickyBox from "react-sticky-box";
 import PropTypes from 'prop-types';
 
 export default function SearchFilter(props) {
-    const handleSubmit = e => {
+    const handleSort = e => {
+        e.preventDefault();
+
+        const results = e.currentTarget;
+        var sorts = {};
+
+        if (props.price) {
+            sorts.priceSort = results.priceSort.value
+        }
+
+        if (props.distance) {
+            sorts.distanceSort = results.distanceSort.value
+        }
+
+        props.sortFunc(sorts)
+    }
+
+    const handleFilter = e => {
         e.preventDefault();
 
         const results = e.currentTarget;
         var filters = {};
 
-        if(props.price) {
-            if(results.minPrice.value.length == 0) {
+        if (props.price) {
+            if (results.minPrice.value.length == 0) {
                 filters.minPrice = 0
             } else {
                 filters.minPrice = parseInt(results.minPrice.value)
             }
 
-            if(results.maxPrice.value.length == 0) {
+            if (results.maxPrice.value.length == 0) {
                 filters.maxPrice = null
             } else {
                 filters.maxPrice = parseInt(results.maxPrice.value)
             }
         }
 
-        if(props.stops) {
-            if(results.maxStops.value == "No Max") {
+        if (props.stops) {
+            if (results.maxStops.value == "No Max") {
                 filters.maxStops = null
             } else {
                 filters.maxStops = parseInt(results.maxStops.value)
             }
         }
 
-        if(props.carriers) {
+        if (props.carriers) {
             //TODO
             filters.carriers = null
         }
 
-        if(props.ratings) {
+        if (props.ratings) {
             filters.ratings = parseInt(results.ratings.value)
         }
 
-        if(props.distance) {
-            if(results.distance.value == "No Max") {
+        if (props.distance) {
+            if (results.distance.value == "No Max") {
                 filters.distance = null
             } else {
                 filters.distance = parseInt(results.distance.value)
             }
         }
 
-        if(props.relativePrice) {
+        if (props.relativePrice) {
             filters.minRelativePrice = parseInt(results.minRelativePrice.value)
             filters.maxRelativePrice = parseInt(results.maxRelativePrice.value)
         }
@@ -61,10 +78,43 @@ export default function SearchFilter(props) {
         <StickyBox className="mt-5" offsetTop={20} offsetBottom={20} style={{ border: '1px solid gray', borderRadius: '5px' }}>
             <Container className="p-3 mr-5">
                 <Row className="ml-1">
+                    <h1>Sort</h1>
+                </Row>
+
+                <Form onSubmit={handleSort}>
+                    {props.price && (
+                        <Row><Col>
+                            <Form.Group controlId="priceSort">
+                                <Form.Label>Sort by Price</Form.Label>
+                                <Form.Control as="select">
+                                    <option>Low to High</option>
+                                    <option>High to Low</option>
+                                </Form.Control>
+                            </Form.Group>
+                            <hr />
+                        </Col></Row>
+                    )}
+
+                    {props.distance && (
+                        <Row><Col>
+                            <Form.Group controlId="distanceSort">
+                                <Form.Label>Sort by Price</Form.Label>
+                                <Form.Control as="select">
+                                    <option>Low to High</option>
+                                    <option>High to Low</option>
+                                </Form.Control>
+                            </Form.Group>
+                            <hr />
+                        </Col></Row>
+                    )}
+                    <Button type="submit">Sort Results</Button>
+                </Form>
+
+                <Row className="ml-1">
                     <h1>Filters</h1>
                 </Row>
 
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={handleFilter}>
                     {props.price && ( // Absolute Price
                         <Row><Col>
                             <Form.Group controlId="minPrice">

@@ -96,9 +96,25 @@ export default function FlightSearchResults(props) {
         setupPages();
     }
 
+    const handleSort = sorts => {
+        var sorted = null;
+
+        if(sorts.priceSort == "Low to High") {
+            sorted = flightItns.sort((a, b) => (a.price.grandTotal > b.price.grandTotal) ? 1 : -1)
+        }
+
+        if(sorts.priceSort == "High to Low") {
+            sorted = flightItns.sort((a, b) => (a.price.grandTotal < b.price.grandTotal) ? 1 : -1)
+        }
+
+        setPage(1);
+        setFilteredItns(sorted);
+        setupPages();
+    }
+
     return (
         <div style={{display: "flex", alignItems: "flex-start"}}>
-            <SearchFilter price stops carriers filterFunc={handleFilter} />
+            <SearchFilter price stops carriers filterFunc={handleFilter} sortFunc={handleSort} />
             <Container fluid>
             {flightSlice.map((item, i) => {
                 return(
