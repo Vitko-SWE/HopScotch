@@ -114,7 +114,7 @@ export default function FlightSearchResults(props) {
 
     return (
         <div style={{display: "flex", alignItems: "flex-start"}}>
-            <SearchFilter price stops carriers filterFunc={handleFilter} sortFunc={handleSort} />
+            <SearchFilter price stops filterFunc={handleFilter} sortFunc={handleSort} />
             <Container fluid>
             {flightSlice.map((item, i) => {
                 return(
