@@ -110,7 +110,7 @@ export default function SearchFilter(props) {
                     <Button type="submit">Sort Results</Button>
                 </Form>
 
-                <Row className="ml-1">
+                <Row className="ml-1 mt-4">
                     <h1>Filters</h1>
                 </Row>
 
