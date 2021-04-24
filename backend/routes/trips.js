@@ -584,8 +584,7 @@ router.route("/getTripFeatures/:tripid").get((req, res) => {
   })
 });
 
-/* GET PDF of schedule */
-router.get('/:tripid/pdf', (req, res) => {
+router.post('/:tripid/pdf', (req, res) => {
   const query = `select * from Trip where TripId = '${req.params.tripid}';`;
   db.query(query, (err, data) => {
     if (err) {
@@ -598,13 +597,67 @@ router.get('/:tripid/pdf', (req, res) => {
 
       doc.pipe(res);
 
-      doc.fontSize(24).text(tripdata.Name);
+      doc.fontSize(24).text(tripdata.Name, {
+        align: "center",
+      });
+
+      doc.moveDown();
+
+      let collabs = "Trip Collaborators: ";
+      for (let i = 0; i < req.body.people.length; i++) {
+        collabs += req.body.people[i].Name;
+      }
+      doc.fontSize(16).text(collabs);
+
+      doc.moveDown();
+
+      doc.fontSize(20).text("Trip Details", {
+        align: "center",
+      });
+
       doc.fontSize(16).text(`Origin: ${tripdata.Origin}`);
       doc.fontSize(16).text(`Destination: ${tripdata.Destination}`);
       doc.fontSize(16).text(`Start Date: ${`${(new Date(tripdata.StartDate)).getMonth() + 1}/${(new Date(tripdata.StartDate)).getDate()}/${(new Date(tripdata.StartDate)).getFullYear()}`}`);
       doc.fontSize(16).text(`End Date: ${`${(new Date(tripdata.EndDate)).getMonth() + 1}/${(new Date(tripdata.EndDate)).getDate()}/${(new Date(tripdata.EndDate)).getFullYear()}`}`);
       doc.fontSize(16).text(`OutboundFlightId: ${tripdata.OutboundFlightId}`);
       doc.fontSize(16).text(`InboundFlightId: ${tripdata.InboundFlightId}`);
+
+      doc.moveDown();
+
+      doc.fontSize(20).text("Trip Features", {
+        align: "center",
+      });
+
+      for (let i = 0; i < req.body.featureInfo.dining.length; i++) {
+        doc.fontSize(16).text(req.body.featureInfo.dining[i].name, {
+          align: "center",
+        });
+        doc.fontSize(12).text(req.body.featureInfo.dining[i].phone, {
+          align: "center",
+        });
+        doc.fontSize(12).fillColor("blue").text("Yelp URL", {
+          link: req.body.featureInfo.dining[i].url,
+          underline: true,
+          align: "center",
+        });
+        doc.fillColor("black");
+        doc.moveDown();
+      }
+      for (let i = 0; i < req.body.featureInfo.otherFeatures.length; i++) {
+        doc.fontSize(16).text(req.body.featureInfo.otherFeatures[i].FeatureName, {
+          align: "center",
+        });
+        doc.fontSize(12).text(req.body.featureInfo.otherFeatures[i].Location, {
+          align: "center",
+        });
+        doc.fontSize(12).fillColor("blue").text("Booking URL", {
+          link: req.body.featureInfo.otherFeatures[i].BookingURL,
+          underline: true,
+          align: "center",
+        });
+        doc.fillColor("black");
+        doc.moveDown();
+      }
 
       doc.end();
     }
