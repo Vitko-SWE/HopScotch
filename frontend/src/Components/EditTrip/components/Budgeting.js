@@ -4,6 +4,7 @@ import axios from "axios";
 import { Button, Form, Container, Row, Col } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 import uuid from "react-uuid";
+import ErrorAlert from "../../ErrorAlert";
 
 export default function Budgeting(props) {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -11,6 +12,10 @@ export default function Budgeting(props) {
     <div></div>
   ));
   const [features, setFeatures] = useState([]);
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertText, setAlertText] = useState("");
+
   const history = useHistory();
 
   useEffect(() => {
@@ -47,7 +52,8 @@ export default function Budgeting(props) {
     const results = e.currentTarget;
 
     if (results.budgetChange.value === "" || isNaN(results.budgetChange.value)) {
-      alert("Please enter a valid number.");
+      setAlertText("Please enter a valid number.");
+      setShowAlert(true);
     }
     else {
       getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
@@ -61,7 +67,8 @@ export default function Budgeting(props) {
           console.log(res);
           history.push(`/edittrip/${props.tripid}`);
         }).catch((err) => {
-          alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
+          setAlertText(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
+          setShowAlert(true);
         });
       });
     }
@@ -73,7 +80,8 @@ export default function Budgeting(props) {
     const convData = [];
     for (let i = 0; i < results.length - 2; i++) {
       if (results[i].value === "" || isNaN(results[i].value)) {
-        alert("Please enter valid numbers.");
+        setAlertText("Please enter valid numbers.");
+        setShowAlert(true);
         return;
       }
       convData.push({
@@ -92,7 +100,8 @@ export default function Budgeting(props) {
         console.log(res);
         history.push(`/edittrip/${props.tripid}`);
       }).catch((err) => {
-        alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
+        setAlertText(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
+        setShowAlert(true);
       });
     });
   };
@@ -134,6 +143,7 @@ export default function Budgeting(props) {
 
   return (
     <div>
+      <ErrorAlert show={showAlert} text={alertText} />
       <h3>Budgeting</h3>
       <Container>
         <Row>
