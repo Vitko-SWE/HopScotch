@@ -26,7 +26,8 @@ export default function EditTrip(props) {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [votes, setVotes] = useState([]);
-  const [agendaView, setAgendaView] = useState(false)
+  const [agendaView, setAgendaView] = useState(false);
+  const [imgUrl, setImgUrl] = useState("");
   const history = useHistory();
 
   useEffect(() => {
@@ -93,15 +94,26 @@ export default function EditTrip(props) {
   }
 
   const updateTripInfo = () => {
-    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res1) => {
       axios.get(`/api/trips/gettrip/${props.match.params.tripid}`, {
         headers: {
-          Authorization: `Bearer ${res}`,
+          Authorization: `Bearer ${res1}`,
         },
       }).then((res) => {
         getTripInfo(res.data);
         setStartDate(new Date(res.data.StartDate.toString()));
         setEndDate(new Date(res.data.EndDate.toString()));
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res1) => {
+      axios.get(`/api/trips/gettripimage/${props.match.params.tripid}`, {
+        headers: {
+          Authorization: `Bearer ${res1}`,
+        },
+      }).then((res) => {
+        setImgUrl(res.data);
       }).catch((err) => {
         console.log(err);
       });
@@ -469,7 +481,8 @@ export default function EditTrip(props) {
 
       {agendaView ? <AgendaView features={tripFeatures} tripInfo={tripInfo} /> :
         <div>
-          <div class="intro pt-5 pb-5">
+          <div class="fc1 pt-5 pb-5" style={{"background-image": `url(${imgUrl})`, "background-position": "center", "background-repeat": "no-repeat",
+  "background-size": "cover"}}>
             <h1 class="pb-3">{tripInfo.Name}</h1>
             <h3 class="pb-3">Your role: <strong>{userRole}</strong></h3>
             {!tripInfo.IsLocked ?

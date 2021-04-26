@@ -57,6 +57,19 @@ class TripCards extends Component {
     let trips = res.data
     trips= trips.sort((a, b) => a.TripId > b.TripId ? 1 : -1);
 
+    for (let i = 0; i < trips.length; i++) {
+      const curr = trips[i];
+      let accessToken1 = await this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"});
+      const token = `Bearer ${accessToken1}`;
+      let currimg = await axios.get(`/api/trips/gettripimage/${curr.TripId}`, {
+        headers: {
+          Authorization: token,
+        }
+      });
+      currimg = currimg.data;
+      trips[i].ImgUrl = currimg;
+    }
+
     let ownedTrips = []
     let sharedTrips = []
 
@@ -122,7 +135,7 @@ class TripCards extends Component {
         <div className="custom_container">
           {this.state.sepTrips.owned.map((trip, index) => (
             <Card className="custom_card">
-              <Card.Img variant="top" src={pic} />
+              <Card.Img style={{"height": "33%"}} variant="top" src={trip.ImgUrl} />
               <Card.Body>
                 <Card.Title>{trip.Name}</Card.Title>
                 <Card.Text>
@@ -153,7 +166,7 @@ class TripCards extends Component {
         <div className="custom_container">
           {this.state.sepTrips.shared.map((trip, index) => (
             <Card className="custom_card">
-              <Card.Img variant="top" src={pic} />
+              <Card.Img style={{"height": "33%"}} variant="top" src={trip.ImgUrl} />
               <Card.Body>
                 <Card.Title>{trip.Name}</Card.Title>
                 <Card.Text>

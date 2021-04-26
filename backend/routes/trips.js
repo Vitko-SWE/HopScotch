@@ -6,6 +6,7 @@ require('dotenv').config()
 const yelp = require('yelp-fusion');
 const client = yelp.client(process.env.YELP_SECRET);
 const PDFDocument = require('pdfkit');
+const axios = require("axios");
 
 router.route("/createtrip").post((req, res) => {
   let users = [];
@@ -550,6 +551,24 @@ router.route("/getTripFeatures/:tripid").get((req, res) => {
       }
     }
   })
+});
+
+router.get("/gettripimage/:tripid", (req, res) => {
+  const query = `select Destination from Trip where TripId = '${req.params.tripid}';`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      axios.get(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${data[0].Destination}&inputtype=textquery&fields=photos&key=AIzaSyDhf9OqY8Z3uNub0hgRYttINkf1gXOGZH4`).then((res1) => {
+        res.send(`https://maps.googleapis.com/maps/api/place/photo?maxwidth=1600&photoreference=${res1.data.candidates[0].photos[0].photo_reference}&key=AIzaSyDhf9OqY8Z3uNub0hgRYttINkf1gXOGZH4`);
+      }).catch((err) => {
+        console.log(err);
+        res.send(err);
+      });
+    }
+  });
 });
 
 router.post('/:tripid/pdf', (req, res) => {
