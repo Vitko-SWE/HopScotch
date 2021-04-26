@@ -98,14 +98,14 @@ export default function SelectTripDropdown(props) {
     }
 
     const postNotification = async() => {
-        let newNotification = {
-            UserId: user.sub,
-            NotificationTitle: "Dining Feature Update",
-            NotificationBody: `A dining feature was added to your ${trip.Name} trip.`,
-            TripName: trip.Name,
-            TripId: trip.TripId,
-            NotificationId: uuid()
-        }
+        // let newNotification = {
+        //     UserId: user.sub,
+        //     NotificationTitle: "Dining Feature Update",
+        //     NotificationBody: `A dining feature was added to your ${trip.Name} trip.`,
+        //     TripName: trip.Name,
+        //     TripId: trip.TripId,
+        //     NotificationId: uuid()
+        // }
 
         let users = await getTripUsers(trip.TripId);
         let accessToken = null
@@ -118,6 +118,14 @@ export default function SelectTripDropdown(props) {
 
         for (let i = 0; i < users.length; i++) {
             try {
+                let newNotification = {
+                    UserId: users[i].UserId,
+                    NotificationTitle: "Dining Feature Update",
+                    NotificationBody: `A dining feature was added to your ${trip.Name} trip.`,
+                    TripName: trip.Name,
+                    TripId: trip.TripId,
+                    NotificationId: uuid()
+                }
                 promise = await axios.post(`/api/notifications/insertNotification`, newNotification, {
                     headers: {
                         Authorization: token,

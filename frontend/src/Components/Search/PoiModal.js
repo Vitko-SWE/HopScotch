@@ -158,6 +158,14 @@ export default function PoiModal(props) {
 
         for (let i = 0; i < users.length; i++) {
             try {
+                let newNotification = {
+                    UserId: user[i].UserId,
+                    NotificationTitle: "Point of Intrest Feature Update",
+                    NotificationBody: `${props.result.name} has been added to your ${trip.Name} trip.`,
+                    TripName: trip.Name,
+                    TripId: trip.TripId,
+                    NotificationId: uuid()
+                }
                 promise = await axios.post(`/api/notifications/insertNotification`, newNotification, {
                     headers: {
                         Authorization: token,
