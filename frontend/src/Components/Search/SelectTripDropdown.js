@@ -6,14 +6,17 @@ import { useHistory } from 'react-router';
 import DatePicker from "react-datepicker";
 import { Container } from 'react-bootstrap';
 import { Row } from 'react-bootstrap';
+import uuid from 'react-uuid';
 
 export default function SelectTripDropdown(props) {
-    console.log(props)
+
+//     console.log(props)
     const { user, getAccessTokenSilently } = useAuth0();
     const [show, setShow] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [tripSelected, setTripSelected] = useState(-1)
+    const [trip, setTrip] = useState({})
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -25,11 +28,12 @@ export default function SelectTripDropdown(props) {
 
         console.log("trip if: " + trip.TripId)
         setTripSelected(trip.TripId)
+        setTrip(trip)
 
         console.log(tripSelected)
     }
 
-    const handleSelect = (item) => {
+    const handleSelect = async (item) => {
         console.log("trips to submit: " + tripSelected)
         console.log(startDate)
         console.log(endDate)
@@ -61,42 +65,92 @@ export default function SelectTripDropdown(props) {
             price: props.diningOption.price,
         };
 
-        getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-            const authToken = res;
-            axios.post('/api/search/selectDining', newFeature, {
-                headers: {
-                    Authorization: `Bearer ${res}`,
-                },
-            }).then((res) => {
-                if (res.status == 200) {
-                    axios.post("/api/trips/vote", {
-                        tripid: tripSelected,
-                        userid: user.sub,
-                        featureid: props.diningOption.id,
-                        isflight: 0,
-                        score: 1
-                    }, {
-                        headers: {
-                            Authorization: `Bearer ${authToken}`
-                        }
-                    }).then(res => {
-                        alert("The dining option has been added to the selected trip.");
-                        console.log(res.data);
-                        history.push({
-                            pathname: `/edittrip/${tripSelected}`
-                        });
-                    }).catch(err => {
-                        console.log(err)
-                        alert("error")
-                    })
-                } else {
-                    alert("error")
-                }
-            }).catch((err) => {
-                console.log(err);
-            });
-        });
+        const vote = {
+            tripid: tripSelected,
+            userid: user.sub,
+            featureid: props.diningOption.id,
+            isflight: 0,
+            score: 1,
+        }
 
+        try {
+            let accessToken = null
+            accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+            const token = `Bearer ${accessToken}`
+            let promise = null
+
+            promise = await axios.post('/api/search/selectDining', newFeature, {
+                headers: {
+                    Authorization: token,
+                }
+            })
+
+            promise = await axios.post("/api/trips/vote", vote, {
+                headers: {
+                    Authorization: token,
+                }
+            })
+
+            postNotification()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const postNotification = async() => {
+        // let newNotification = {
+        //     UserId: user.sub,
+        //     NotificationTitle: "Dining Feature Update",
+        //     NotificationBody: `A dining feature was added to your ${trip.Name} trip.`,
+        //     TripName: trip.Name,
+        //     TripId: trip.TripId,
+        //     NotificationId: uuid()
+        // }
+
+        let users = await getTripUsers(trip.TripId);
+        let accessToken = null
+        accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+        const token = `Bearer ${accessToken}`
+        let promise = null
+
+        console.log("users")
+        console.log(users)
+
+        for (let i = 0; i < users.length; i++) {
+            try {
+                let newNotification = {
+                    UserId: users[i].UserId,
+                    NotificationTitle: "Dining Feature Update",
+                    NotificationBody: `A dining feature was added to your ${trip.Name} trip.`,
+                    TripName: trip.Name,
+                    TripId: trip.TripId,
+                    NotificationId: uuid()
+                }
+                promise = await axios.post(`/api/notifications/insertNotification`, newNotification, {
+                    headers: {
+                        Authorization: token,
+                    }
+                })
+                console.log(" posting Notifications")
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    const getTripUsers = async (tripId) => {
+        let accessToken = null
+        accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+        const token = `Bearer ${accessToken}`
+        let promise = null
+
+        promise = await axios.get(`/api/user/getTripUsers/${tripId}`, {
+            headers: {
+                Authorization: token,
+            }
+        })
+
+        return promise.data;
     }
 
     return (

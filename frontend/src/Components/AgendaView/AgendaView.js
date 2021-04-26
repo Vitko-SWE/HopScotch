@@ -18,16 +18,16 @@ export default function AgendaView(props) {
     const [flights, setFlights] = useState([])
     const [dining, setDining] = useState([])
     const [features, setFeatures] = useState([])
+    const [tripInfo, setTripInfo] = useState({})
+    const [tripFeatures, setTripFeatures] = useState({ dining: [], otherFeatures: [] });
     
 
-    useEffect (() => {
-        getFlights()
-        getDiningFeatures()
-        getOtherFeatures()
+    useEffect (async () => {
+        await getTripInfo()
+        await getFlights()
+        await getDiningFeatures()
+        await getOtherFeatures()
     }, [])
-
-    
-
 
     function onChange (calDate) {
         // change results based on calendar date click
@@ -44,6 +44,9 @@ export default function AgendaView(props) {
         for (let i = 0; i < flights.length; i++) {
             for (let j = 0; j < flights[i].segments.length; j++) {
                 let date = new Date(flights[i].segments[j].departure.at)
+                console.log("flight date")
+                console.log(date)
+
 
                 if (date.toDateString() === calDate.toDateString()) {
                     flights[i].segments[j].departure.at = date.toTimeString()
@@ -92,13 +95,40 @@ export default function AgendaView(props) {
 
     }
 
+    const getTripInfo = async () => {
+
+        let accessToken = null
+        accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+        const token = `Bearer ${accessToken}`
+        let res = null
+
+        try {
+            res = await axios.get(`/api/trips/gettrip/${props.match.params.tripid}`, {
+                headers: {
+                  Authorization: token,
+                }
+              })
+      
+              if (res.status === 200) {
+                  setTripInfo(res.data)
+              }
+              else {
+                  console.log("Error fetching trip")
+              }
+        } catch (error) {
+            console.log(error)
+        }
+        
+        
+      };
+
     const getFlights = async ()  => {
         let accessToken = null
         accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
         const token = `Bearer ${accessToken}`
         let res = null
         
-        res = await axios.get(`/api/flights/getFlights/${props.tripInfo.TripId}`, {
+        res = await axios.get(`/api/flights/getFlights/${props.match.params.tripid}`, {
           headers: {
             Authorization: token,
           }
@@ -106,6 +136,7 @@ export default function AgendaView(props) {
 
         console.log("flights")
         console.log(res.data)
+        console.log(res.status)
 
         if (res.data !== "") {
             let flightObject = JSON.parse(atob(res.data.FlightData))
@@ -121,39 +152,73 @@ export default function AgendaView(props) {
         accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
         const token = `Bearer ${accessToken}`
         let res = null
-        
-        res = await axios.get(`/api/features/getDiningFeatures/${props.tripInfo.TripId}`, {
-          headers: {
-            Authorization: token,
-          }
-        })
 
-        let diningFeatures = []
+        try {
+            res = await axios.get(`/api/trips/getTripFeatures/${props.match.params.tripid}`, {
+                headers: {
+                    Authorization: token,
+                },
+            })
 
-        for (let i = 0; i < props.features.dining.length; i++) {
-            for (let j = 0; j < res.data.length; j++) {
-                // console.log(props.features.dining[i].id)
-                if (props.features.dining[i].id === res.data[j].FeatureId) {
-                    console.log("inside")
-                    let date = new Date(res.data[j].StartDateTime)
-                    let time = date.toTimeString()
-                    let diningObject = {
-                        name: props.features.dining[i].name,
-                        address: props.features.dining[i].location.address1,
-                        city: props.features.dining[i].location.city,
-                        phone: props.features.dining[i].display_phone,
-                        date: date,
-                        time: time,
-
-                    }
-
-                    diningFeatures.push(diningObject)
-                    break;
-                }
+            if (res.status === 200) {
+                setTripFeatures({ dining: res.data.dining, otherFeatures: res.data.otherFeatures })
             }
+            else {
+                console.log("Error: Can't fetch features")
+            }
+            
+        } catch (error) {
+            console.log(error)
         }
 
-        setDining(diningFeatures)
+
+        try {
+            res = await axios.get(`/api/features/getConfirmedDiningFeatures/${props.match.params.tripid}`, {
+                headers: {
+                  Authorization: token,
+                }
+              })
+      
+            let diningFeatures = []
+
+            if (res.status === 200) {
+    
+                for (let i = 0; i < tripFeatures.dining.length; i++) {
+                    for (let j = 0; j < res.data.length; j++) {
+                        // console.log(props.features.dining[i].id)
+                        if (tripFeatures.dining[i].id === res.data[j].FeatureId) {
+                            console.log("inside")
+                            let date = new Date(res.data[j].StartDateTime)
+                            let time = date.toTimeString()
+                            let diningObject = {
+                                name: tripFeatures.dining[i].name,
+                                address: tripFeatures.dining[i].location.address1,
+                                city: tripFeatures.dining[i].location.city,
+                                phone: tripFeatures.dining[i].display_phone,
+                                date: date,
+                                time: time,
+        
+                            }
+        
+                            diningFeatures.push(diningObject)
+                            break;
+                        }
+                    }
+                }
+        
+                setDining(diningFeatures)
+            }
+            else {
+                console.log("Error: Can't setup dining features")
+            }
+            
+        } catch (error) {
+            console.log(error)
+        }
+
+    
+        
+       
 
     }
 
@@ -163,7 +228,7 @@ export default function AgendaView(props) {
         const token = `Bearer ${accessToken}`
         let res = null
         
-        res = await axios.get(`/api/features/getOtherFeatures/${props.tripInfo.TripId}`, {
+        res = await axios.get(`/api/features/getConfirmedOtherFeatures/${props.match.params.tripid}`, {
           headers: {
             Authorization: token,
           }
@@ -174,7 +239,7 @@ export default function AgendaView(props) {
     }
 
     return (
-        <div>
+        <div >
             
             <div className="result-calendar" >
                 <div className="react-calendar" style={{margin: "0 auto", marginTop: "1cm"}}>
@@ -193,7 +258,7 @@ export default function AgendaView(props) {
                 <div>
                     {agenda.flights.length === 0 ? <></>: 
                         <Jumbotron fluid>
-                            <h1>Destination: {props.tripInfo.Destination}</h1>
+                            <h1>Destination: {tripInfo.Destination}</h1>
                             {agenda.flights.map((item, index) => ( 
                                 <Container>
                                 <p><b>Departure</b></p>

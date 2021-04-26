@@ -7,6 +7,7 @@ const searchService = require('./routes/search')
 const searchHotelService = require('./routes/searchHotel')
 const flightService = require('./routes/flights')
 const featureService = require('./routes/features')
+const notificationService = require('./routes/notifications')
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 const cors = require('cors');
@@ -49,6 +50,7 @@ app.use("/api/search", searchService);
 app.use("/api/hotel", searchHotelService);
 app.use("/api/flights", flightService);
 app.use("/api/features", featureService);
+app.use("/api/notifications", notificationService);
 
 if (process.env.NODE_ENV == "production") {
     const publicPath = path.join(__dirname, './frontend');

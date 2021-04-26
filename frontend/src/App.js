@@ -23,6 +23,10 @@ import VotingCard from './Components/EditTrip/components/VotingCard';
 import FlightSearch from './Components/FlightSearch/FlightSearch';
 import FlightSearchResults from "./Components/FlightSearchResults/FlightSearchResults.js";
 import AgendaView from './Components/AgendaView/AgendaView';
+import EditTripView from './Components/EditTrip/EditTripView';
+import Budgeting from './Components/EditTrip/components/Budgeting';
+import Vote from './Components/EditTrip/components/Vote'
+import EditTripDetails from './Components/EditTrip/components/EditTripDetails';
 import ErrorAlert from './Components/ErrorAlert';
 
 export const history = createBrowserHistory();
@@ -47,11 +51,15 @@ function App() {
           <ProtectedRoute path="/searchHotel"  component={SearchHotel} exact/>
           {/* <ProtectedRoute path="/DiningResults"  component={DiningResults} exact/> */}
           <ProtectedRoute path="/edittrip/:tripid"  component={EditTrip} exact/>
+          <ProtectedRoute path="/editview/:tripid"  component={EditTripView} exact/>
+          <ProtectedRoute path="/editview/budgeting/:tripid"  component={Budgeting} exact/>
+          <ProtectedRoute path="/editview/vote/:tripid"  component={Vote} exact/>
+          <ProtectedRoute path="/editview/editTripDetails/:tripid"  component={EditTripDetails} exact/>
           <ProtectedRoute path="/search/flights" component={FlightSearch} exact />
           <ProtectedRoute path="/search/flights/results" component={FlightSearchResults} exact />
           <ProtectedRoute path="/attractionsearch/"  component={AttractionSearch} exact/>
           <ProtectedRoute path="/search/"  component={MainSearch} exact/>
-          <ProtectedRoute path="/AgendaView"  component={AgendaView} exact/>
+          <ProtectedRoute path="/AgendaView/:tripid"  component={AgendaView} exact/>
           <Route path="/testrender/votingcard" component={VotingCard} exact />
           <Route path="/testrender/alert" component={ErrorAlert} exact />
         </Switch>

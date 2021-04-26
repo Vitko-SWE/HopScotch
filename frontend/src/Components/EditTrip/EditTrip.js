@@ -479,6 +479,7 @@ export default function EditTrip(props) {
       {agendaView ? <Button variant="primary" onClick={handleAgendaView}>Switch to edit view</Button> :
         <Button variant="primary" onClick={handleAgendaView}>Switch to agenda view</Button>}
 
+
       {agendaView ? <AgendaView features={tripFeatures} tripInfo={tripInfo} /> :
         <div>
           <div class="fc1 pt-5 pb-5" style={{"background-image": `url(${imgUrl})`, "background-position": "center", "background-repeat": "no-repeat",

@@ -1,0 +1,10 @@
+.toast-body {
+    display: flex;
+    /* word-break: break-word; */
+    overflow-wrap: inherit;
+}
+
+.notification {
+    cursor: pointer;
+
+}
