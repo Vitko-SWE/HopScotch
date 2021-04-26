@@ -30,16 +30,18 @@ export default function EditTrip(props) {
   const history = useHistory();
 
   useEffect(() => {
-    updateTripInfo();
-    updateUserRole();
-    updateTripUsers();
-    updateTripOwners();
-    updateTripEditors();
-    updateTripViewers();
-    updateVotingCards();
-    getTripFeatures();
-    updateConfirmedFeatures();
-  }, []);
+    setTimeout(() => {
+      updateTripInfo();
+      updateUserRole();
+      updateTripUsers();
+      updateTripOwners();
+      updateTripEditors();
+      updateTripViewers();
+      updateVotingCards();
+      getTripFeatures();
+      // updateConfirmedFeatures();
+    }, 5000);
+  });
 
   const updateConfirmedFeatures = () => {
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
@@ -435,219 +437,222 @@ export default function EditTrip(props) {
 
   return (
     <div>
-      {agendaView ? <Button variant="primary" onClick={handleAgendaView}>Switch to edit view</Button>:
+      {agendaView ? <Button variant="primary" onClick={handleAgendaView}>Switch to edit view</Button> :
         <Button variant="primary" onClick={handleAgendaView}>Switch to agenda view</Button>}
-  
-      {agendaView ? <AgendaView features={tripFeatures} tripInfo={tripInfo}/> :
-      <div>
-      <div class="intro pt-5 pb-5">
-        <h1 class="pb-3">{tripInfo.Name}</h1>
-        <h3 class="pb-3">Your role: <strong>{userRole}</strong></h3>
-        {!tripInfo.IsLocked ?
-          <div>
-            <Button variant="primary" onClick={() => lockTrip()}>Lock Trip</Button>
-          </div>
-          :
-          <div>
-            <Button variant="primary" onClick={() => unlockTrip()}>Unlock Trip</Button>
-          </div>
-        }
 
-        <br /><br />
-        <Link to="/directions"><Button variant="primary">Directions</Button></Link>
-        <Container>
-          <Row>
-            <Col>
-              <p><strong>Origin:</strong> {tripInfo.Origin}</p>
-              <p><strong>Destination:</strong> {tripInfo.Destination}</p>
-              <p><strong>Start Date:</strong> {`${(new Date(tripInfo.StartDate)).getMonth() + 1}/${(new Date(tripInfo.StartDate)).getDate()}/${(new Date(tripInfo.StartDate)).getFullYear()}`}</p>
-              <p><strong>End Date:</strong> {`${(new Date(tripInfo.EndDate)).getMonth() + 1}/${(new Date(tripInfo.EndDate)).getDate()}/${(new Date(tripInfo.EndDate)).getFullYear()}`}</p>
-              <p><strong>Outbound Flight ID:</strong> {tripInfo.OutboundFlightId ? tripInfo.OutboundFlightId : "N/A"}</p>
-              <p><strong>Inbound Flight ID:</strong> {tripInfo.InboundFlightId ? tripInfo.InboundFlightId : "N/A"}</p>
-            </Col>
-            <Col>
-              <p><strong>Features:</strong> {tripFeatures.dining.length > 0 && tripFeatures.dining.map((item, index) => (
-                <li key={uuid()}>Dining: {item.name}</li>))}
-                {tripFeatures.otherFeatures.length > 0 && tripFeatures.otherFeatures.map((item, index) => (
-                  <li key={uuid()}>{item.FeatureType}: {item.FeatureName}</li>))}
 
-              </p>
-              <p><strong>Locked?</strong> {tripInfo.IsLocked === 0 ? "No" : "Yes"}</p>
-              <p>
-                <strong>Owners:</strong>{" "}
-                {tripOwners.map((owner, i) => (
-                  (i !== 0 ? ", " : "") + owner.Name
-                ))}
-              </p>
-              <p>
-                <strong>Editors:</strong>{" "}
-                {tripEditors.length === 0 ? "N/A" : (tripEditors.map((editor, i) => (
-                  (i !== 0 ? ", " : "") + editor.Name
-                )))}
-              </p>
-              <p>
-                <strong>Viewers:</strong>{" "}
-                {tripViewers.length === 0 ? "N/A" : (tripViewers.map((viewer, i) => (
-                  (i !== 0 ? ", " : "") + viewer.Name
-                )))}
-              </p>
-            </Col>
-          </Row>
-        </Container>
-      </div>
-      {userRole !== "Viewer" && (
-        <div class="pt-5 pb-5">
-          {(userRole == "Editor" || userRole == "Owner") && !tripInfo.IsLocked && (
-            <div>
-              {/* <div>
-                <Budgeting tripFeatures={tripFeatures} tripid={props.match.params.tripid} tripInfo={tripInfo} />
-              </div> */}
+      {agendaView ? <AgendaView features={tripFeatures} tripInfo={tripInfo} /> :
+        <div>
+          <div class="intro pt-5 pb-5">
+            <h1 class="pb-3">{tripInfo.Name}</h1>
+            <h3 class="pb-3">Your role: <strong>{userRole}</strong></h3>
+            {!tripInfo.IsLocked ?
               <div>
-                <h3>Voting</h3>
-
-              {votes.length > 0 ? (
-                <CardDeck className="ml-5 mr-5 mt-3 justify-content-center">
-                  {votes.map((item, i) => {
-                    return (<VotingCard
-                      key={i}
-                      title={item.FeatureName}
-                      type={item.FeatureType}
-                      score={item.Score}
-                      voters={item.Voters.split(",")}
-                      tripid={props.match.params.tripid}
-                      featureid={item.FeatureId}
-                      isflight={item.IsFlight}
-                      bookingURL={item.BookingURL}
-                      confirmed={item.Confirmed}
-                      updateFunc={updateVotingCards}
-                    />)
-                  })}
-                </CardDeck>
-              ) : (
-                <h6>No votes availible. Why not add something?</h6>
-              )}
-
-                <hr />
+                <Button variant="primary" onClick={() => lockTrip()}>Lock Trip</Button>
               </div>
-            </div>
-          )}
-          {userRole === "Owner" && !tripInfo.IsLocked && (
-            <div>
-              <h3 class="pb-3">Actions</h3>
+              :
+              <div>
+                <Button variant="primary" onClick={() => unlockTrip()}>Unlock Trip</Button>
+              </div>
+            }
 
-              <Container>
-                <Row>
-                  <Col>
-                    <h5>Add Owners</h5>
-                    <Form onSubmit={handleAddOwners}>
-                      <Form.Group controlId="addOwners">
-                        <Form.Text className="text-muted">
-                          Enter email addresses separated by commas.
-                      </Form.Text>
-                        <Form.Control required />
-                      </Form.Group>
-                      <Button variant="primary" type="submit">Submit</Button>
-                    </Form>
-                    <h5>Add Editors</h5>
-                    <Form onSubmit={handleAddEditors}>
-                      <Form.Group controlId="addEditors">
-                        <Form.Text className="text-muted">
-                          Enter email addresses separated by commas.
-                      </Form.Text>
-                        <Form.Control required />
-                      </Form.Group>
-                      <Button variant="primary" type="submit">Submit</Button>
-                    </Form>
-                    <h5>Add Viewers</h5>
-                    <Form onSubmit={handleAddViewers}>
-                      <Form.Group controlId="addViewers">
-                        <Form.Text className="text-muted">
-                          Enter email addresses separated by commas.
-                      </Form.Text>
-                        <Form.Control required />
-                      </Form.Group>
-                      <Button variant="primary" type="submit">Submit</Button>
-                    </Form>
-                  </Col>
-                  <Col>
-                    <h5>Edit User Roles</h5>
-                    <Form onSubmit={handleEditUsers}>
-                      <Form.Group controlId="roleSelectUser">
-                        <Form.Text className="text-muted">
-                          Select the user that needs to be edited.
-                      </Form.Text>
-                        <Form.Control as="select">
-                          {tripUsers.map((user) => (
-                            <option value={user.UserId}>{`${user.Name} (${user.EmailAddress})`}</option>
-                          ))}
-                        </Form.Control>
-                      </Form.Group>
-                      <Form.Group controlId="roleSelectRole">
-                        <Form.Text className="text-muted">
-                          Select the role the user should be set to.
-                      </Form.Text>
-                        <Form.Control as="select">
-                          <option>Owner</option>
-                          <option>Editor</option>
-                          <option>Viewer</option>
-                          <option>Remove user from trip</option>
-                        </Form.Control>
-                      </Form.Group>
-                      <Button variant="primary" type="submit">Submit</Button>
-                    </Form>
-                    {tripOwners.find(element => element.sub === user.UserId) && (
-                      <div>
-                        <h5> Delete trip </h5>
-                        <Button variant="danger" onClick={deleteTrip} type="submit">Delete Trip</Button>
-                      </div>
+            <br /><br />
+            <Link to="/directions"><Button variant="primary">Directions</Button></Link>
+            <Container>
+              <Row>
+                <Col>
+                  <p><strong>Origin:</strong> {tripInfo.Origin}</p>
+                  <p><strong>Destination:</strong> {tripInfo.Destination}</p>
+                  <p><strong>Start Date:</strong> {`${(new Date(tripInfo.StartDate)).getMonth() + 1}/${(new Date(tripInfo.StartDate)).getDate()}/${(new Date(tripInfo.StartDate)).getFullYear()}`}</p>
+                  <p><strong>End Date:</strong> {`${(new Date(tripInfo.EndDate)).getMonth() + 1}/${(new Date(tripInfo.EndDate)).getDate()}/${(new Date(tripInfo.EndDate)).getFullYear()}`}</p>
+                  <p><strong>Outbound Flight ID:</strong> {tripInfo.OutboundFlightId ? tripInfo.OutboundFlightId : "N/A"}</p>
+                  <p><strong>Inbound Flight ID:</strong> {tripInfo.InboundFlightId ? tripInfo.InboundFlightId : "N/A"}</p>
+                </Col>
+                <Col>
+                  <p><strong>Features:</strong> {tripFeatures.dining.length > 0 && tripFeatures.dining.map((item, index) => (
+                    <li key={uuid()}>Dining: {item.name}</li>))}
+                    {tripFeatures.otherFeatures.length > 0 && tripFeatures.otherFeatures.map((item, index) => (
+                      <li key={uuid()}>{item.FeatureType}: {item.FeatureName}</li>))}
+
+                  </p>
+                  <p><strong>Locked?</strong> {tripInfo.IsLocked === 0 ? "No" : "Yes"}</p>
+                  <p>
+                    <strong>Owners:</strong>{" "}
+                    {tripOwners.map((owner, i) => (
+                      (i !== 0 ? ", " : "") + owner.Name
+                    ))}
+                  </p>
+                  <p>
+                    <strong>Editors:</strong>{" "}
+                    {tripEditors.length === 0 ? "N/A" : (tripEditors.map((editor, i) => (
+                      (i !== 0 ? ", " : "") + editor.Name
+                    )))}
+                  </p>
+                  <p>
+                    <strong>Viewers:</strong>{" "}
+                    {tripViewers.length === 0 ? "N/A" : (tripViewers.map((viewer, i) => (
+                      (i !== 0 ? ", " : "") + viewer.Name
+                    )))}
+                  </p>
+                </Col>
+              </Row>
+            </Container>
+          </div>
+          {userRole !== "Viewer" && (
+            <div class="pt-5 pb-5">
+              {(userRole == "Editor" || userRole == "Owner") && (
+                <div>
+                  <div>
+                    <Budgeting tripFeatures={tripFeatures} tripid={props.match.params.tripid} tripInfo={tripInfo} />
+                  </div>
+                  <div>
+                    <h3>Voting</h3>
+
+                    {votes.length > 0 ? (
+                      <CardDeck className="ml-5 mr-5 mt-3 justify-content-center">
+                        {votes.map((item, i) => {
+                          return (<VotingCard
+                            key={i}
+                            title={item.FeatureName}
+                            type={item.FeatureType}
+                            score={item.Score}
+                            popularity={item.Popularity}
+                            voters={item.Voters.split(",")}
+                            tripid={props.match.params.tripid}
+                            featureid={item.FeatureId}
+                            isflight={item.IsFlight}
+                            bookingURL={item.BookingURL}
+                            confirmed={item.Confirmed}
+                            locked={tripInfo.IsLocked}
+                            updateFunc={updateVotingCards}
+                          />)
+                        })}
+                      </CardDeck>
+                    ) : (
+                      <h6>No votes available. Why not add something?</h6>
                     )}
-                  </Col>
-                </Row>
-                <hr />
-              </Container>
+
+                    <hr />
+                  </div>
+                </div>
+              )}
+              {userRole === "Owner" && !tripInfo.IsLocked && (
+                <div>
+                  <h3 class="pb-3">Actions</h3>
+
+                  <Container>
+                    <Row>
+                      <Col>
+                        <h5>Add Owners</h5>
+                        <Form onSubmit={handleAddOwners}>
+                          <Form.Group controlId="addOwners">
+                            <Form.Text className="text-muted">
+                              Enter email addresses separated by commas.
+                      </Form.Text>
+                            <Form.Control required />
+                          </Form.Group>
+                          <Button variant="primary" type="submit">Submit</Button>
+                        </Form>
+                        <h5>Add Editors</h5>
+                        <Form onSubmit={handleAddEditors}>
+                          <Form.Group controlId="addEditors">
+                            <Form.Text className="text-muted">
+                              Enter email addresses separated by commas.
+                      </Form.Text>
+                            <Form.Control required />
+                          </Form.Group>
+                          <Button variant="primary" type="submit">Submit</Button>
+                        </Form>
+                        <h5>Add Viewers</h5>
+                        <Form onSubmit={handleAddViewers}>
+                          <Form.Group controlId="addViewers">
+                            <Form.Text className="text-muted">
+                              Enter email addresses separated by commas.
+                      </Form.Text>
+                            <Form.Control required />
+                          </Form.Group>
+                          <Button variant="primary" type="submit">Submit</Button>
+                        </Form>
+                      </Col>
+                      <Col>
+                        <h5>Edit User Roles</h5>
+                        <Form onSubmit={handleEditUsers}>
+                          <Form.Group controlId="roleSelectUser">
+                            <Form.Text className="text-muted">
+                              Select the user that needs to be edited.
+                      </Form.Text>
+                            <Form.Control as="select">
+                              {tripUsers.map((user) => (
+                                <option value={user.UserId}>{`${user.Name} (${user.EmailAddress})`}</option>
+                              ))}
+                            </Form.Control>
+                          </Form.Group>
+                          <Form.Group controlId="roleSelectRole">
+                            <Form.Text className="text-muted">
+                              Select the role the user should be set to.
+                      </Form.Text>
+                            <Form.Control as="select">
+                              <option>Owner</option>
+                              <option>Editor</option>
+                              <option>Viewer</option>
+                              <option>Remove user from trip</option>
+                            </Form.Control>
+                          </Form.Group>
+                          <Button variant="primary" type="submit">Submit</Button>
+                        </Form>
+                        {tripOwners.find(element => element.sub === user.UserId) && (
+                          <div>
+                            <h5> Delete trip </h5>
+                            <Button variant="danger" onClick={deleteTrip} type="submit">Delete Trip</Button>
+                          </div>
+                        )}
+                      </Col>
+                    </Row>
+                    <hr />
+                  </Container>
+                </div>
+              )}
+              {!tripInfo.IsLocked && (
+                <div>
+                  <h5>Edit Trip Details</h5>
+                  <Form onSubmit={handleEditDetails}>
+                    <Container>
+                      <Row>
+                        <Col>
+                          <Form.Group controlId="tripTitle">
+                            <Form.Label>Title</Form.Label>
+                            <Form.Control required defaultValue={tripInfo.Name} />
+                          </Form.Group>
+                          <Form.Group controlId="tripOrigin">
+                            <Form.Label>Origin</Form.Label>
+                            <Form.Control required defaultValue={tripInfo.Origin} />
+                          </Form.Group>
+                          <Form.Group controlId="tripDestination">
+                            <Form.Label>Destination</Form.Label>
+                            <Form.Control required defaultValue={tripInfo.Destination} />
+                          </Form.Group>
+                        </Col>
+                        <Col>
+                          <Form.Group controlId="tripStartDate">
+                            <Form.Label>Start Date</Form.Label><br />
+                            <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
+                          </Form.Group>
+                          <Form.Group controlId="tripEndDate">
+                            <Form.Label>End Date</Form.Label><br />
+                            <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    </Container>
+                    <Button variant="primary" type="submit">Submit</Button>
+                    {" "}
+                    <Link to={`/edittrip/${props.match.params.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
+                  </Form>
+                </div>
+              )}
             </div>
           )}
-          {!tripInfo.IsLocked && (
-            <div>
-              <h5>Edit Trip Details</h5>
-              <Form onSubmit={handleEditDetails}>
-                <Container>
-                  <Row>
-                    <Col>
-                      <Form.Group controlId="tripTitle">
-                        <Form.Label>Title</Form.Label>
-                        <Form.Control required defaultValue={tripInfo.Name} />
-                      </Form.Group>
-                      <Form.Group controlId="tripOrigin">
-                        <Form.Label>Origin</Form.Label>
-                        <Form.Control required defaultValue={tripInfo.Origin} />
-                      </Form.Group>
-                      <Form.Group controlId="tripDestination">
-                        <Form.Label>Destination</Form.Label>
-                        <Form.Control required defaultValue={tripInfo.Destination} />
-                      </Form.Group>
-                    </Col>
-                    <Col>
-                      <Form.Group controlId="tripStartDate">
-                        <Form.Label>Start Date</Form.Label><br />
-                        <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
-                      </Form.Group>
-                      <Form.Group controlId="tripEndDate">
-                        <Form.Label>End Date</Form.Label><br />
-                        <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                </Container>
-                <Button variant="primary" type="submit">Submit</Button>
-                {" "}
-                <Link to={`/edittrip/${props.match.params.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
-              </Form>
-            </div>
-          )}
-        </div>
-      )}
-      </div>}
+        </div>}
     </div>
   );
 };

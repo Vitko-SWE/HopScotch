@@ -27,6 +27,7 @@ import EditTripView from './Components/EditTrip/EditTripView';
 import Budgeting from './Components/EditTrip/components/Budgeting';
 import Vote from './Components/EditTrip/components/Vote'
 import EditTripDetails from './Components/EditTrip/components/EditTripDetails';
+import ErrorAlert from './Components/ErrorAlert';
 
 export const history = createBrowserHistory();
 
@@ -60,6 +61,7 @@ function App() {
           <ProtectedRoute path="/search/"  component={MainSearch} exact/>
           <ProtectedRoute path="/AgendaView/:tripid"  component={AgendaView} exact/>
           <Route path="/testrender/votingcard" component={VotingCard} exact />
+          <Route path="/testrender/alert" component={ErrorAlert} exact />
         </Switch>
       </div>
     </Router>

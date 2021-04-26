@@ -6,12 +6,12 @@ import { Modal, Button, ListGroup, Col, Form, Container, Row } from 'react-boots
 import DatePicker from "react-datepicker";
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import uuid from 'react-uuid';
-
+import { useHistory } from 'react-router';
 
 export default function SelectTripDropdown(props) {
 
-    const {user, getAccessTokenSilently} = useAuth0();
-    const trips = useState({items: []});
+    const { user, getAccessTokenSilently } = useAuth0();
+    const trips = useState({ items: [] });
     const [show, setShow] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
@@ -19,6 +19,7 @@ export default function SelectTripDropdown(props) {
     const [trip, setTrip] = useState({})
     const [success, setSuccess] = useState(false)
     
+    const history = useHistory();
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -86,6 +87,44 @@ export default function SelectTripDropdown(props) {
         //         console.log(err);
         //     });
         // });
+      
+// ======= dev
+//         getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+//             const authToken = res;
+//             axios.post('/api/hotel/selectHotel', newFeature, {
+//                 headers: {
+//                     Authorization: `Bearer ${res}`,
+//                 },
+//             }).then((res) => {
+//                 if (res.status == 200) {
+//                     axios.post("/api/trips/vote", {
+//                         tripid: tripSelected,
+//                         userid: user.sub,
+//                         featureid: props.result.id,
+//                         isflight: 0,
+//                         score: 1
+//                     }, {
+//                         headers: {
+//                             Authorization: `Bearer ${authToken}`
+//                         }
+//                     }).then(res => {
+//                         alert("The hotel has been added to the selected trip.");
+//                         console.log(res.data);
+//                         history.push({
+//                             pathname: `/edittrip/${tripSelected}`
+//                         });
+//                     }).catch(err => {
+//                         console.log(err)
+//                         alert("error")
+//                     })
+//                 } else {
+//                     alert("error")
+//                 }
+//             }).catch((err) => {
+//                 console.log(err);
+//             });
+//         });
+// >>>>>>> dev
 
     }
 
@@ -145,59 +184,108 @@ export default function SelectTripDropdown(props) {
 
     return (
         <>
-        <Button variant="primary" onClick={handleShow}>
-            Add to trip
-        </Button>
+            <Button variant="primary" onClick={handleShow}>
+                Add to trip
+          </Button>
 
-        <Modal show={show} onHide={handleClose} size="lg" centered>
-            <Modal.Header closeButton>
-            <Modal.Title>Please select trip, date, and time</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Container>
-                    <Row>
-                        <Col xs={6} md={4}>
-                            <ListGroup>
-                                <ListGroup.Item variant="primary"><strong>Choose Trip</strong></ListGroup.Item>
-                                {props.trips.map((item) => (
-                                    !item.IsLocked ?
-                                    <div><ListGroup.Item action variant="light" onClick={() => handleTripChange(item)} as="button">{item.Name}</ListGroup.Item></div> :
-                                    <div><ListGroup.Item disabled><del>{item.Name}</del></ListGroup.Item></div>
-                                ))}
-                            </ListGroup>
-                        </Col>
-                        <Col>
-                            <Form.Group controlId="tripStartDate">
-                                <Form.Label><strong>Start Date and Time</strong></Form.Label><br />
-                                <DatePicker selected={startDate} showTimeSelect onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
-                            </Form.Group>
-                            <Form.Group controlId="tripEndDate">
-                                <Form.Label><strong>End Date and Time</strong></Form.Label><br />
-                                <DatePicker selected={endDate} showTimeSelect onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
-                            </Form.Group>
-                        </Col>
+// <<<<<<< 5.11-notifications
+//         <Modal show={show} onHide={handleClose} size="lg" centered>
+//             <Modal.Header closeButton>
+//             <Modal.Title>Please select trip, date, and time</Modal.Title>
+//             </Modal.Header>
+//             <Modal.Body>
+//                 <Container>
+//                     <Row>
+//                         <Col xs={6} md={4}>
+//                             <ListGroup>
+//                                 <ListGroup.Item variant="primary"><strong>Choose Trip</strong></ListGroup.Item>
+//                                 {props.trips.map((item) => (
+//                                     !item.IsLocked ?
+//                                     <div><ListGroup.Item action variant="light" onClick={() => handleTripChange(item)} as="button">{item.Name}</ListGroup.Item></div> :
+//                                     <div><ListGroup.Item disabled><del>{item.Name}</del></ListGroup.Item></div>
+//                                 ))}
+//                             </ListGroup>
+//                         </Col>
+//                         <Col>
+//                             <Form.Group controlId="tripStartDate">
+//                                 <Form.Label><strong>Start Date and Time</strong></Form.Label><br />
+//                                 <DatePicker selected={startDate} showTimeSelect onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
+//                             </Form.Group>
+//                             <Form.Group controlId="tripEndDate">
+//                                 <Form.Label><strong>End Date and Time</strong></Form.Label><br />
+//                                 <DatePicker selected={endDate} showTimeSelect onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
+//                             </Form.Group>
+//                         </Col>
 
-                    </Row>
-                    <Row>
-                        <Col >
-                            <Form.Group controlId="disclaimer" >
-                                <Form.Label>This is not a reservation, it's just a tool to help you organize your trip</Form.Label><br />
+//                     </Row>
+//                     <Row>
+//                         <Col >
+//                             <Form.Group controlId="disclaimer" >
+//                                 <Form.Label>This is not a reservation, it's just a tool to help you organize your trip</Form.Label><br />
 
-                            </Form.Group>
+//                             </Form.Group>
 
-                        </Col>
-                    </Row>
-                </Container>
-            </Modal.Body>
-            <Modal.Footer>
-            <Button variant="secondary" onClick={() => handleClose()}>
-                Close
+//                         </Col>
+//                     </Row>
+//                 </Container>
+//             </Modal.Body>
+//             <Modal.Footer>
+//             <Button variant="secondary" onClick={() => handleClose()}>
+//                 Close
+//             </Button>
+//             <Button variant="primary" onClick={() => handleSelect()}>
+//                 Save
+// =======
+            <Modal show={show} onHide={handleClose} size="lg" centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Please select trip, date, and time</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Container>
+                        <Row>
+                            <Col xs={6} md={4}>
+                                <ListGroup>
+                                    <ListGroup.Item variant="primary"><strong>Choose Trip</strong></ListGroup.Item>
+                                    {props.trips.map((item) => (
+                                        !item.IsLocked ?
+                                            <div><ListGroup.Item action variant="light" onClick={() => handleTripChange(item)} as="button">{item.Name}</ListGroup.Item></div> :
+                                            <div><ListGroup.Item disabled><del>{item.Name}</del></ListGroup.Item></div>
+                                    ))}
+                                </ListGroup>
+                            </Col>
+                            <Col>
+                                <Form.Group controlId="tripStartDate">
+                                    <Form.Label><strong>Start Date and Time</strong></Form.Label><br />
+                                    <DatePicker selected={startDate} showTimeSelect onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
+                                </Form.Group>
+                                <Form.Group controlId="tripEndDate">
+                                    <Form.Label><strong>End Date and Time</strong></Form.Label><br />
+                                    <DatePicker selected={endDate} showTimeSelect onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
+                                </Form.Group>
+                            </Col>
+
+                        </Row>
+                        <Row>
+                            <Col >
+                                <Form.Group controlId="disclaimer" >
+                                    <Form.Label>This is not a reservation, it's just a tool to help you organize your trip</Form.Label><br />
+
+                                </Form.Group>
+
+                            </Col>
+                        </Row>
+                    </Container>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
             </Button>
-            <Button variant="primary" onClick={() => handleSelect()}>
-                Save
+                    <Button variant="primary" onClick={handleSelect}>
+                        Save
+// >>>>>>> dev
             </Button>
-            </Modal.Footer>
-        </Modal>
+                </Modal.Footer>
+            </Modal>
         </>
 
         // <DropdownButton id="dropdown-item-button" title="Select Trip to add to">
@@ -207,4 +295,4 @@ export default function SelectTripDropdown(props) {
         //         ))}
         // </DropdownButton>
     );
-  }
+}
