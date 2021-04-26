@@ -446,6 +446,33 @@ export default function EditTrip(props) {
     setAgendaView(!agendaView)
   }
 
+  const handlePDF = () => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios({
+        method: 'post',
+        url: `/api/trips/${props.match.params.tripid}/pdf`,
+        responseType: 'blob',
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+        data: {
+          featureInfo: tripFeatures,
+          people: tripOwners.concat(tripEditors.concat(tripViewers)),
+        },
+      }).then(res => {
+        const file = new Blob(
+          [res.data],
+          {
+            type: 'application/pdf',
+          }
+        );
+        const fileURL = URL.createObjectURL(file);
+        window.open(fileURL);
+      }).catch(err => {
+        console.log(err);
+      })
+    });
+  }
 
   return (
     <div>
@@ -470,6 +497,7 @@ export default function EditTrip(props) {
 
             <br /><br />
             <Link to="/directions"><Button variant="primary">Directions</Button></Link>
+            <Button onClick={handlePDF} variant="primary">Generate PDF</Button>
             <Container>
               <Row>
                 <Col>
