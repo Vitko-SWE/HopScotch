@@ -11,6 +11,7 @@ import FlightSearch from '../FlightSearch/FlightSearch';
 import "./Card.css";
 import AttractionModal from "../Search/AttractionModal"
 import PoiModal from "../Search/PoiModal"
+import "./MainSearch.css"
 
 export default function MainSearch() {
   // General Globals
