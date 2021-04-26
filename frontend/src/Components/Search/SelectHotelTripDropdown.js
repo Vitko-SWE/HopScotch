@@ -188,101 +188,54 @@ export default function SelectTripDropdown(props) {
                 Add to trip
           </Button>
 
-// <<<<<<< 5.11-notifications
-//         <Modal show={show} onHide={handleClose} size="lg" centered>
-//             <Modal.Header closeButton>
-//             <Modal.Title>Please select trip, date, and time</Modal.Title>
-//             </Modal.Header>
-//             <Modal.Body>
-//                 <Container>
-//                     <Row>
-//                         <Col xs={6} md={4}>
-//                             <ListGroup>
-//                                 <ListGroup.Item variant="primary"><strong>Choose Trip</strong></ListGroup.Item>
-//                                 {props.trips.map((item) => (
-//                                     !item.IsLocked ?
-//                                     <div><ListGroup.Item action variant="light" onClick={() => handleTripChange(item)} as="button">{item.Name}</ListGroup.Item></div> :
-//                                     <div><ListGroup.Item disabled><del>{item.Name}</del></ListGroup.Item></div>
-//                                 ))}
-//                             </ListGroup>
-//                         </Col>
-//                         <Col>
-//                             <Form.Group controlId="tripStartDate">
-//                                 <Form.Label><strong>Start Date and Time</strong></Form.Label><br />
-//                                 <DatePicker selected={startDate} showTimeSelect onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
-//                             </Form.Group>
-//                             <Form.Group controlId="tripEndDate">
-//                                 <Form.Label><strong>End Date and Time</strong></Form.Label><br />
-//                                 <DatePicker selected={endDate} showTimeSelect onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
-//                             </Form.Group>
-//                         </Col>
 
-//                     </Row>
-//                     <Row>
-//                         <Col >
-//                             <Form.Group controlId="disclaimer" >
-//                                 <Form.Label>This is not a reservation, it's just a tool to help you organize your trip</Form.Label><br />
+         <Modal show={show} onHide={handleClose} size="lg" centered>
+             <Modal.Header closeButton>
+             <Modal.Title>Please select trip, date, and time</Modal.Title>
+             </Modal.Header>
+             <Modal.Body>
+                 <Container>
+                     <Row>
+                         <Col xs={6} md={4}>
+                             <ListGroup>
+                                 <ListGroup.Item variant="primary"><strong>Choose Trip</strong></ListGroup.Item>
+                                 {props.trips.map((item) => (
+                                    !item.IsLocked ?
+                                    <div><ListGroup.Item action variant="light" onClick={() => handleTripChange(item)} as="button">{item.Name}</ListGroup.Item></div> :
+                                    <div><ListGroup.Item disabled><del>{item.Name}</del></ListGroup.Item></div>
+                                ))}
+                            </ListGroup>
+                        </Col>
+                        <Col>
+                            <Form.Group controlId="tripStartDate">
+                                <Form.Label><strong>Start Date and Time</strong></Form.Label><br />
+                                <DatePicker selected={startDate} showTimeSelect onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
+                            </Form.Group>
+                            <Form.Group controlId="tripEndDate">
+                                <Form.Label><strong>End Date and Time</strong></Form.Label><br />
+                                <DatePicker selected={endDate} showTimeSelect onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
+                            </Form.Group>
+                        </Col>
 
-//                             </Form.Group>
+                    </Row>
+                    <Row>
+                        <Col >
+                            <Form.Group controlId="disclaimer" >
+                                <Form.Label>This is not a reservation, it's just a tool to help you organize your trip</Form.Label><br />
 
-//                         </Col>
-//                     </Row>
-//                 </Container>
-//             </Modal.Body>
-//             <Modal.Footer>
-//             <Button variant="secondary" onClick={() => handleClose()}>
-//                 Close
-//             </Button>
-//             <Button variant="primary" onClick={() => handleSelect()}>
-//                 Save
-// =======
-            <Modal show={show} onHide={handleClose} size="lg" centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Please select trip, date, and time</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Container>
-                        <Row>
-                            <Col xs={6} md={4}>
-                                <ListGroup>
-                                    <ListGroup.Item variant="primary"><strong>Choose Trip</strong></ListGroup.Item>
-                                    {props.trips.map((item) => (
-                                        !item.IsLocked ?
-                                            <div><ListGroup.Item action variant="light" onClick={() => handleTripChange(item)} as="button">{item.Name}</ListGroup.Item></div> :
-                                            <div><ListGroup.Item disabled><del>{item.Name}</del></ListGroup.Item></div>
-                                    ))}
-                                </ListGroup>
-                            </Col>
-                            <Col>
-                                <Form.Group controlId="tripStartDate">
-                                    <Form.Label><strong>Start Date and Time</strong></Form.Label><br />
-                                    <DatePicker selected={startDate} showTimeSelect onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
-                                </Form.Group>
-                                <Form.Group controlId="tripEndDate">
-                                    <Form.Label><strong>End Date and Time</strong></Form.Label><br />
-                                    <DatePicker selected={endDate} showTimeSelect onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
-                                </Form.Group>
-                            </Col>
+                            </Form.Group>
 
-                        </Row>
-                        <Row>
-                            <Col >
-                                <Form.Group controlId="disclaimer" >
-                                    <Form.Label>This is not a reservation, it's just a tool to help you organize your trip</Form.Label><br />
-
-                                </Form.Group>
-
-                            </Col>
-                        </Row>
-                    </Container>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
+                        </Col>
+                    </Row>
+                </Container>
+            </Modal.Body>
+            <Modal.Footer>
+            <Button variant="secondary" onClick={() => handleClose()}>
+                Close
             </Button>
-                    <Button variant="primary" onClick={handleSelect}>
-                        Save
-// >>>>>>> dev
+            <Button variant="primary" onClick={() => handleSelect()}>
+                Save
+
             </Button>
                 </Modal.Footer>
             </Modal>

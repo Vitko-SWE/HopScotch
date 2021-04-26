@@ -68,22 +68,23 @@ export default function Budgeting(props) {
             }
           })
   
-          if (res.status === 200) {
-            let data = res.data
-              setTripInfo(data)
-              console.log("in trip info")
-              console.log(res.data.Budget)
-              return res.data
-          }
-          else {
-              console.log("Error: fetching trip")
-          }
+        if (res.status === 200) {
+          let data = res.data
+            setTripInfo(data)
+            console.log("in trip info")
+            console.log(res.data.Budget)
+            return res.data
+        }
+        else {
+            console.log("Error: fetching trip")
+        }
     } catch (error) {
         console.log(error)
     }
     
     
   };
+
 
   const updateFeatures = async (e) => {
 
@@ -178,9 +179,10 @@ export default function Budgeting(props) {
             alert(`${res.status}: ${res.statusText}\n${res.data}`);
             setShowAlert(true);
           }
-    } catch (error) {
-        console.log(error)
-        setShowAlert(true);
+      } catch (error) {
+          console.log(error)
+          setShowAlert(true);
+      }
     }
       // getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
       //   axios.post(`/api/trips/editbudget/${props.tripid}`, {
@@ -223,39 +225,41 @@ export default function Budgeting(props) {
 
   
       res = await axios.post(`/api/features/editprices/${props.match.params.tripid}`, {
-              input: convData,
-            }, {
-              headers: {
-                Authorization: token,
-              },
+                input: convData,
+              }, {
+                headers: {
+                  Authorization: token,
+                },
             })
+          
 
-        if (res.status === 200) {
-          console.log(res);
-          history.push(`/editview/budgeting${props.match.params.tripid}`);
-        }
-        else {
-          alert(`${res.status}: ${res.statusText}\n${res.data}`);
-          setShowAlert(true);
-        }
-      } catch (error) {
-          console.log(error)
-          setShowAlert(true);
+      if (res.status === 200) {
+        console.log(res);
+        history.push(`/editview/budgeting${props.match.params.tripid}`);
       }
-    // getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-    //   axios.post(`/api/features/editprices/${props.tripid}`, {
-    //     input: convData,
-    //   }, {
-    //     headers: {
-    //       Authorization: `Bearer ${res}`,
-    //     },
-    //   }).then((res) => {
-    //     console.log(res);
-    //     history.push(`/edittrip/${props.tripid}`);
-    //   }).catch((err) => {
-    //     alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
-    //   });
-    // });
+      else {
+        alert(`${res.status}: ${res.statusText}\n${res.data}`);
+        setShowAlert(true);
+      }
+    } catch (error) {
+        console.log(error)
+        setShowAlert(true);
+    }
+  
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.post(`/api/features/editprices/${props.tripid}`, {
+        input: convData,
+      }, {
+        headers: {
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        console.log(res);
+        history.push(`/edittrip/${props.tripid}`);
+      }).catch((err) => {
+        alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
+      });
+    });
   };
 
   const priceCalculator = async () => {
@@ -296,6 +300,7 @@ export default function Budgeting(props) {
       ));
     }
   };
+
 
   return (
     <div>
@@ -338,5 +343,5 @@ export default function Budgeting(props) {
       </Container>
       <hr />
     </div>
-  );
+  )
 }

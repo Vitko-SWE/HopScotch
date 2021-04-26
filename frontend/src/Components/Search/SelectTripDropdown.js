@@ -87,7 +87,6 @@ export default function SelectTripDropdown(props) {
 
             promise = await axios.post("/api/trips/vote", vote, {
                 headers: {
-// <<<<<<< 5.11-notifications
                     Authorization: token,
                 }
             })
@@ -96,37 +95,6 @@ export default function SelectTripDropdown(props) {
         } catch (error) {
             console.log(error)
         }
-
-        
-
-        // getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-        //     const authToken = res;
-        //     axios.post('/api/search/selectDining', newFeature, {
-        //         headers: {
-        //         Authorization: `Bearer ${res}`,
-        //         },
-        //     }).then((res) => {
-        //         axios.post("/api/trips/vote", {
-        //             tripid: tripSelected,
-        //             userid: user.sub,
-        //             featureid: props.diningOption.id,
-        //             isflight: 0,
-        //             score: 1,
-        //         }, {
-        //             headers: {
-        //                 Authorization: `Bearer ${authToken}`
-        //             }
-        //         }).then(res3 => {
-        //            postNotification();
-        //         })
-        //         .catch((err) =>{
-        //             console.log(err);
-        //         });
-        //     //   alert("The dining option has been added to the selected trip.");
-        //     }).catch((err) => {
-        //         console.log(err);
-        //     });
-        // });
     }
 
     const postNotification = async() => {
@@ -155,40 +123,6 @@ export default function SelectTripDropdown(props) {
                         Authorization: token,
                     }
                 })
-// =======
-//                     Authorization: `Bearer ${res}`,
-//                 },
-//             }).then((res) => {
-//                 if (res.status == 200) {
-//                     axios.post("/api/trips/vote", {
-//                         tripid: tripSelected,
-//                         userid: user.sub,
-//                         featureid: props.diningOption.id,
-//                         isflight: 0,
-//                         score: 1
-//                     }, {
-//                         headers: {
-//                             Authorization: `Bearer ${authToken}`
-//                         }
-//                     }).then(res => {
-//                         alert("The dining option has been added to the selected trip.");
-//                         console.log(res.data);
-//                         history.push({
-//                             pathname: `/edittrip/${tripSelected}`
-//                         });
-//                     }).catch(err => {
-//                         console.log(err)
-//                         alert("error")
-//                     })
-//                 } else {
-//                     alert("error")
-//                 }
-//             }).catch((err) => {
-//                 console.log(err);
-//             });
-//         });
-// >>>>>>> dev
-
                 console.log(" posting Notifications")
             } catch (error) {
                 console.log(error)
