@@ -338,7 +338,7 @@ export default function EditTripUsers(props) {
                     console.log(res.data);
                     let title = "User Roles Edited";
                     let body = `User roles were edited in your ${tripInfo.Name} trip`;
-                    postNotification(title, body)
+                    await postNotification(title, body)
                     window.location.reload()
                 }
                 else {

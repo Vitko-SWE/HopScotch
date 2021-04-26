@@ -154,8 +154,8 @@ export default function SelectTripDropdown(props) {
             try {
                 let newNotification = {
                     UserId: users[i].UserId,
-                    NotificationTitle: "Dining Feature Update",
-                    NotificationBody: `A dining feature was added to your ${trip.Name} trip.`,
+                    NotificationTitle: "Hotel Update",
+                    NotificationBody: `A hotel was added to your ${trip.Name} trip.`,
                     TripName: trip.Name,
                     TripId: trip.TripId,
                     NotificationId: uuid()
