@@ -152,7 +152,7 @@ class TripCards extends Component {
                   </Card.Text>
               </Card.Body>
               <Card.Footer>
-                <Link to={`/edittrip/${trip.TripId}`}><Button className="edit-button"  variant="primary" size="lg" block>Edit</Button></Link>
+                <Link to={`/editview/${trip.TripId}`}><Button className="edit-button"  variant="primary" size="lg" block>Edit</Button></Link>
                 <Button  variant="danger" size="lg" block>Exit Trip</Button>
               </Card.Footer>
             </Card>

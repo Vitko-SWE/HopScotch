@@ -5,6 +5,7 @@ let router = express.Router()
 require('dotenv').config()
 const yelp = require('yelp-fusion');
 const client = yelp.client(process.env.YELP_SECRET);
+const PDFDocument = require('pdfkit');
 const axios = require("axios");
 
 router.route("/createtrip").post((req, res) => {
@@ -371,7 +372,7 @@ router.route("/removeuser/:tripid/:userid").delete((req, res) => {
     else {
       res.send(data);
     }
-  })
+  });
 });
 
 router.route("/vote").post((req, res) => {
@@ -566,6 +567,86 @@ router.get("/gettripimage/:tripid", (req, res) => {
         console.log(err);
         res.send(err);
       });
+    }
+  });
+});
+
+router.post('/:tripid/pdf', (req, res) => {
+  const query = `select * from Trip where TripId = '${req.params.tripid}';`;
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+      const doc = new PDFDocument;
+      const tripdata = data[0];
+
+      doc.pipe(res);
+
+      doc.fontSize(24).text(tripdata.Name, {
+        align: "center",
+      });
+
+      doc.moveDown();
+
+      let collabs = "Trip Collaborators: ";
+      for (let i = 0; i < req.body.people.length; i++) {
+        collabs += (req.body.people[i].Name + (i === req.body.people.length - 1 ? "" : ", "));
+      }
+      doc.fontSize(16).text(collabs);
+
+      doc.moveDown();
+
+      doc.fontSize(20).text("Trip Details", {
+        align: "center",
+      });
+
+      doc.fontSize(16).text(`Origin: ${tripdata.Origin}`);
+      doc.fontSize(16).text(`Destination: ${tripdata.Destination}`);
+      doc.fontSize(16).text(`Start Date: ${`${(new Date(tripdata.StartDate)).getMonth() + 1}/${(new Date(tripdata.StartDate)).getDate()}/${(new Date(tripdata.StartDate)).getFullYear()}`}`);
+      doc.fontSize(16).text(`End Date: ${`${(new Date(tripdata.EndDate)).getMonth() + 1}/${(new Date(tripdata.EndDate)).getDate()}/${(new Date(tripdata.EndDate)).getFullYear()}`}`);
+      doc.fontSize(16).text(`OutboundFlightId: ${tripdata.OutboundFlightId}`);
+      doc.fontSize(16).text(`InboundFlightId: ${tripdata.InboundFlightId}`);
+
+      doc.moveDown();
+
+      doc.fontSize(20).text("Trip Features", {
+        align: "center",
+      });
+
+      for (let i = 0; i < req.body.featureInfo.dining.length; i++) {
+        doc.fontSize(16).text(req.body.featureInfo.dining[i].name, {
+          align: "center",
+        });
+        doc.fontSize(12).text(req.body.featureInfo.dining[i].phone, {
+          align: "center",
+        });
+        doc.fontSize(12).fillColor("blue").text("Yelp URL", {
+          link: req.body.featureInfo.dining[i].url,
+          underline: true,
+          align: "center",
+        });
+        doc.fillColor("black");
+        doc.moveDown();
+      }
+      for (let i = 0; i < req.body.featureInfo.otherFeatures.length; i++) {
+        doc.fontSize(16).text(req.body.featureInfo.otherFeatures[i].FeatureName, {
+          align: "center",
+        });
+        doc.fontSize(12).text(req.body.featureInfo.otherFeatures[i].Location, {
+          align: "center",
+        });
+        doc.fontSize(12).fillColor("blue").text("Booking URL", {
+          link: req.body.featureInfo.otherFeatures[i].BookingURL,
+          underline: true,
+          align: "center",
+        });
+        doc.fillColor("black");
+        doc.moveDown();
+      }
+
+      doc.end();
     }
   });
 });
