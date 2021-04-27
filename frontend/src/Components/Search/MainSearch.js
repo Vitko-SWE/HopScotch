@@ -1,429 +1,64 @@
-import React, { useEffect, useState } from "react";
-import { Button, InputGroup, FormControl, Dropdown, DropdownButton, Card, ButtonToolbar, FormGroup, FormCheck, ButtonGroup } from "react-bootstrap";
-import axios from "axios";
+import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { BsSearch } from 'react-icons/bs'
-import { FaYelp } from 'react-icons/fa';
-import Rating from './Rating';
-import SelectTripDropdown from './SelectTripDropdown';
-import SelectHotelTripDropdown from './SelectHotelTripDropdown';
+
 import FlightSearch from '../FlightSearch/FlightSearch';
 import "./Card.css";
-import AttractionModal from "../Search/AttractionModal"
-import PoiModal from "../Search/PoiModal"
+import SearchOptions from "./Components/SearchOptions/SearchOptions" 
+import AttractionSearch from "./Components/AttractionsSearch/AttractionsSearch"
+import FoodSearch from "./Components/FoodSearch/FoodSearch"
+import HotelSearch from "./Components/HotelSearch/HotelSearch"
 import "./MainSearch.css"
 
 export default function MainSearch() {
   // General Globals
   const { user, getAccessTokenSilently } = useAuth0();
   const [type, setType] = useState("Attractions");
-  const [query, setQuery] = useState("");
-  const [location, setLocation] = useState("");
-
-  // Attraction Globals
-  const [attractionFilter, setAttractionFilter] = useState("All");
-  const [attSearchResults, setAttSearchResults] = useState({
-    ta: [],
-    poi: [],
-  });
-  const [attTrips, setAttTrips] = useState([]);
-  const [searchedYet, setSY] = useState(false);
-
-  // Food Globals
-  const foodSearchResult = useState({items: []})
-  const foodTrips = useState({items: []});
-
-  // Hotel Globals
-  const [hotelSearchResult, setHotelSearchResult] = useState([]);
-  const [hotelTrips, setHotelTrips] = useState([]);
-
-  // Attraction Functions
-  useEffect(() => {
-    updateAttTrips();
-  }, []);
-
-
-  const updateAttTrips = () => {
-    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get(`/api/trips/myeditabletrips`, {
-        headers: {
-          userid: user.sub,
-          Authorization: `Bearer ${res}`,
-        },
-      }).then((res) => {
-        setAttTrips(res.data);
-      }).catch((err) => {
-        console.log(err);
-      });
-    });
-  };
-  const handleAttractionFilter = (e) => {
-    console.log(e);
-    setAttractionFilter(e);
-  };
-  const handleAttractionSearch = () => {
-    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.post("/api/search/attractionsearch/", {
-        location: location,
-        query: query,
-        filter: attractionFilter,
-      }, {
-        headers: {
-          Authorization: `Bearer ${res}`,
-        },
-      }).then((res) => {
-        console.log(res.data);
-        let tempd = res.data;
-        if (tempd.name === "Error" || Object.keys(tempd).length === 0) {
-          tempd = {
-            ta: [],
-            poi: [],
-          };
-        }
-        setAttSearchResults(tempd);
-        setSY(true);
-      }).catch((err) => {
-        console.log(err);
-        setSY(true);
-      });
-    });
-  };
-
-
-  // Food Functions
-  const getFoodTrips = async () => {
-    getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
-      const token = `Bearer ${res}`;
-      const api = axios.create({
-        baseURL: '/api/homepage/myTrips',
-        headers: {
-          userid: user.sub,
-          Authorization: token
-        }
-      });
-      try {
-        api.get('/').then(response => {
-          foodTrips[1]({items: response.data});
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    });
-  };
-  const handleFoodSearch = () => {
-    getFoodTrips();
-    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get('/api/search/searchDining', {
-        headers: {
-          Authorization: `Bearer ${res}`,
-          string: query,
-          city: location,
-        },
-      }).then((res) => {
-        foodSearchResult[1]({items: res.data});
-
-        if (res.data.length === 0) {
-          alert("Oops, it looks like we couldn't find anything for this location");
-        }
-      }).catch((err) => {
-        console.log(err);
-        alert("Oops, it looks like we couldn't find anything for this location");
-      });
-    });
-  };
-
-  // Hotel Functions
-  const getHotelTrips = async () => {
-    getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
-      const token = `Bearer ${res}`;
-      const api = axios.create({
-        baseURL: '/api/homepage/myTrips',
-        headers: {
-          userid: user.sub,
-          Authorization: token,
-        }
-      })
-      try {
-        api.get('/').then(response => {
-          //update state trips array
-          setHotelTrips(response.data);
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    });
-  };
-  const handleHotelSearch = () => {
-    getHotelTrips();
-    console.log(query);
-    console.log(location);
-    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.get('/api/hotel/search', {
-        headers: {
-          Authorization: `Bearer ${res}`,
-          hotel: query,
-          location: location,
-        },
-      }).then(async (res) => {
-        await setHotelSearchResult(res.data);
-        console.log(hotelSearchResult);
-      }).catch((err) => {
-        console.log(err);
-      });
-    });
-  };
 
   // General Functions
   const handleType = (e) => {
     setType(e);
-    setQuery("");
-    setLocation("");
-    setAttSearchResults({
-      ta: [],
-      poi: [],
-    });
-    setSY(false);
-    foodSearchResult[1]({items: []});
-    setHotelSearchResult([]);
-  };
-  const handleQuery = (e) => {
-    e.preventDefault();
-    setQuery(e.currentTarget.value);
-  };
-  const handleLocation = (e) => {
-    e.preventDefault();
-    setLocation(e.currentTarget.value);
   };
 
   if (type === "Attractions") {
     return (
       <div>
-        <h1 className="title-format">Search:</h1>
-        <div>
-          <ButtonToolbar className='justify-content-center'>
-            <Button className={type === "Attractions" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Attractions")}>Attractions/POI's</Button>
-            <Button className={type === "Food" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Food")}>Food</Button>
-            <Button className={type === "Hotels" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Hotels")}>Hotels</Button>
-            <Button className={type === "Flights" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Flights")}>Flights</Button>
-          </ButtonToolbar>
-        </div>
-        <div className="search-bar">
-          <h2>Enter attraction and/or POI here:</h2>
-          <InputGroup>
-            <FormControl size='lg' onChange={handleQuery} type="attractions-str" placeholder="Enter Attraction or Point of Interest"/>
-          </InputGroup>
-          <h2 className='attraction-titleformat'>Enter location here:</h2>
-          <InputGroup>
-            <FormControl size='lg' onChange={handleLocation} type="location-str" placeholder="Where to?"/>
-          </InputGroup>
-          <h2 className='attraction-titleformat'>Search for:</h2>
-          <ButtonToolbar className='justify-content-center'>
-            <Button className={attractionFilter === "Tours and Activities" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleAttractionFilter("Tours and Activities")}>Attractions</Button>
-            <Button className={attractionFilter === "Points of Interest" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleAttractionFilter("Points of Interest")}>Points of Interest</Button>
-            <Button className={attractionFilter === "All" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleAttractionFilter("All")}>All</Button>
-          </ButtonToolbar>
-          <div className='attraction-search-button'>
-            <Button onClick={handleAttractionSearch}>
-            <BsSearch size={20} />
-            </Button>
-          </div>
-        </div>
-        {(attSearchResults.ta.length === 0 && attSearchResults.poi.length === 0 && searchedYet === true) && (
-          <div>
-            <h3>There were no matching results.</h3>
-          </div>
-        )}
-        {attSearchResults.ta.length !== 0 && (
-          <div>
-            <h3>Tours and Activities</h3>
-            <div className="custom_container">
-              {attSearchResults.ta.map((result) => (
-                <Card className="custom_card">
-                  <Card.Img variant="top" src={result.pictures[0]} />
-                  <Card.Body>
-                    <Card.Title>{result.name}</Card.Title>
-                    <Card.Text><strong>Price:</strong> {result.price.amount + " " + result.price.currencyCode}</Card.Text>
-                    <Card.Text><a href={result.bookingLink}>Booking Link</a></Card.Text>
-                  </Card.Body>
-                  <Card.Body>
-                    <AttractionModal trips={attTrips} result={result}/>
-                  </Card.Body>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
-        {attSearchResults.poi.length !== 0 && (
-          <div>
-            <h3>Points of Interest</h3>
-            <div className="custom_container">
-              {attSearchResults.poi.map((result) => (
-                <Card className="custom_card">
-                  <Card.Body>
-                    <Card.Title>{result.name}</Card.Title>
-                    <Card.Text><strong>Type:</strong> {result.category}</Card.Text>
-                  </Card.Body>
-                  <Card.Body>
-                    <PoiModal trips={attTrips} result={result} />
-                  </Card.Body>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
+        <SearchOptions 
+          currentType = {type} 
+          newType = {handleType}
+        />
+        <AttractionSearch/>
       </div>
     );
   }
   else if (type === "Food") {
-    if (foodSearchResult[0].items.length === 0) {
-      return (
-        <div>
-          <h1 className="title-format">Search:</h1>
-          <div>
-            <ButtonToolbar className='justify-content-center'>
-              <Button className={type === "Attractions" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Attractions")}>Attractions/POI's</Button>
-              <Button className={type === "Food" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Food")}>Food</Button>
-              <Button className={type === "Hotels" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Hotels")}>Hotels</Button>
-              <Button className={type === "Flights" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Flights")}>Flights</Button>
-            </ButtonToolbar>
-          </div>
-          <div className="search-bar">
-            <h2>Search criteria:</h2>
-            <FormGroup>
-              <FormControl size='lg' onChange={handleQuery} type="dining-str" placeholder="Breakfast, Coffee, Pizza..."/>
-            </FormGroup>
-            <h2>Enter location here:</h2>
-            <FormGroup>
-              <FormControl size='lg' onChange={handleLocation} type="location-str" placeholder="Where to?"/>
-            </FormGroup>
-            <FormGroup className='text-right'>
-              <Button className='search-btn justify-content-right' onClick={handleFoodSearch}>
-                <BsSearch size={20} />
-              </Button>
-            </FormGroup>
-          </div>
-        </div>
-      );
-    }
-    else {
-      return (
-        <div>
-          <h1 className="title-format">Search:</h1>
-          <div>
-            <ButtonToolbar className='justify-content-center'>
-              <Button className={type === "Attractions" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Attractions")}>Attractions/POI's</Button>
-              <Button className={type === "Food" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Food")}>Food</Button>
-              <Button className={type === "Hotels" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Hotels")}>Hotels</Button>
-              <Button className={type === "Flights" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Flights")}>Flights</Button>
-            </ButtonToolbar>
-          </div>
-          <div className="search-bar">
-            <h2>Search criteria:</h2>
-            <FormGroup>
-              <FormControl size='lg' onChange={handleQuery} type="dining-str" placeholder="Breakfast, Coffee, Pizza..."/>
-            </FormGroup>
-            <h2>Enter location here:</h2>
-            <FormGroup>
-              <FormControl size='lg' onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
-            </FormGroup>
-            <FormGroup className='text-right'>
-              <Button className='search-btn justify-content-right' onClick={handleFoodSearch}>
-                <BsSearch size={20} />
-              </Button>
-            </FormGroup>
-          </div>
-          <div className='card-display'>
-            {foodSearchResult[0].items.map((item, index) =>
-              <Card className="custom_card" style={{ width: '19%' }}>
-                <Card.Img style={{width: '100%', height: '280px'}} variant="top" src={item.image_url} />
-                <Card.Body>
-                  <Card.Title>{item.name}</Card.Title>
-                  <Card.Text>
-                    <Rating rating={item.rating}/>
-                    <Card.Text className="text-muted">{item.review_count} reviews</Card.Text>
-                  </Card.Text>
-                  <Card.Text>Price: {item.price}</Card.Text>
-                  <Card.Text>{item.location.address1}, {item.location.city}, {item.location.state}</Card.Text>
-                </Card.Body>
-                <Card.Body>
-                  <Card.Body>
-                    <a href={item.url}>
-                      <FaYelp size={50} style={{fill: 'red' }} />
-                    </a>
-                    <h1>Yelp</h1>
-                    <p>Read more on Yelp</p>
-                  </Card.Body>
-                  <SelectTripDropdown trips={foodTrips[0].items} diningOption={item}/>
-                </Card.Body>
-              </Card>
-            )}
-          </div>
-        </div>
-      )
-    }
+    return (
+      <div>
+        <SearchOptions 
+          currentType = {type} 
+          newType = {handleType}
+        />
+        <FoodSearch/>
+      </div>
+    );
   }
   else if (type === "Hotels") {
     return (
       <div>
-        <h1 className="title-format">Search:</h1>
-        <div>
-          <ButtonToolbar className='justify-content-center'>
-            <Button className={type === "Attractions" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Attractions")}>Attractions/POI's</Button>
-            <Button className={type === "Food" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Food")}>Food</Button>
-            <Button className={type === "Hotels" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Hotels")}>Hotels</Button>
-            <Button className={type === "Flights" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Flights")}>Flights</Button>
-          </ButtonToolbar>
-        </div>
-        <div className="search-bar">
-          <h2>Hotel name:</h2>
-          <FormGroup>
-            <FormControl size='lg' onChange={handleQuery} type="hotel-str" placeholder="Enter hotel name (optional)"/>
-          </FormGroup>
-          <h2>Enter location here:</h2>
-          <FormGroup>
-            <FormControl size='lg' onChange={handleLocation} type="location-str" placeholder="Where to?"/>
-          </FormGroup>
-          <FormGroup className='text-right'>
-            <Button className='search-btn' onClick={handleHotelSearch}>
-              <BsSearch size={20} />
-            </Button>
-          </FormGroup>
-        </div>
-        {hotelSearchResult.length > 0 &&
-        <div className='card-display'>
-          {hotelSearchResult.map((item, index) =>
-            <Card className="custom_card" style={{ width: '19%' }}>
-              <Card.Body>
-                <Card.Title>{item.name}</Card.Title>
-                <Card.Text>
-                  Rating: {item.rating}/5
-                </Card.Text>
-                <Card.Text>Address: {item.formatted_address}</Card.Text>
-                <a href={item.url} className="btn btn-primary">Visit on google maps</a>
-                <h1></h1>
-                <a href={item.website} className="btn btn-primary">Visit hotel's website</a>
-                <h1></h1>
-                <SelectHotelTripDropdown trips={hotelTrips} hotelOption={item}/>
-              </Card.Body>
-            </Card>
-          )}
-        </div>
-        }
+        <SearchOptions 
+          currentType = {type} 
+          newType = {handleType}
+        />
+        <HotelSearch/>
       </div>
     );
   }
   else if (type === "Flights") {
     return (
       <div>
-        <h1 className="title-format">Search:</h1>
-        <div>
-          <ButtonToolbar className='justify-content-center'>
-            <Button className={type === "Attractions" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Attractions")}>Attractions/POI's</Button>
-            <Button className={type === "Food" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Food")}>Food</Button>
-            <Button className={type === "Hotels" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Hotels")}>Hotels</Button>
-            <Button className={type === "Flights" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Flights")}>Flights</Button>
-          </ButtonToolbar>
-          </div>
+        <SearchOptions 
+          currentType = {type} 
+          newType = {handleType}
+        />
         <FlightSearch />
       </div>
     );
