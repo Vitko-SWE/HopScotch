@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, InputGroup, FormControl, Dropdown, DropdownButton, Card, ButtonToolbar, FormGroup, FormCheck } from "react-bootstrap";
+import { Button, InputGroup, FormControl, Dropdown, DropdownButton, Card, ButtonToolbar, FormGroup, FormCheck, ButtonGroup } from "react-bootstrap";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import { BsSearch } from 'react-icons/bs'
@@ -58,6 +58,7 @@ export default function MainSearch() {
     });
   };
   const handleAttractionFilter = (e) => {
+    console.log(e);
     setAttractionFilter(e);
   };
   const handleAttractionSearch = () => {
@@ -154,6 +155,8 @@ export default function MainSearch() {
   };
   const handleHotelSearch = () => {
     getHotelTrips();
+    console.log(query);
+    console.log(location);
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
       axios.get('/api/hotel/search', {
         headers: {
@@ -173,6 +176,8 @@ export default function MainSearch() {
   // General Functions
   const handleType = (e) => {
     setType(e);
+    setQuery("");
+    setLocation("");
     setAttSearchResults({
       ta: [],
       poi: [],
@@ -205,23 +210,23 @@ export default function MainSearch() {
         <div className="search-bar">
           <h2 className='attraction-titleformat'>Enter attraction and/or POI here:</h2>
           <InputGroup>
-            <FormControl size='lg' onChange={handleQuery} type="dining-str" placeholder="Enter Attraction or Point of Interest"/>
+            <FormControl size='lg' onChange={handleQuery} type="attractions-str" placeholder="Enter Attraction or Point of Interest"/>
           </InputGroup>
           <h2 className='attraction-titleformat'>Enter location here:</h2>
           <InputGroup>
             <FormControl size='lg' onChange={handleLocation} type="location-str" placeholder="Where to?"/>
           </InputGroup>
-          <h2>Search for:</h2>
-          <InputGroup className='attraction-check-format'>
-            <FormCheck inline onClick={() => handleAttractionFilter("Tours and Activities")} label="Attractions" />
-            <FormCheck inline onClick={() => handleType("Points of Interest")} label="Points of Interest" />
-            <FormCheck inline onClick={() => handleType("All")} label="Both" />
-            <InputGroup.Append >
-              <Button className='justify-content-right' onClick={handleAttractionSearch}>
-                Search!
-              </Button>
-            </InputGroup.Append>
-          </InputGroup>
+          <h2 className='attraction-titleformat'>Search for:</h2>
+          <ButtonToolbar className='justify-content-center'>
+            <Button className={attractionFilter === "Tours and Activities" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleAttractionFilter("Tours and Activities")}>Attractions</Button>
+            <Button className={attractionFilter === "Points of Interest" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleAttractionFilter("Points of Interest")}>Points of Interest</Button>
+            <Button className={attractionFilter === "All" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleAttractionFilter("All")}>All</Button>
+          </ButtonToolbar>
+          <div  className='attraction-search-button'>
+            <Button size='lg' onClick={handleAttractionSearch}>
+              Search!
+            </Button>
+          </div>
         </div>
         {(attSearchResults.ta.length === 0 && attSearchResults.poi.length === 0 && searchedYet === true) && (
           <div>
@@ -273,7 +278,7 @@ export default function MainSearch() {
     if (foodSearchResult[0].items.length === 0) {
       return (
         <div>
-          <h1 className="title-format">Search for:</h1>
+          <h1 className="title-format">Search:</h1>
           <div>
             <ButtonToolbar className='justify-content-center'>
               <Button className={type === "Attractions" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Attractions")}>Attractions/POI's</Button>
@@ -283,15 +288,19 @@ export default function MainSearch() {
             </ButtonToolbar>
           </div>
           <div className="search-bar">
-            <InputGroup className="mb-3">
-              <FormControl onChange={handleQuery} type="dining-str" placeholder="Breakfast, Coffee, Pizza..."/>
-              <FormControl onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
-              <InputGroup.Append>
-                <Button className='search-btn' onClick={handleFoodSearch}>
-                  <BsSearch size={20} />
-                </Button>
-              </InputGroup.Append>
-            </InputGroup>
+            <h2>Search criteria:</h2>
+            <FormGroup>
+              <FormControl size='lg' onChange={handleQuery} type="dining-str" placeholder="Breakfast, Coffee, Pizza..."/>
+            </FormGroup>
+            <h2>Enter location here:</h2>
+            <FormGroup>
+              <FormControl size='lg' onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
+            </FormGroup>
+            <FormGroup className='text-right'>
+              <Button className='search-btn justify-content-right' onClick={handleFoodSearch}>
+                <BsSearch size={20} />
+              </Button>
+            </FormGroup>
           </div>
         </div>
       );
@@ -299,7 +308,7 @@ export default function MainSearch() {
     else {
       return (
         <div>
-          <h1 className="title-format">Search for:</h1>
+          <h1 className="title-format">Search:</h1>
           <div>
             <ButtonToolbar className='justify-content-center'>
               <Button className={type === "Attractions" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Attractions")}>Attractions/POI's</Button>
@@ -309,15 +318,19 @@ export default function MainSearch() {
             </ButtonToolbar>
           </div>
           <div className="search-bar">
-            <InputGroup className="mb-3">
-              <FormControl onChange={handleQuery} type="dining-str" placeholder="Breakfast, Coffee, Pizza..."/>
-              <FormControl onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
-              <InputGroup.Append>
-                <Button className='search-btn' onClick={handleFoodSearch}>
-                  <BsSearch size={20} />
-                </Button>
-              </InputGroup.Append>
-            </InputGroup>
+            <h2>Search criteria:</h2>
+            <FormGroup>
+              <FormControl size='lg' onChange={handleQuery} type="dining-str" placeholder="Breakfast, Coffee, Pizza..."/>
+            </FormGroup>
+            <h2>Enter location here:</h2>
+            <FormGroup>
+              <FormControl size='lg' onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
+            </FormGroup>
+            <FormGroup className='text-right'>
+              <Button className='search-btn justify-content-right' onClick={handleFoodSearch}>
+                <BsSearch size={20} />
+              </Button>
+            </FormGroup>
           </div>
           <div className='card-display'>
             {foodSearchResult[0].items.map((item, index) =>
@@ -352,7 +365,7 @@ export default function MainSearch() {
   else if (type === "Hotels") {
     return (
       <div>
-        <h1 className="title-format">Search for:</h1>
+        <h1 className="title-format">Search:</h1>
         <div>
           <ButtonToolbar className='justify-content-center'>
             <Button className={type === "Attractions" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Attractions")}>Attractions/POI's</Button>
@@ -362,15 +375,19 @@ export default function MainSearch() {
           </ButtonToolbar>
         </div>
         <div className="search-bar">
-          <InputGroup className="mb-3">
-            <FormControl onChange={handleQuery} type="dining-str" placeholder="search query"/>
-            <FormControl onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
-            <InputGroup.Append>
-              <Button className='search-btn' onClick={handleHotelSearch}>
-                <BsSearch size={20} />
-              </Button>
-            </InputGroup.Append>
-          </InputGroup>
+          <h2>Hotel name:</h2>
+          <FormGroup>
+            <FormControl size='lg' onChange={handleQuery} type="hotel-str" placeholder="Enter hotel name (optional)"/>
+          </FormGroup>
+          <h2>Enter location here:</h2>
+          <FormGroup>
+            <FormControl size='lg' onChange={handleLocation} type="location-str" placeholder="Where to?"/>
+          </FormGroup>
+          <FormGroup className='text-right'>
+            <Button className='search-btn' onClick={handleHotelSearch}>
+              <BsSearch size={20} />
+            </Button>
+          </FormGroup>
         </div>
         {hotelSearchResult.length > 0 &&
         <div className='card-display'>
