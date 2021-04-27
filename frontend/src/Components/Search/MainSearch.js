@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, InputGroup, FormControl, Dropdown, DropdownButton, Card } from "react-bootstrap";
+import { Button, InputGroup, FormControl, Dropdown, DropdownButton, Card, ButtonToolbar } from "react-bootstrap";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import { BsSearch } from 'react-icons/bs'
@@ -193,18 +193,19 @@ export default function MainSearch() {
   if (type === "Attractions") {
     return (
       <div>
-        <h1>Search</h1>
+        <h1 className="title-format">Search</h1>
+        <h2 className="subtitle-format">Look up and add various features to your trip.</h2>
+        <div>
+          <h3>Search for:</h3> 
+          <ButtonToolbar className='justify-content-center'>
+            <Button className='button-format btn-lg' onClick={() => handleType("Attractions")}>Attractions/POI's</Button>
+            <Button className='button-format btn-lg' onClick={() => handleType("Food")}>Food</Button>
+            <Button className='button-format btn-lg' onClick={() => handleType("Hotels")}>Hotels</Button>
+            <Button className='button-format btn-lg' onClick={() => handleType("Flights")}>Flights</Button>
+          </ButtonToolbar>
+        </div>
         <div className="search-bar">
-          <InputGroup className="mb-3">
-            <InputGroup.Prepend>
-              <InputGroup.Text>Find</InputGroup.Text>
-            </InputGroup.Prepend>
-            <DropdownButton title={type} onSelect={handleType} variant="outline-secondary">
-              <Dropdown.Item eventKey="Attractions">Attractions</Dropdown.Item>
-              <Dropdown.Item eventKey="Food">Food</Dropdown.Item>
-              <Dropdown.Item eventKey="Hotels">Hotels</Dropdown.Item>
-              <Dropdown.Item eventKey="Flights">Flights</Dropdown.Item>
-            </DropdownButton>
+          <InputGroup>
             <FormControl onChange={handleQuery} type="dining-str" placeholder="search query"/>
             <FormControl onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
             <DropdownButton title={attractionFilter} onSelect={handleAttractionFilter} variant="outline-secondary">
