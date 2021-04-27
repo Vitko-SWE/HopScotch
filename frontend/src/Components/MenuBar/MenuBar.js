@@ -54,11 +54,7 @@ const Menubar = (props) => {
     )
   }
   else {
-    return (
-      <Navbar bg="dark" variant="dark" expand="lg">
-        <Navbar.Brand href="/">Hopscotch</Navbar.Brand>
-      </Navbar>
-    )
+    return(<div></div>)
   }
 }
 
