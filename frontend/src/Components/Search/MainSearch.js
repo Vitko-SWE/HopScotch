@@ -208,7 +208,7 @@ export default function MainSearch() {
           </ButtonToolbar>
         </div>
         <div className="search-bar">
-          <h2 className='attraction-titleformat'>Enter attraction and/or POI here:</h2>
+          <h2>Enter attraction and/or POI here:</h2>
           <InputGroup>
             <FormControl size='lg' onChange={handleQuery} type="attractions-str" placeholder="Enter Attraction or Point of Interest"/>
           </InputGroup>
@@ -222,9 +222,9 @@ export default function MainSearch() {
             <Button className={attractionFilter === "Points of Interest" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleAttractionFilter("Points of Interest")}>Points of Interest</Button>
             <Button className={attractionFilter === "All" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleAttractionFilter("All")}>All</Button>
           </ButtonToolbar>
-          <div  className='attraction-search-button'>
-            <Button size='lg' onClick={handleAttractionSearch}>
-              Search!
+          <div className='attraction-search-button'>
+            <Button onClick={handleAttractionSearch}>
+            <BsSearch size={20} />
             </Button>
           </div>
         </div>
@@ -294,7 +294,7 @@ export default function MainSearch() {
             </FormGroup>
             <h2>Enter location here:</h2>
             <FormGroup>
-              <FormControl size='lg' onChange={handleLocation} type="location-str" placeholder="address, neighborhood, city, state or zip"/>
+              <FormControl size='lg' onChange={handleLocation} type="location-str" placeholder="Where to?"/>
             </FormGroup>
             <FormGroup className='text-right'>
               <Button className='search-btn justify-content-right' onClick={handleFoodSearch}>
@@ -415,12 +415,15 @@ export default function MainSearch() {
   else if (type === "Flights") {
     return (
       <div>
-        <DropdownButton title={type} onSelect={handleType} variant="outline-secondary" id="input-group-dropdown-1">
-          <Dropdown.Item eventKey="Attractions">Attractions</Dropdown.Item>
-          <Dropdown.Item eventKey="Food">Food</Dropdown.Item>
-          <Dropdown.Item eventKey="Hotels">Hotels</Dropdown.Item>
-          <Dropdown.Item eventKey="Flights">Flights</Dropdown.Item>
-        </DropdownButton>
+        <h1 className="title-format">Search:</h1>
+        <div>
+          <ButtonToolbar className='justify-content-center'>
+            <Button className={type === "Attractions" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Attractions")}>Attractions/POI's</Button>
+            <Button className={type === "Food" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Food")}>Food</Button>
+            <Button className={type === "Hotels" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Hotels")}>Hotels</Button>
+            <Button className={type === "Flights" ? 'active button-format btn-lg btn-secondary' : 'button-format btn-lg btn-secondary'} onClick={() => handleType("Flights")}>Flights</Button>
+          </ButtonToolbar>
+          </div>
         <FlightSearch />
       </div>
     );
