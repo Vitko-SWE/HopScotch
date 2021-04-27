@@ -14,5 +14,14 @@
 .button-format {
     padding-left:20px !important;
     padding-right:20px !important;
-    margin: 15px;
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+}
+
+.attraction-titleformat {
+    margin:20px;
+}
+
+.attraction-check-format {
+    margin-top:20px;
 }
