@@ -39,7 +39,7 @@ function App() {
   return (
     <Router history={history}>
       <div className="App">
-        <MenuBar/>
+        <MenuBar className="mb-0"/>
         <Switch>
           <Route path="/" component={Landing} exact />
           <Route path="/directions" render={() => {window.location.href="Directions.html"}} />

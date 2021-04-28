@@ -43,7 +43,9 @@ export default function SearchForm(props) {
                             trips: res.data
                         }
                     });
-                });
+                }).catch(err => {
+                    console.log(err)
+                })
             });
         });
     }

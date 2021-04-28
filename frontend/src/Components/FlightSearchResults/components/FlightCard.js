@@ -14,8 +14,6 @@ export default function FlightCard(props) {
 
     useEffect(() => { setButtonTrips(props.trips) }, [props.trips])
 
-    console.log(airlineURLs.find(x => x.code == props.airlines[0])?.url)
-
     return (
         <div>
             <Container fluid className="border p-3 rounded">

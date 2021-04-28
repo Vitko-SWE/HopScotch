@@ -101,12 +101,14 @@ router.route("/attractionsearch").post((req, res) => {
         });
       }
       else {
-        axios.get(`https://test.api.amadeus.com/v1/shopping/activities?latitude=${resploc.data.results[0].geometry.location.lat}&longitude=${resploc.data.results[0].geometry.location.lng}&radius=20`, {
+        axios.get(`https://test.api.amadeus.com/v1/shopping/activities?latitude=${resploc.data.results[0].geometry.location.lat}&longitude=${resploc.data.results[0].geometry.location.lng}&radius=20&currencyCode=USD`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }).then((respo) => {
-          let uft = respo.data.data;
+          let grossUFT = JSON.stringify(respo.data.data);
+          grossUFT = grossUFT.split('EUR').join('USD');
+          let uft = JSON.parse(grossUFT);
           for (let i = 0; i < uft.length; i++) {
             if (uft[i].name.toLowerCase().includes(req.body.query.toLowerCase())) {
               continue;
