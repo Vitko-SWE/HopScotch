@@ -36,14 +36,14 @@ export default function EditTripDetails(props) {
         accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
         const token = `Bearer ${accessToken}`
         let res = null
-    
+
         try {
             res = await axios.get(`/api/trips/getuserrole/${props.match.params.tripid}/${user.sub}`, {
                 headers: {
                   Authorization: token,
                 },
               })
-    
+
             if (res.status === 200) {
                 getUserRole(res.data[0].Role);
                 return res.data
@@ -51,7 +51,7 @@ export default function EditTripDetails(props) {
             else {
                 console.log(`Error: status ${res.status} ${res.statusText}`)
             }
-            
+
         } catch (error) {
             console.log(error)
         }
@@ -63,14 +63,14 @@ export default function EditTripDetails(props) {
         accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
         const token = `Bearer ${accessToken}`
         let res = null
-    
+
         try {
             res = await axios.get(`/api/trips/gettrip/${props.match.params.tripid}`, {
                 headers: {
                   Authorization: token,
                 },
               })
-    
+
             if (res.status === 200) {
                 getTripInfo(res.data);
                 setStartDate(new Date(res.data.StartDate.toString()));
@@ -81,7 +81,7 @@ export default function EditTripDetails(props) {
             else {
                 console.log(`Error: status ${res.status} ${res.statusText}`)
             }
-            
+
         } catch (error) {
             console.log(error)
         }
@@ -90,16 +90,16 @@ export default function EditTripDetails(props) {
     const handleEditDetails = async (e) => {
         e.preventDefault();
         const results = e.currentTarget;
-    
+
         let errors = "";
-    
+
         if (startDate === null || endDate === null) {
           errors += "Please enter a start date and an end date.\n";
         }
         else if (startDate >= endDate) {
           errors += "Please make sure the end date is after the start date.\n";
         }
-    
+
         if (errors !== "") {
           alert(errors);
         }
@@ -109,7 +109,7 @@ export default function EditTripDetails(props) {
             accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
             const token = `Bearer ${accessToken}`
             let res = null
-    
+
             try {
                 res = await axios.post(`/api/trips/updatetrip/${props.match.params.tripid}`, {
                     title: results.tripTitle.value,
@@ -123,7 +123,7 @@ export default function EditTripDetails(props) {
                       Authorization: token,
                     },
                   })
-    
+
                 if (res.status === 200) {
                     console.log(res);
                     let title = "Trip Details Changed";
@@ -136,7 +136,7 @@ export default function EditTripDetails(props) {
                 }
             } catch (error) {
                 console.log(error)
-                
+
             }
         //   getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
         //     axios.post(`/api/trips/updatetrip/${props.match.params.tripid}`, {
@@ -254,7 +254,7 @@ export default function EditTripDetails(props) {
                                     </Container>
                                     <Button variant="primary" type="submit">Submit</Button>
                                     {" "}
-                                    <Link to={`/edittrip/${props.match.params.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
+                                    <Link to={`/editview/${props.match.params.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
                                 </Form>
                             </div>
                         )}
