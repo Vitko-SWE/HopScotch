@@ -3,8 +3,9 @@ import { Card } from 'react-bootstrap'
 import SelectHotelTripDropdown from '../../SelectHotelTripDropdown'
 
 export default function HotelSearchResults(props) {
-    if(props.hotelSearchResults.length === 0) {
-        return (
+    return (
+        <div> 
+        {props.hotelSearchResults.length !== 0 && (
             <div className='card-display'>
                 {props.hotelSearchResults.map((item, index) =>
                 <Card className="custom_card" style={{ width: '19%' }}>
@@ -23,9 +24,7 @@ export default function HotelSearchResults(props) {
                 </Card>
                 )}
             </div>
-        );
-    }
-    else {
-        return(<div></div>)
-    }
+        )};
+    </div>
+    );
 }

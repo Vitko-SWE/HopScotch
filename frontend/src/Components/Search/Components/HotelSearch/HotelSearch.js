@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import {FormGroup, FormControl, Button} from 'react-bootstrap'
+import {FormGroup, FormControl, Button, Container} from 'react-bootstrap'
 import { BsSearch } from 'react-icons/bs'
 
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import HotelSearchResults from './HotelSearchResults';
+
+import SearchFilter from '../SearchFilter'
 
 export default function HotelSearch(props) {
 
@@ -14,6 +16,9 @@ export default function HotelSearch(props) {
   const [hotelLocation, setHotelLocation] = useState("");
   const [hotelSearchResult, setHotelSearchResult] = useState([]);
   const [hotelTrips, setHotelTrips] = useState([]);
+
+  const [filteredResults, setFilteredResults] = useState(hotelSearchResult);
+  const [num, setNum] = useState(0);
 
   const handleSetHotelQuery = (e) => {
     e.preventDefault();
@@ -44,6 +49,7 @@ export default function HotelSearch(props) {
       }
     });
   };
+
   const handleHotelSearch = () => {
     getHotelTrips();
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
@@ -55,15 +61,36 @@ export default function HotelSearch(props) {
         },
       }).then(async (res) => {
         await setHotelSearchResult(res.data);
-        console.log(hotelSearchResult);
+        await setFilteredResults(res.data);
       }).catch((err) => {
         console.log(err);
       });
     });
   };
 
+  const handleFilter = filters => {
+    const filtered = hotelSearchResult.filter(item => {
+
+      if(filters.ratings === 1) {
+        return item;
+      }
+      var isValid = true;
+
+      if(filters.ratings > item.rating) {
+        isValid = false;
+      }
+
+      if(isValid == true) {
+        return item;
+      }
+    })
+
+    setFilteredResults(filtered);
+    setNum(num + 1);
+  }
     
   return (
+    <>
       <div className="search-bar">
         <h2>Hotel name:</h2>
         <FormGroup>
@@ -78,9 +105,17 @@ export default function HotelSearch(props) {
             <BsSearch size={20} />
           </Button>
         </FormGroup>
-        <HotelSearchResults
-          hotelSearchResults = {hotelSearchResult}
-          hotelTrips = {hotelTrips}/>
       </div>
+      <div style={{ display: "flex", alignItems: "flex-start"}}>
+        <SearchFilter ratings filterFunc={handleFilter} />
+        <Container fluid>
+          <HotelSearchResults
+            hotelSearchResults = {filteredResults}
+            hotelTrips = {hotelTrips}
+            key={num}
+          />
+        </Container>
+      </div>
+    </>
   )
 }
