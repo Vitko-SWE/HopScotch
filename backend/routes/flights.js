@@ -18,7 +18,7 @@ router.route("/getflights/:tripid").get((req, res) => {
   });
 
   router.route("/getflightinfo/:carriercode/:flightnumber").get((req, res) => {
-    const query = `select * from FlightInfo where CarrierCode = '${req.params.carriercode}' AND FlightNumber = ${req.params.flightnumber}`;
+    const query = `select ArrivalDelayTime, Cancelled, Diverted from FlightInfo where CarrierCode = '${req.params.carriercode}' AND FlightNumber = ${req.params.flightnumber}`;
     db.query(query, (err, data) => {
       if(err) {
         console.log(err);

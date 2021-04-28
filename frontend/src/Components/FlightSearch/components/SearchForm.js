@@ -4,6 +4,8 @@ import { Form, Col, Button } from 'react-bootstrap'
 import { useAuth0 } from "@auth0/auth0-react";
 import { useHistory } from 'react-router';
 
+import "./SearchForm.css"
+
 export default function SearchForm(props) {
     const { user, getAccessTokenSilently } = useAuth0();
     const history = useHistory();
@@ -51,35 +53,36 @@ export default function SearchForm(props) {
     }
 
     return (
-        <div>
+        <div className="margins">
             <Form onSubmit={handleSubmit}>
                 <Form.Row>
                     <Form.Group as={Col} controlId="fsOriginGroup">
-                        <Form.Control placeholder="Where are we starting?" />
+                        <Form.Label>Origin airport ICAO:</Form.Label>
+                        <Form.Control/>
                     </Form.Group>
 
                     <Form.Group as={Col} controlId="fsDestGroup">
-                        <Form.Control placeholder="Where to?" />
+                        <Form.Label>Destination airport ICAO:</Form.Label>
+                        <Form.Control/>
                     </Form.Group>
                 </Form.Row>
 
                 <Form.Row>
                     <Form.Group as={Col} controlId="fsDepartDateGroup">
-                        <Form.Label>When are we leaving?</Form.Label>
+                        <Form.Label>Depature date:</Form.Label>
                         <Form.Control type="date" />
                     </Form.Group>
 
                     <Form.Group as={Col} controlId="fsReturnDateGroup">
-                        <Form.Label>When are we coming back?</Form.Label>
+                        <Form.Label>Return date (optional):</Form.Label>
                         <Form.Control type="date" />
                     </Form.Group>
 
                     <Form.Group as={Col} controlId="fsNumPassGroup">
-                        <Form.Label>How many people?</Form.Label>
-                        <Form.Control type="number" placeholder="Enter number of passengers for flight" />
+                        <Form.Label># of adult travellers:</Form.Label>
+                        <Form.Control type="number" />
                     </Form.Group>
                 </Form.Row>
-
                 <Button type="submit">Search</Button>
             </Form>
         </div>
