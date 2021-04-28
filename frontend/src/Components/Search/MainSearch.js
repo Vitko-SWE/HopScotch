@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-
 import FlightSearch from '../FlightSearch/FlightSearch';
 import "./Card.css";
 import SearchOptions from "./Components/SearchOptions/SearchOptions" 
@@ -11,7 +9,6 @@ import "./MainSearch.css"
 
 export default function MainSearch() {
   // General Globals
-  const { user, getAccessTokenSilently } = useAuth0();
   const [type, setType] = useState("Attractions");
 
   // General Functions

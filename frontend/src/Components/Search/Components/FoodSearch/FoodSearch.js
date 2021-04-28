@@ -68,24 +68,28 @@ export default function FoodSearch(props) {
     };
 
     return (
-        <div className="search-bar">
-            <h2>Search criteria:</h2>
-            <FormGroup>
-                <FormControl size='lg' onChange={handleSetFoodQuery} type="dining-str" placeholder="Breakfast, Coffee, Pizza..."/>
-            </FormGroup>
-            <h2>Enter location here:</h2>
-            <FormGroup>
-                <FormControl size='lg' onChange={handleSetFoodLocation} type="location-str" placeholder="Where to?"/>
-            </FormGroup>
-            <FormGroup className='text-right'>
-                <Button className='search-btn justify-content-right' onClick={handleFoodSearch}>
-                    <BsSearch size={20} />
-                </Button>
-            </FormGroup>
-            <FoodSearchResults
-                foodSearchResult = {foodSearchResult}
-                foodTrips = {foodTrips}
-            />
+        <div>
+            <div className="search-bar">
+                <h2>Search criteria:</h2>
+                <FormGroup>
+                    <FormControl size='lg' onChange={handleSetFoodQuery} type="dining-str" placeholder="Breakfast, Coffee, Pizza..."/>
+                </FormGroup>
+                <h2>Enter location here:</h2>
+                <FormGroup>
+                    <FormControl size='lg' onChange={handleSetFoodLocation} type="location-str" placeholder="Where to?"/>
+                </FormGroup>
+                <FormGroup className='text-right'>
+                    <Button className='search-btn justify-content-right' onClick={handleFoodSearch}>
+                        <BsSearch size={20} />
+                    </Button>
+                </FormGroup>
+            </div>
+            <div>
+                <FoodSearchResults
+                    foodSearchResult = {foodSearchResult}
+                    foodTrips = {foodTrips}
+                />
+            </div>
         </div>
     )
 } 
