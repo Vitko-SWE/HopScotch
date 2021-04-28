@@ -77,38 +77,43 @@ export default function SearchFilter(props) {
     return (
         <StickyBox className="mt-5" offsetTop={20} offsetBottom={20} style={{ border: '1px solid gray', borderRadius: '5px' }}>
             <Container className="p-3 mr-5">
-                <Row className="ml-1">
-                    <h1>Sort</h1>
-                </Row>
+                {(props.distance || props.price) && (
+                    <>
+                        <Row className="ml-1">
+                            <h1>Sort</h1>
+                        </Row>
 
-                <Form onSubmit={handleSort}>
-                    {props.price && (
-                        <Row><Col>
-                            <Form.Group controlId="priceSort">
-                                <Form.Label>Sort by Price</Form.Label>
-                                <Form.Control as="select">
-                                    <option>Low to High</option>
-                                    <option>High to Low</option>
-                                </Form.Control>
-                            </Form.Group>
-                            <hr />
-                        </Col></Row>
-                    )}
+                        <Form onSubmit={handleSort}>
+                            {props.price && (
+                                <Row><Col>
+                                    <Form.Group controlId="priceSort">
+                                        <Form.Label>Sort by Price</Form.Label>
+                                        <Form.Control as="select">
+                                            <option>Low to High</option>
+                                            <option>High to Low</option>
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <hr />
+                                </Col></Row>
+                            )}
 
-                    {props.distance && (
-                        <Row><Col>
-                            <Form.Group controlId="distanceSort">
-                                <Form.Label>Sort by Price</Form.Label>
-                                <Form.Control as="select">
-                                    <option>Low to High</option>
-                                    <option>High to Low</option>
-                                </Form.Control>
-                            </Form.Group>
-                            <hr />
-                        </Col></Row>
-                    )}
-                    <Button type="submit">Sort Results</Button>
-                </Form>
+                            {props.distance && (
+                                <Row><Col>
+                                    <Form.Group controlId="distanceSort">
+                                        <Form.Label>Sort by Price</Form.Label>
+                                        <Form.Control as="select">
+                                            <option>Low to High</option>
+                                            <option>High to Low</option>
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <hr />
+                                </Col></Row>
+                            )}
+
+                            <Button type="submit">Sort Results</Button>
+                        </Form>
+                    </>
+                )}
 
                 <Row className="ml-1 mt-4">
                     <h1>Filters</h1>
