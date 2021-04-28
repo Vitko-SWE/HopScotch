@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {FormGroup, FormControl, Button, Container} from 'react-bootstrap'
+import { FormGroup, FormControl, Button, Container } from 'react-bootstrap'
 import { BsSearch } from 'react-icons/bs'
 
 import axios from "axios";
@@ -30,7 +30,7 @@ export default function HotelSearch(props) {
     setHotelLocation(e.currentTarget.value);
   }
   const getHotelTrips = async () => {
-    getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then(res => {
       const token = `Bearer ${res}`;
       const api = axios.create({
         baseURL: '/api/homepage/myTrips',
@@ -71,16 +71,16 @@ export default function HotelSearch(props) {
   const handleFilter = filters => {
     const filtered = hotelSearchResult.filter(item => {
 
-      if(filters.ratings === 1) {
+      if (filters.ratings === 1) {
         return item;
       }
       var isValid = true;
 
-      if(filters.ratings > item.rating) {
+      if (filters.ratings > item.rating) {
         isValid = false;
       }
 
-      if(isValid == true) {
+      if (isValid == true) {
         return item;
       }
     })
@@ -88,17 +88,17 @@ export default function HotelSearch(props) {
     setFilteredResults(filtered);
     setNum(num + 1);
   }
-    
+
   return (
     <>
       <div className="search-bar">
         <h2>Hotel name:</h2>
         <FormGroup>
-          <FormControl size='lg' onChange={handleSetHotelQuery} type="hotel-str" placeholder="Enter hotel name (optional)"/>
+          <FormControl size='lg' onChange={handleSetHotelQuery} type="hotel-str" placeholder="Enter hotel name (optional)" />
         </FormGroup>
         <h2>Enter location here:</h2>
         <FormGroup>
-          <FormControl size='lg' onChange={handleSetHotelLocation} type="location-str" placeholder="Where to?"/>
+          <FormControl size='lg' onChange={handleSetHotelLocation} type="location-str" placeholder="Where to?" />
         </FormGroup>
         <FormGroup className='text-right'>
           <Button className='search-btn' onClick={handleHotelSearch}>
@@ -106,12 +106,14 @@ export default function HotelSearch(props) {
           </Button>
         </FormGroup>
       </div>
-      <div style={{ display: "flex", alignItems: "flex-start"}}>
-        <SearchFilter ratings filterFunc={handleFilter} />
+      <div style={{ display: "flex", alignItems: "flex-start" }}>
+        {hotelSearchResult.length > 0 && (
+          <SearchFilter ratings filterFunc={handleFilter} />
+        )}
         <Container fluid>
           <HotelSearchResults
-            hotelSearchResults = {filteredResults}
-            hotelTrips = {hotelTrips}
+            hotelSearchResults={filteredResults}
+            hotelTrips={hotelTrips}
             key={num}
           />
         </Container>

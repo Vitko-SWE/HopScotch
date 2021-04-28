@@ -24,7 +24,7 @@ export default function AttractionSearch(props) {
   const [filteredResults, setFilteredResults] = useState(attSearchResults)
 
   const [searchedYet, setSY] = useState(false);
-  
+
   const [num, setNum] = useState(0)
 
   const handleSetAttractionQuery = (e) => {
@@ -67,23 +67,23 @@ export default function AttractionSearch(props) {
   };
 
   const handleFilter = filters => {
-    var filtered = {...attSearchResults}
+    var filtered = { ...attSearchResults }
     filtered.ta = filtered.ta.filter(item => {
-      if(filters.maxPrice == null && filters.minPrice == 0) {
+      if (filters.maxPrice == null && filters.minPrice == 0) {
         return item;
       }
 
       var isValid = true;
 
-      if(filters.minPrice != 0 && item.price.amount < filters.minPrice) {
+      if (filters.minPrice != 0 && item.price.amount < filters.minPrice) {
         isValid = false;
       }
 
-      if(filters.maxPrice != null && item.price.amount > filters.maxPrice) {
+      if (filters.maxPrice != null && item.price.amount > filters.maxPrice) {
         isValid = false;
       }
 
-      if(isValid == true) {
+      if (isValid == true) {
         return item;
       }
     })
@@ -93,13 +93,13 @@ export default function AttractionSearch(props) {
   }
 
   const handleSort = sorts => {
-    var sorted = {...attSearchResults}
+    var sorted = { ...attSearchResults }
 
-    if(sorts.priceSort == "Low to High") {
+    if (sorts.priceSort == "Low to High") {
       sorted.ta = sorted.ta.sort((a, b) => (parseFloat(a.price.amount) > parseFloat(b.price.amount)) ? 1 : -1)
     }
 
-    if(sorts.priceSort == "High to Low") {
+    if (sorts.priceSort == "High to Low") {
       sorted.ta = sorted.ta.sort((a, b) => (parseFloat(a.price.amount) < parseFloat(b.price.amount)) ? 1 : -1)
     }
 
@@ -131,7 +131,10 @@ export default function AttractionSearch(props) {
         </div>
       </div>
       <div style={{ display: "flex", alignItems: "flex-start" }}>
-        <SearchFilter price filterFunc={handleFilter} sortFunc={handleSort} />
+        {searchedYet && (
+          <SearchFilter price filterFunc={handleFilter} sortFunc={handleSort} />
+        )}
+        
         <Container fluid>
           <AttractionSearchResults
             attSearchResults={filteredResults}

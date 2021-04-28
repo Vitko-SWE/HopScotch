@@ -75,25 +75,25 @@ export default function FoodSearch(props) {
 
     const handleFilter = filters => {
         var filtered = foodSearchResult.filter(item => {
-            if(filters.minRelativePrice == 1 && filters.maxRelativePrice == 4 && filters.ratings == 1) {
+            if (filters.minRelativePrice == 1 && filters.maxRelativePrice == 4 && filters.ratings == 1) {
                 return item;
             }
 
             var isValid = true;
 
-            if(item.rating < filters.ratings) {
+            if (item.rating < filters.ratings) {
                 isValid = false;
             }
 
-            if(item.price && item.price.length < filters.minRelativePrice) {
+            if (item.price && item.price.length < filters.minRelativePrice) {
                 isValid = false;
             }
 
-            if(item.price && item.price.length > filters.maxRelativePrice) {
+            if (item.price && item.price.length > filters.maxRelativePrice) {
                 isValid = false;
             }
 
-            if(isValid == true) {
+            if (isValid == true) {
                 return item;
             }
         })
@@ -120,7 +120,10 @@ export default function FoodSearch(props) {
                 </FormGroup>
             </div>
             <div style={{ display: "flex", alignItems: "flex-start" }}>
-                <SearchFilter relativePrice ratings filterFunc={handleFilter} />
+                {foodSearchResult.length > 0 && (
+                    <SearchFilter relativePrice ratings filterFunc={handleFilter} />
+                )}
+
                 <Container fluid>
                     <FoodSearchResults
                         foodSearchResult={filteredResults}
