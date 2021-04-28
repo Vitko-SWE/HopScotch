@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
-import { Card } from "react-bootstrap"
+import { Card, CardColumns } from "react-bootstrap"
 
 import AttractionModal from './AttractionModal'
 import PoiModal from './PoiModal'
@@ -9,39 +9,40 @@ import PoiModal from './PoiModal'
 
 export default function AttractionsSearchResults(props) {
 
-    const [attTrips, setAttTrips] = useState([]);
-    const { user, getAccessTokenSilently } = useAuth0();
+  const [attTrips, setAttTrips] = useState([]);
+  const { user, getAccessTokenSilently } = useAuth0();
 
-    useEffect(() => {
-        updateAttTrips();
-      }, []);
-    
-    const updateAttTrips = () => {
-        getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-          axios.get(`/api/trips/myeditabletrips`, {
-            headers: {
-              userid: user.sub,
-              Authorization: `Bearer ${res}`,
-            },
-          }).then((res) => {
-            setAttTrips(res.data);
-          }).catch((err) => {
-            console.log(err);
-          });
-        });
-      };
+  useEffect(() => {
+    updateAttTrips();
+  }, []);
 
-    return (
+  const updateAttTrips = () => {
+    getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+      axios.get(`/api/trips/myeditabletrips`, {
+        headers: {
+          userid: user.sub,
+          Authorization: `Bearer ${res}`,
+        },
+      }).then((res) => {
+        setAttTrips(res.data);
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
+  };
+
+  return (
+    <div>
+      {(props.attSearchResults.ta.length === 0 && props.attSearchResults.poi.length === 0 && props.searchedYet === true) && (
         <div>
-            {(props.attSearchResults.ta.length === 0 && props.attSearchResults.poi.length === 0 && props.searchedYet === true) && (
-          <div>
-            <h3>There were no matching results.</h3>
-          </div>
-        )}
-        {props.attSearchResults.ta.length !== 0 && (
-          <div>
-            <h3>Tours and Activities</h3>
-            <div className="custom_container">
+          <h3>There were no matching results.</h3>
+        </div>
+      )}
+      {props.attSearchResults.ta.length !== 0 && (
+        <div>
+          <h3>Tours and Activities</h3>
+          <div className="custom_container">
+            <CardColumns className="pb-3">
               {props.attSearchResults.ta.map((result) => (
                 <Card className="custom_card">
                   <Card.Img variant="top" src={result.pictures[0]} />
@@ -51,17 +52,19 @@ export default function AttractionsSearchResults(props) {
                     <Card.Text><a href={result.bookingLink}>Booking Link</a></Card.Text>
                   </Card.Body>
                   <Card.Body>
-                    <AttractionModal trips={attTrips} result={result}/>
+                    <AttractionModal trips={attTrips} result={result} />
                   </Card.Body>
                 </Card>
               ))}
-            </div>
+            </CardColumns>
           </div>
-        )}
-        {props.attSearchResults.poi.length !== 0 && (
-          <div>
-            <h3>Points of Interest</h3>
-            <div className="custom_container">
+        </div>
+      )}
+      {props.attSearchResults.poi.length !== 0 && (
+        <div>
+          <h3>Points of Interest</h3>
+          <div className="custom_container">
+            <CardColumns className="pb-3">
               {props.attSearchResults.poi.map((result) => (
                 <Card className="custom_card">
                   <Card.Body>
@@ -73,9 +76,10 @@ export default function AttractionsSearchResults(props) {
                   </Card.Body>
                 </Card>
               ))}
-            </div>
+            </CardColumns>
           </div>
-        )}
+        </div>
+      )}
     </div>
-    );
+  );
 }

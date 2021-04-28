@@ -16,48 +16,28 @@ export default function MainSearch() {
     setType(e);
   };
 
-  if (type === "Attractions") {
-    return (
-      <div>
-        <SearchOptions 
-          currentType = {type} 
-          newType = {handleType}
-        />
-        <AttractionSearch/>
-      </div>
-    );
-  }
-  else if (type === "Food") {
-    return (
-      <div>
-        <SearchOptions 
-          currentType = {type} 
-          newType = {handleType}
-        />
-        <FoodSearch/>
-      </div>
-    );
-  }
-  else if (type === "Hotels") {
-    return (
-      <div>
-        <SearchOptions 
-          currentType = {type} 
-          newType = {handleType}
-        />
-        <HotelSearch/>
-      </div>
-    );
-  }
-  else if (type === "Flights") {
-    return (
-      <div>
-        <SearchOptions 
-          currentType = {type} 
-          newType = {handleType}
-        />
+  return (
+    <>
+      <SearchOptions
+        currentType = {type}
+        newType = {handleType}
+      />
+
+      {type == "Attractions" && (
+        <AttractionSearch />
+      )}
+
+      {type == "Food" && (
+        <FoodSearch />
+      )}
+
+      {type == "Hotels" && (
+        <HotelSearch />
+      )}
+
+      {type == "Flights" && (
         <FlightSearch />
-      </div>
-    );
-  }
+      )}
+    </>
+  )
 };
