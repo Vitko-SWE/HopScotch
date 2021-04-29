@@ -505,7 +505,7 @@ router.route("/getfeaturespure/:tripid").get((req, res) => {
   });
 });
 
-router.route("/getTripFeatures/:tripid").get((req, res) => {
+router.route("/getTripFeatures/:tripid").get(async (req, res) => {
   const query = `select * from TripFeatures where TripId = '${req.params.tripid}';`;
   db.query(query, (err, data) => {
     if (err) {
@@ -546,7 +546,7 @@ router.route("/getTripFeatures/:tripid").get((req, res) => {
           otherFeatures: otherFeatures
         }
         // console.log(diningOptions)
-        Promise.all(promises).then(() => res.send(features))
+        Promise.allSettled(promises).then(() => res.send(features))
         // res.send(data);
       }
     }
