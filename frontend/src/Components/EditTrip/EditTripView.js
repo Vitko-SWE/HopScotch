@@ -14,44 +14,114 @@ import { SiGooglecalendar } from 'react-icons/si'
 import { Link } from "react-router-dom";
 export default function EditTripView (props) {
     const {user, getAccessTokenSilently} = useAuth0();
-    const [tripInfo, setTripInfo] = useState({})
+    const [tripInfo, setTripInfo] = useState({});
+    const [imgUrl, setImgUrl] = useState("");
+    const [tripCollabs, setTripCollabs] = useState([]);
+    const [tripFeatures, setTripFeatures] = useState({ dining: [], otherFeatures: [] });
 
     useEffect (async () => {
-        getTripInfo()
+      getTripInfo();
+      updateTripCollabs();
+      getTripFeatures();
     }, [])
 
     const getTripInfo = async () => {
+      let accessToken = null
+      accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
+      const token = `Bearer ${accessToken}`
+      let res = null
 
-        let accessToken = null
-        accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
-        const token = `Bearer ${accessToken}`
-        let res = null
+      try {
+        res = await axios.get(`/api/trips/gettrip/${props.match.params.tripid}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
 
-        try {
-            res = await axios.get(`/api/trips/gettrip/${props.match.params.tripid}`, {
-                headers: {
-                  Authorization: token,
-                }
-              })
-      
-              if (res.status === 200) {
-                  setTripInfo(res.data)
-              }
-              else {
-                  console.log("Error fetching trip")
-              }
-        } catch (error) {
-            console.log(error)
+        if (res.status === 200) {
+          setTripInfo(res.data)
         }
-        
-        
-      };
+        else {
+          console.log("Error fetching trip")
+        }
+      } catch (error) {
+        console.log(error)
+      }
 
+      getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res1) => {
+        axios.get(`/api/trips/gettripimage/${props.match.params.tripid}`, {
+          headers: {
+            Authorization: `Bearer ${res1}`,
+          },
+        }).then((res) => {
+          setImgUrl(res.data);
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    };
+
+    const updateTripCollabs = () => {
+      getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+        axios.get(`/api/trips/gettripusers/${props.match.params.tripid}/all`, {
+          headers: {
+            Authorization: `Bearer ${res}`,
+          },
+        }).then((res) => {
+          setTripCollabs(res.data);
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    };
+
+    const getTripFeatures = () => {
+      getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+        axios.get(`/api/trips/getTripFeatures/${props.match.params.tripid}`, {
+          headers: {
+            Authorization: `Bearer ${res}`,
+          },
+        }).then(async (res) => {
+          console.log(res.data)
+          setTripFeatures({ dining: res.data.dining, otherFeatures: res.data.otherFeatures });
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    };
+
+    const handlePDF = () => {
+      getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+        axios({
+          method: 'post',
+          url: `/api/trips/${props.match.params.tripid}/pdf`,
+          responseType: 'blob',
+          headers: {
+            Authorization: `Bearer ${res}`,
+          },
+          data: {
+            featureInfo: tripFeatures,
+            people: tripCollabs,
+          },
+        }).then(res => {
+          const file = new Blob(
+            [res.data],
+            {
+              type: 'application/pdf',
+            }
+          );
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL);
+        }).catch(err => {
+          console.log(err);
+        })
+      });
+    };
 
     return (
         <div style={{backgroundColor: "rgba(192,192,192,0.3)"}}>
             <Card className="bg-dark text-white">
-                <Card.Img src={flight_wallpaper} alt="Card image" style={{width: "100%", height: "15cm"}}/>
+                <Card.Img src={imgUrl} alt="Card image" style={{width: "100%", height: "30em"}}/>
                 <Card.ImgOverlay>
                     <Card.Title><h1>{tripInfo.Destination}</h1></Card.Title>
                     <Card.Text>
@@ -60,7 +130,7 @@ export default function EditTripView (props) {
                     <Card.Text>Last updated 3 mins ago</Card.Text>
                 </Card.ImgOverlay>
             </Card>
-            <Container fluid style={{width: "70%", height: "10cm"}}>
+            <Container fluid style={{width: "70%", height: "13cm"}}>
                 <Row style={{marginTop: "1cm"}}>
                     <Col>
                         <Link to={`/editview/vote/${props.match.params.tripid}`}>
@@ -92,7 +162,7 @@ export default function EditTripView (props) {
                             </Button>
                         </Link>
                     </Col>
-            
+
                 </Row >
                 <Row style={{marginTop: "2cm"}}>
                     <Col>
@@ -104,6 +174,11 @@ export default function EditTripView (props) {
                     <Col>
                         <Button variant="outline-info" size="lg" style={{width: "8cm"}}><strong><Badge variant="dark"><IoRestaurantSharp size={22}/></Badge>  Food Details</strong></Button>
                     </Col>
+                </Row>
+                <Row style={{marginTop: "2cm"}}>
+                  <Col>
+                    <Button onClick={handlePDF} variant="outline-info" size="lg" style={{width: "8cm"}}><strong>Generate PDF</strong></Button>
+                  </Col>
                 </Row>
             </Container>
         </div>
