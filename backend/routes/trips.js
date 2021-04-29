@@ -150,9 +150,6 @@ router.route("/confirmFeature/:tripid/:featureid").post((req, res) => {
 });
 
 router.route("/deleteFeature/:tripid/:featureid").post((req, res) => {
-  console.log("++++++++++++++++++++++")
-  console.log(req.body)
-  console.log("++++++++++++++++++++++")
   if (req.body.isFlight == null) {
     console.log("Invalid parameters.")
     res.status(400).send("Invalid parameters.")
