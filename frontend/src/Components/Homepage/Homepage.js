@@ -17,26 +17,24 @@ export default function Homepage() {
 
     }).then(res => {
         const headers = {
-            "Authorization" : "Bearer " + res,
+            "Authorization": "Bearer " + res,
         };
-        axios.get(`/api/user/getbyuserid/${user.sub}`, {"headers":headers})
-        .then( function(res, err) {
-            if (err)
-                console.log(err);
-            else if (res.data.length === 0) {
-                const newUser = { userId: `${user.sub}`, name: `${user.name}`, email: `${user.email}`}
-                axios.post('/api/user/postnewuser', newUser, {"headers":headers});
-            }
-        });
+        axios.get(`/api/user/getbyuserid/${user.sub}`, { "headers": headers })
+            .then(function (res, err) {
+                if (err)
+                    console.log(err);
+                else if (res.data.length === 0) {
+                    const newUser = { userId: `${user.sub}`, name: `${user.name}`, email: `${user.email}` }
+                    axios.post('/api/user/postnewuser', newUser, { "headers": headers });
+                }
+            });
     });
 
 
 
     return (
         <div>
-            <main>
-                <TripCards/>
-            </main>
+            <TripCards />
         </div>
     )
 }
