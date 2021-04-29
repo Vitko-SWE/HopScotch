@@ -2,8 +2,7 @@ import { useState, useEffect} from 'react'
 import { useAuth0} from "@auth0/auth0-react";
 import axios from 'axios'
 import { Card, Spinner, Button } from 'react-bootstrap'
-import { FaYelp } from 'react-icons/fa';
-// import SelectTripDropdown from '../../SelectTripDropdown';
+import { FaYelp, FaExternalLinkAlt } from 'react-icons/fa';
 import hotel_image from "./Hotel_image.jpg"
 
 export default function DisplayHotels(props) {
@@ -65,12 +64,19 @@ export default function DisplayHotels(props) {
                                     <hr />
                                     <Card.Text>{item.Location}</Card.Text>
                                     <hr />
-                                    <p>Check-In: {item.StartDateTime}</p>
-                                    <p>Check-Out: {item.EndDateTime}</p>
+                                    <p style={{textAlign: "left"}}><strong>Planned Check-In Date:</strong>  {new Date(item.StartDateTime).toDateString()}</p>
+                                    <p style={{textAlign: "left"}}><strong>Planned Check-In Time:</strong>  {new Date(item.StartDateTime).toTimeString()}</p>
+                                    <hr/>
+                                    <p style={{textAlign: "left"}}><strong>Planned Check-Out Date:</strong> {new Date(item.EndDateTime).toDateString()}</p>
+                                    <p style={{textAlign: "left"}}><strong>Planned Check-Out Time:</strong> {new Date(item.EndDateTime).toTimeString()}</p>
                                     <hr />
                                 </Card.Body>
                                 <Card.Body>
                                     <Card.Body>
+                                        <a href={item.BookingURL}>
+                                                <FaExternalLinkAlt size={50} style={{fill: 'blue' }} />
+                                        </a>
+                                        <h3>Booking URL</h3>
 
                                         {item.confirmed ? <p style={{color:"green"}}>confirmed</p>: <p style={{color:"red"}}>pending</p>}
                                     </Card.Body>

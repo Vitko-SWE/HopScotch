@@ -92,11 +92,6 @@ export default function DisplayFlights(props) {
                                     <p style={{textAlign: "left"}}><b>Date: </b>{new Date(item.segments[0].departure.at).toDateString()}</p>
                                     <p style={{textAlign: "left"}}><b>Time: </b> {new Date(item.segments[0].departure.at).toTimeString()}</p>
                                     <hr/>
-                        
-                                    {/* <p><strong>Date: </strong></p>
-                                    <p>Start Time: {item.StartDateTime}</p>
-                                    <p>End Time: {item.EndDateTime}</p>
-                                    <hr /> */}
                                 </Card.Body>
                                 <Card.Body>
                                     <a href={flights.bookingURL}>

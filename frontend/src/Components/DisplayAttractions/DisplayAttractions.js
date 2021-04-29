@@ -2,10 +2,7 @@ import { useState, useEffect} from 'react'
 import { useAuth0} from "@auth0/auth0-react";
 import axios from 'axios'
 import { Card, Spinner, Button } from 'react-bootstrap'
-import { FaYelp } from 'react-icons/fa';
-// import SelectTripDropdown from '../../SelectTripDropdown';
-// import hotel_image from "./Hotel_image.jpg"
-
+import { FaYelp, FaExternalLinkAlt } from 'react-icons/fa'
 export default function DisplayAttractions(props) {
     const { user, getAccessTokenSilently } = useAuth0();
     const [attraction, setAttractions] = useState([])
@@ -72,6 +69,10 @@ export default function DisplayAttractions(props) {
                                     <hr />
                                 </Card.Body>
                                 <Card.Body>
+                                    <a href={item.BookingURL}>
+                                            <FaExternalLinkAlt size={50} style={{fill: 'blue' }} />
+                                    </a>
+                                    <h3>Booking URL</h3>
                                     {item.confirmed ? <p style={{color:"green"}}>confirmed</p>: <p style={{color:"red"}}>pending</p>}
                                     <Button variant="danger">Delete</Button>
                                 </Card.Body>

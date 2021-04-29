@@ -54,6 +54,10 @@ export default function EditTripView (props) {
                 <Card.Img src={flight_wallpaper} alt="Card image" style={{ postion: "absolute", top: "0", left: "0", width: "100%", height: "100%"}}/>
                 <Card.ImgOverlay>
                     <Card.Title><h1>{tripInfo.Destination}</h1></Card.Title>
+                     <Card.Text>
+                        <strong>{Math.ceil((new Date(tripInfo.StartDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} Days Left</strong>
+                    </Card.Text>
+                    <Card.Text>Last updated 3 mins ago</Card.Text>
                     <Card style={{width: "8cm", backgroundColor: "rgba(0,0,0,1)"}}>
                     <ButtonGroup vertical>
                         <Link to={`/editview/editTripDetails/${props.match.params.tripid}`}>
@@ -102,10 +106,7 @@ export default function EditTripView (props) {
 
                     </Card>
                     
-                    {/* <Card.Text>
-                    <strong>{Math.ceil((new Date(tripInfo.StartDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} Days Left</strong>
-                    </Card.Text>
-                    <Card.Text>Last updated 3 mins ago</Card.Text> */}
+                    
                 </Card.ImgOverlay>
             </Card>
             {/* <Container fluid style={{width: "70%", height: "10cm"}}>
