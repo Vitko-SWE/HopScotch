@@ -440,7 +440,7 @@ export default function EditTrip(props) {
         console.log(err);
       });
     });
-  }
+  };
 
   const handleAgendaView = () => {
     setAgendaView(!agendaView)
@@ -472,7 +472,7 @@ export default function EditTrip(props) {
         console.log(err);
       })
     });
-  }
+  };
 
   return (
     <div>
