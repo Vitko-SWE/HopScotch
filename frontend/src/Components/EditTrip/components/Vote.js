@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { CardDeck, Spinner } from 'react-bootstrap';
+import { CardColumns, CardDeck, Spinner } from 'react-bootstrap';
 import axios from "axios";
 import VotingCard from "./VotingCard";
 
@@ -142,7 +142,7 @@ export default function Vote (props) {
                         <div>
                             <h3>Voting</h3>
                             {votes.length > 0 ? (
-                            <CardDeck className="ml-5 mr-5 mt-3 justify-content-center">
+                            <CardColumns className="ml-5 mr-5 mt-3 justify-content-center">
                                 {votes.map((item, i) => {
                                 return (<VotingCard
                                     key={i}
@@ -158,7 +158,7 @@ export default function Vote (props) {
                                     updateFunc={updateVotingCards}
                                 />)
                                 })}
-                            </CardDeck>
+                            </CardColumns>
                             ) : (
                             <h6>No votes availible. Why not add something?</h6>
                             )}
