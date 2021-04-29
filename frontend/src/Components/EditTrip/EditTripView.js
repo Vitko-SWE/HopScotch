@@ -76,7 +76,7 @@ export default function EditTripView (props) {
                                 <strong><Badge variant="dark"><SiGooglecalendar size={22}/></Badge> Agenda View</strong>
                             </Button>
                         </Link>
-                        <Link>
+                        <Link to={`/editview/flights/${props.match.params.tripid}`}>
                             <Button variant="outline-light" size="lg" style={{width: "8cm"}} className="primary-btn col-xs-11 text-left">
                                 <strong><Badge variant="dark"><MdFlight size={22}/></Badge>  Flight Details</strong>
                             </Button>
