@@ -89,8 +89,8 @@ export default function DisplayFlights(props) {
                                     <p style={{color: "green"}}><b>Arrival</b></p>
                                     <p style={{textAlign: "left"}}><b>Airport: </b>{item.segments[item.segments.length - 1].arrival.iataCode}</p>
                                     <p style={{textAlign: "left"}}><b>Terminal: </b>{item.segments[item.segments.length - 1].arrival.terminal}</p>
-                                    <p style={{textAlign: "left"}}><b>Date: </b>{new Date(item.segments[0].departure.at).toDateString()}</p>
-                                    <p style={{textAlign: "left"}}><b>Time: </b> {new Date(item.segments[0].departure.at).toTimeString()}</p>
+                                    <p style={{textAlign: "left"}}><b>Date: </b>{new Date(item.segments[0].arrival.at).toDateString()}</p>
+                                    <p style={{textAlign: "left"}}><b>Time: </b> {new Date(item.segments[0].arrival.at).toTimeString()}</p>
                                     <hr/>
                                 </Card.Body>
                                 <Card.Body>

@@ -3,7 +3,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios'
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import {Container, Jumbotron } from "react-bootstrap"
+import {Card, Container, Jumbotron } from "react-bootstrap"
+import planning from "../AgendaView/planning.jpg"
 
 export default function AgendaView(props) {
     const {user, getAccessTokenSilently} = useAuth0();
@@ -43,14 +44,15 @@ export default function AgendaView(props) {
 
         for (let i = 0; i < flights.length; i++) {
             for (let j = 0; j < flights[i].segments.length; j++) {
-                let date = new Date(flights[i].segments[j].departure.at)
+                let departureDate = new Date(flights[i].segments[j].departure.at)
+                let arrivalDate = new Date(flights[i].segments[j].arrival.at)
                 console.log("flight date")
-                console.log(date)
+                console.log(departureDate)
 
 
-                if (date.toDateString() === calDate.toDateString()) {
-                    flights[i].segments[j].departure.at = date.toTimeString()
-                    flights[i].segments[j].arrival.at = date.toTimeString()
+                if (departureDate.toDateString() === calDate.toDateString()) {
+                    flights[i].segments[j].departure.at = departureDate.toTimeString()
+                    flights[i].segments[j].arrival.at = arrivalDate.toTimeString()
                     todayAgenda.flights.push(flights[i].segments[j])
                 }
             }
@@ -240,8 +242,23 @@ export default function AgendaView(props) {
 
     return (
         <div >
+            {/* <Card> */}
+            <Card className="bg-dark text-white">
+                <Card.Img src={planning} alt="Card image" style={{height: "12cm"}}/>
+                <Card.ImgOverlay>
+                    <div className="result-calendar" >
+                        <div className="react-calendar" style={{margin: "0 auto", marginTop: "1cm"}} >
+                            <Calendar 
+                                onChange={onChange} 
+                                value={calDate} 
+                                // onClickDay={displayClasses1}
+                            />
+                        </div>
+                    </div>
+                </Card.ImgOverlay>
+                </Card>
             
-            <div className="result-calendar" >
+            {/* <div className="result-calendar" >
                 <div className="react-calendar" style={{margin: "0 auto", marginTop: "1cm"}}>
                     <Calendar 
                         onChange={onChange} 
@@ -250,6 +267,7 @@ export default function AgendaView(props) {
                     />
                 </div>
             </div>
+            </Card> */}
             <div style={{width: "90%", margin: "0 auto", marginTop: "1cm"}}>
                 <h1>Agenda for {calDate.toDateString()}</h1>
                 <hr/>
