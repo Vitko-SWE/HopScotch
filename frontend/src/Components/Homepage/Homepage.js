@@ -33,11 +33,8 @@ export default function Homepage() {
 
 
     return (
-        <div style={{height: '100%'}}>
-            <div class="m-5">
-                <Link to="/createtrip"><Button>Create New Trip</Button></Link>
-            </div>
-            <main style={{marginTop: '64px'}}>
+        <div>
+            <main>
                 <TripCards/>
             </main>
         </div>
