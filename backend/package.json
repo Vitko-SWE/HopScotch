@@ -11,8 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@auth0/auth0-react": "github:auth0/auth0-react",
     "amadeus": "^5.6.1",
-    "auth0": "^2.33.0",
+    "auth0": "^2.34.2",
     "axios": "^0.21.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -28,7 +29,7 @@
     "yelp-fusion": "^3.0.0"
   },
   "devDependencies": {
-    "chai": "^4.3.3",
+    "chai": "^4.3.4",
     "chai-http": "^4.3.0",
     "mocha": "^8.3.0",
     "sinon": "^9.2.4"
