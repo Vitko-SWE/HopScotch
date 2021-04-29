@@ -2,21 +2,21 @@ import React from 'react'
 import './MenuBar.css'
 import LogoutButton from "../LogoutButton";
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-  } from "react-router-dom";
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
-import {Nav, Navbar, NavDropdown, Form, Button, FormControl, Badge} from 'react-bootstrap'
+import { Nav, Navbar, NavDropdown, Form, Button, FormControl, Badge } from 'react-bootstrap'
 import { useAuth0 } from "@auth0/auth0-react";
 import { IoMdNotificationsOutline } from 'react-icons/io'
 import { Dropdown, Toast } from 'react-bootstrap';
 import Notifications from "../Notifications/Notifications"
-
+import AccWidget from '../AccWidget';
 
 const Menubar = (props) => {
-  const {user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
   if (isAuthenticated) {
     return (
       <Navbar bg="dark" variant="dark" expand="lg">
@@ -33,22 +33,27 @@ const Menubar = (props) => {
               <Link className="mytrips-link" to="/map" >Map</Link>
             </Nav.Link>
             <Nav.Link>
-              <Link className="mytrips-link" to="/search">Search</Link> 
+              <Link className="mytrips-link" to="/search">Search</Link>
             </Nav.Link>
           </Nav>
+
           <Nav>
-            <Notifications/>
+            <AccWidget contrastFunc={props.contrastFunc} />
+          </Nav>
+
+          <Nav>
+            <Notifications />
             <Nav.Link >
               <Link className="account-details" to="/Account" >Account Details</Link>
             </Nav.Link>
-              <LogoutButton/>
+            <LogoutButton />
           </Nav>
         </Navbar.Collapse>
       </Navbar>
     )
   }
   else {
-    return(<div></div>)
+    return (<div></div>)
   }
 }
 
