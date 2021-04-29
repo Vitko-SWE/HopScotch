@@ -168,7 +168,7 @@ router.route("/deleteFeature/:tripid/:featureid").post((req, res) => {
       }
     })
   } else {
-    const query = `DELETE FROM Votes WHERE TripId = '${req.params.tripid}' and FeatureId = '${req.params.featureid}';\nDELETE FROM TripFeatures WHERE TripID = '${req.params.tripid}' and FlightId = '${req.params.featureid}';`;
+    const query = `DELETE FROM Votes WHERE TripId = '${req.params.tripid}' and FeatureId = '${req.params.featureid}';\nDELETE FROM TripFeatures WHERE TripID = '${req.params.tripid}' and FeatureId = '${req.params.featureid}';`;
     db.query(query, (err, data) => {
       if (err) {
         console.log(err);

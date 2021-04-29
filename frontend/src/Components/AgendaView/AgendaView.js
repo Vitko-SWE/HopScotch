@@ -258,16 +258,7 @@ export default function AgendaView(props) {
                 </Card.ImgOverlay>
                 </Card>
             
-            {/* <div className="result-calendar" >
-                <div className="react-calendar" style={{margin: "0 auto", marginTop: "1cm"}}>
-                    <Calendar 
-                        onChange={onChange} 
-                        value={calDate} 
-                        // onClickDay={displayClasses1}
-                    />
-                </div>
-            </div>
-            </Card> */}
+            
             <div style={{width: "90%", margin: "0 auto", marginTop: "1cm"}}>
                 <h1>Agenda for {calDate.toDateString()}</h1>
                 <hr/>
