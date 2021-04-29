@@ -255,7 +255,7 @@ export default function Budgeting(props) {
         },
       }).then((res) => {
         console.log(res);
-        history.push(`/edittrip/${props.tripid}`);
+        history.push(`/editview/${props.tripid}`);
       }).catch((err) => {
         alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
       });
