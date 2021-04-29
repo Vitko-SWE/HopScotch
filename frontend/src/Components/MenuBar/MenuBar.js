@@ -15,6 +15,7 @@ import { Dropdown, Toast } from 'react-bootstrap';
 import Notifications from "../Notifications/Notifications"
 import AccWidget from '../AccWidget';
 
+
 const Menubar = (props) => {
   const { user, isAuthenticated } = useAuth0();
   if (isAuthenticated) {
@@ -38,7 +39,7 @@ const Menubar = (props) => {
           </Nav>
 
           <Nav>
-            <AccWidget contrastFunc={props.contrastFunc} />
+            <AccWidget />
           </Nav>
 
           <Nav>

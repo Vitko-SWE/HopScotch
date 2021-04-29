@@ -8,6 +8,10 @@ import './index.css';
 import { Auth0Provider } from "@auth0/auth0-react";
 import { DarkModeProvider } from './DarkMode';
 import { TextModeProvider } from './TextMode';
+import { Router } from 'react-router';
+import { createBrowserHistory } from 'history';
+
+export const history = createBrowserHistory();
 
 ReactDOM.render(
   <Auth0Provider
@@ -16,11 +20,13 @@ ReactDOM.render(
     redirectUri={window.location.origin}
   >
     <React.StrictMode>
+    <Router history={history}>
       <DarkModeProvider>
         <TextModeProvider>
           <App />
         </TextModeProvider>
       </DarkModeProvider>
+      </Router>
     </React.StrictMode>
   </Auth0Provider>,
   document.getElementById('root')

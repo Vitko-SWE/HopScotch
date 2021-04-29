@@ -22,8 +22,3 @@ export default function AccWidget(props) {
         </>
     )
 }
-
-AccWidget.propTypes = {
-    contrastFunc: PropTypes.func.isRequired,
-    textFunc: PropTypes.func.isRequired
-}

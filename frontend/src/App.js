@@ -17,7 +17,6 @@ import DiningResults from './Components/Search/SearchDiningResults'
 import SearchHotel from './Components/SearchHotel/SearchHotel'
 import AttractionSearch from './Components/AttractionSearch/AttractionSearch';
 import MainSearch from './Components/Search/MainSearch';
-import { createBrowserHistory } from 'history';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import VotingCard from './Components/EditTrip/components/VotingCard';
 import FlightSearch from './Components/FlightSearch/FlightSearch';
@@ -28,16 +27,17 @@ import Budgeting from './Components/EditTrip/components/Budgeting';
 import Vote from './Components/EditTrip/components/Vote'
 import EditTripDetails from './Components/EditTrip/components/EditTripDetails';
 import ErrorAlert from './Components/ErrorAlert';
-
-export const history = createBrowserHistory();
+import { useDarkMode } from './DarkMode';
 
 const ProtectedRoute = ({ component, ...args }) => (
   <Route component={withAuthenticationRequired(component)} {...args} />
 );
 
 function App() {
+  
+
   return (
-    <Router history={history}>
+    
       <div className="App">
         <MenuBar className="mb-0" />
         <Switch>
@@ -64,7 +64,7 @@ function App() {
           <Route path="/testrender/alert" component={ErrorAlert} exact />
         </Switch>
       </div>
-    </Router>
+
   );
 }
 
