@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import App from './App';
+import Root from './Root';
 
 test('smoke test', () => {
-  const { baseElement } = render(<App />);
+  const { baseElement } = render(<Root />);
   expect(baseElement).toBeInTheDocument();
 });

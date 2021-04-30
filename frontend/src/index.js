@@ -1,34 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
-import { Auth0Provider } from "@auth0/auth0-react";
-import { DarkModeProvider } from './DarkMode';
-import { TextModeProvider } from './TextMode';
-import { Router } from 'react-router';
-import { createBrowserHistory } from 'history';
-
-export const history = createBrowserHistory();
+import Root from "./Root";
 
 ReactDOM.render(
-  <Auth0Provider
-    domain={process.env.REACT_APP_AUTH0_DOMAIN}
-    clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
-    redirectUri={window.location.origin}
-  >
-    <React.StrictMode>
-    <Router history={history}>
-      <DarkModeProvider>
-        <TextModeProvider>
-          <App />
-        </TextModeProvider>
-      </DarkModeProvider>
-      </Router>
-    </React.StrictMode>
-  </Auth0Provider>,
+  <Root />,
   document.getElementById('root')
 );
 
