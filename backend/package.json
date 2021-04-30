@@ -11,7 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@auth0/auth0-react": "github:auth0/auth0-react",
     "amadeus": "^5.6.1",
     "auth0": "^2.34.2",
     "axios": "^0.21.1",
