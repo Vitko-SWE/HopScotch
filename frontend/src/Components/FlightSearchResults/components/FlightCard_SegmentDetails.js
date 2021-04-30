@@ -25,9 +25,9 @@ export default function FlightCard_SegmentDetails(props) {
                         })}
                     </ol>
                     {!renderFlightStatistics && (
-                        <Button onClick= {handleRenderFlightStatistics}>Click here to see flight statistics</Button>
+                        <Button onClick={handleRenderFlightStatistics}>Click here to see flight statistics</Button>
                     )}
-                    <p>*All flight statistics are provided by the BTS and range from June to December of 2019</p>
+                    <p className="mt-3">*All flight statistics are provided by the BTS and range from June to December of 2019</p>
                 </Card.Header>
             </Card>
         </div>
