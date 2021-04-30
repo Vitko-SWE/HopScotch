@@ -1,6 +1,7 @@
 import React, { useState }from 'react'
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
+import { Spinner } from 'react-bootstrap';
 
 export default function FlightCard_SegmentStatistics(props) {
 
@@ -37,11 +38,11 @@ export default function FlightCard_SegmentStatistics(props) {
     return (
         <>
             {(isFlightStatisticsLoaded && isThereFlightInfo) && (
-                <div> 
+                <div style={{ border: '1px solid black', borderRadius: '5px' }}> 
                     <p>Statistics for {props.carrierCode}{props.flightNumber}:</p>
-                    <p>Percent delayed: {percentDelayed}%</p>
-                    <p>Percent cancelled: {percentCancelled}%</p>
-                    <p>Percent diverted: {percentDiverted}%</p>
+                    <p>Percent delayed: {percentDelayed.toFixed(2)}%</p>
+                    <p>Percent cancelled: {percentCancelled.toFixed(2)}%</p>
+                    <p>Percent diverted: {percentDiverted.toFixed(2)}%</p>
                 </div>
             )}
             {(isFlightStatisticsLoaded && !isThereFlightInfo) && (
@@ -50,7 +51,7 @@ export default function FlightCard_SegmentStatistics(props) {
             {!isFlightStatisticsLoaded && (
                 <div>
                     {getFlightInfo()}
-                    <p>Loading stats...</p>
+                    <Spinner animation="border" role="status" className="mt-3"/>
                 </div>
 
             )}
