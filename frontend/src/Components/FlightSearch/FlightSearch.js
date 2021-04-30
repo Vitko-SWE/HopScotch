@@ -8,11 +8,10 @@ export default function FlightSearch() {
         <div>
             {!isLoading ? (
                 <div>
-                    <h1>Flight search goes here...</h1>
                     <SearchForm loadingCallback={setIsLoading}/>
                 </div>
             ) : (
-                <h1>Loading</h1>
+                <h1>Loading...</h1>
             )}
         </div>
     )
