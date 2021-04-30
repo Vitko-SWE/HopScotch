@@ -22,10 +22,15 @@ export default function Vote (props) {
       ));
 
     useEffect (() => {
-        updateVotingCards()
         updateUserRole()
         updateTripInfo()
     }, [])
+
+    useEffect (() => {
+        setTimeout(() => {
+            updateVotingCards()
+        }, 3000);
+    })
 
     const updateVotingCards = async () => {
 

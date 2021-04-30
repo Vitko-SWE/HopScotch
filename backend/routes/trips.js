@@ -606,6 +606,8 @@ router.post('/:tripid/pdf', (req, res) => {
       doc.fontSize(16).text(`Destination: ${tripdata.Destination}`);
       doc.fontSize(16).text(`Start Date: ${`${(new Date(tripdata.StartDate)).getMonth() + 1}/${(new Date(tripdata.StartDate)).getDate()}/${(new Date(tripdata.StartDate)).getFullYear()}`}`);
       doc.fontSize(16).text(`End Date: ${`${(new Date(tripdata.EndDate)).getMonth() + 1}/${(new Date(tripdata.EndDate)).getDate()}/${(new Date(tripdata.EndDate)).getFullYear()}`}`);
+      // doc.fontSize(16).text(`OutboundFlightId: ${tripdata.OutboundFlightId}`);
+      // doc.fontSize(16).text(`InboundFlightId: ${tripdata.InboundFlightId}`);
 
       doc.moveDown();
 
