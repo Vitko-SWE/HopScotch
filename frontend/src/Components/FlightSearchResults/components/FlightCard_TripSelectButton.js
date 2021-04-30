@@ -47,7 +47,7 @@ export default function FlightCard_TripSelectButton(props) {
                     }).then(res => {
                         alert("The flight has been added to the selected trip.");
                         history.push({
-                            pathname: `/edittrip/${item.TripId}`
+                            pathname: `/editview/${item.TripId}`
                         });
                     }).catch(err => {
                         console.log(err)
