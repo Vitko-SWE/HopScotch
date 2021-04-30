@@ -16,6 +16,8 @@ const path = require('path');
 
 require('dotenv').config()
 
+console.log(process.env)
+
 const app = express();
 app.use(express.urlencoded());
 app.use(express.json());
