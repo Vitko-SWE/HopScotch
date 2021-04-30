@@ -5,6 +5,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import { spring, AnimatedSwitch } from "react-router-transition";
 import NoMatch from 'react-router-nomatch';
 import MenuBar from './Components/MenuBar/MenuBar.js';
 import Landing from './Components/Landing/Landing.js';
@@ -43,34 +44,41 @@ function App() {
   return (
     <Router history={history}>
       <div className="App">
-        <MenuBar className="mb-0"/>
-        <Switch>
+        <MenuBar className="mb-0" />
+        <AnimatedSwitch
+          atEnter={{ offset: -100 }}
+          atLeave={{ offset: -100 }}
+          atActive={{ offset: 0 }}
+          mapStyles={(styles) => ({
+            transform: `translateX(${styles.offset}%)`,
+          })}
+        >
           <Route path="/" component={Landing} exact />
-          <Route path="/directions" render={() => {window.location.href="Directions.html"}} />
-          <Route path="/map" render={() => {window.location.href="Map.html"}} />
-          <ProtectedRoute path="/homepage" component={Homepage} exact/>
-          <ProtectedRoute path="/Account"  component={Profile} exact/>
-          <ProtectedRoute path="/createtrip"  component={CreateTrip} exact/>
-          <ProtectedRoute path="/searchDining"  component={SearchDining} exact/>
-          <ProtectedRoute path="/searchHotel"  component={SearchHotel} exact/>
+          <Route path="/directions" render={() => { window.location.href = "Directions.html" }} />
+          <Route path="/map" render={() => { window.location.href = "Map.html" }} />
+          <ProtectedRoute path="/homepage" component={Homepage} exact />
+          <ProtectedRoute path="/Account" component={Profile} exact />
+          <ProtectedRoute path="/createtrip" component={CreateTrip} exact />
+          <ProtectedRoute path="/searchDining" component={SearchDining} exact />
+          <ProtectedRoute path="/searchHotel" component={SearchHotel} exact />
           {/* <ProtectedRoute path="/DiningResults"  component={DiningResults} exact/> */}
-          <ProtectedRoute path="/edittrip/:tripid"  component={EditTrip} exact/>
-          <ProtectedRoute path="/editview/:tripid"  component={EditTripView} exact/>
-          <ProtectedRoute path="/editview/budgeting/:tripid"  component={Budgeting} exact/>
-          <ProtectedRoute path="/editview/vote/:tripid"  component={Vote} exact/>
-          <ProtectedRoute path="/editview/diningDetails/:tripid"  component={DisplayDiningFeatures} exact/>
-          <ProtectedRoute path="/editview/hotels/:tripid"  component={DisplayHotels} exact/>
-          <ProtectedRoute path="/editview/attractions/:tripid"  component={DisplayAttractions} exact/>
-          <ProtectedRoute path="/editview/editTripDetails/:tripid"  component={EditTripDetails} exact/>
-          <ProtectedRoute path="/editview/flights/:tripid"  component={DisplayFlights} exact/>
+          <ProtectedRoute path="/edittrip/:tripid" component={EditTrip} exact />
+          <ProtectedRoute path="/editview/:tripid" component={EditTripView} exact />
+          <ProtectedRoute path="/editview/budgeting/:tripid" component={Budgeting} exact />
+          <ProtectedRoute path="/editview/vote/:tripid" component={Vote} exact />
+          <ProtectedRoute path="/editview/diningDetails/:tripid" component={DisplayDiningFeatures} exact />
+          <ProtectedRoute path="/editview/hotels/:tripid" component={DisplayHotels} exact />
+          <ProtectedRoute path="/editview/attractions/:tripid" component={DisplayAttractions} exact />
+          <ProtectedRoute path="/editview/editTripDetails/:tripid" component={EditTripDetails} exact />
+          <ProtectedRoute path="/editview/flights/:tripid" component={DisplayFlights} exact />
           <ProtectedRoute path="/search/flights" component={FlightSearch} exact />
           <ProtectedRoute path="/search/flights/results" component={FlightSearchResults} exact />
-          <ProtectedRoute path="/attractionsearch/"  component={AttractionSearch} exact/>
-          <ProtectedRoute path="/search/"  component={MainSearch} exact/>
-          <ProtectedRoute path="/AgendaView/:tripid"  component={AgendaView} exact/>
+          <ProtectedRoute path="/attractionsearch/" component={AttractionSearch} exact />
+          <ProtectedRoute path="/search/" component={MainSearch} exact />
+          <ProtectedRoute path="/AgendaView/:tripid" component={AgendaView} exact />
           <Route path="/testrender/votingcard" component={VotingCard} exact />
           <Route path="/testrender/alert" component={ErrorAlert} exact />
-        </Switch>
+        </AnimatedSwitch>
       </div>
     </Router>
   );
