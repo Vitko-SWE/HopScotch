@@ -197,7 +197,13 @@ export default function SearchForm(props) {
                             onInputChange={(text, e) => {
                                 setRetSearch(text)
                             }}
-                            labelKey={option => `${option.name} - ${option.address.cityName}, ${option.address.stateCode}`}
+                            labelKey={option => {
+                                if(option.address.stateCode) {
+                                    return `${option.name} - ${option.address.cityName}, ${option.address.stateCode}`
+                                } else {
+                                    return `${option.name} - ${option.address.cityName}`
+                                }
+                            }}
                             options={retOptions}
                             isLoading={retLoading}
                         />

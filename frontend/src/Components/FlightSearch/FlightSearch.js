@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Spinner } from 'react-bootstrap';
 import SearchForm from './components/SearchForm'
 
 export default function FlightSearch() {
@@ -8,10 +9,12 @@ export default function FlightSearch() {
         <div>
             {!isLoading ? (
                 <div>
-                    <SearchForm loadingCallback={setIsLoading}/>
+                    <SearchForm loadingCallback={setIsLoading} />
                 </div>
             ) : (
-                <h1>Loading...</h1>
+                <Spinner animation="border" role="status" variant="primary" className="mt-5">
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
             )}
         </div>
     )
