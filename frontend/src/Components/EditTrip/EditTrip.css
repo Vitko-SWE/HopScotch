@@ -1,0 +1,36 @@
+.custom_card {
+    /* Add shadows to create the "card" effect */
+    width: 7cm;
+    margin: 1cm;
+    flex-direction: row;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+
+  }
+
+
+  .custom_card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
+  }
+
+  /* Add some padding inside the card container */
+  .card-display {
+   display: flex;
+   flex-flow: wrap;
+   /* margin-left: 1cm; */
+   max-width: 95%;
+   margin: 0 auto
+  }
+
+  .delete-btn {
+    margin-left: 1%;
+  }
+
+.fc1 {
+  color: white;
+  text-shadow:
+    -2px -2px 0 #000,
+     2px -2px 0 #000,
+    -2px  2px 0 #000,
+     2px  2px 0 #000;
+}

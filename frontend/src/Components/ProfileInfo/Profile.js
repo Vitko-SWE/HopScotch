@@ -1,5 +1,5 @@
 import React, { useState, Component } from 'react'
-import { Button, Modal, Form } from 'react-bootstrap';
+import { Button, Modal, Form, Spinner } from 'react-bootstrap';
 import { withAuth0 } from "@auth0/auth0-react";
 import axios from 'axios'
 import {
@@ -30,6 +30,7 @@ class AccountInformation extends Component {
             selectedFile: null,
             userImage: null,
             user_object: this.props.auth0,
+            loading: true
         }
 
         this.handleShow1 = this.handleShow1.bind(this)
@@ -87,6 +88,7 @@ class AccountInformation extends Component {
         var storageref = app.storage()
         storageref.ref(this.state.user_object.user.sub + `/Profile Picture/picture`).getDownloadURL().then((url) => {
             this.setState({ userImage: url })
+            this.setState({loading: false})
             //console.log("On load pic: " + this.state.userImage);
         });
     }
@@ -127,14 +129,14 @@ class AccountInformation extends Component {
     getUser = async () => {
         this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
           const token = `Bearer ${res}`
-    
+
           const api = axios.create({
             baseURL: `/api/user/getbyuserid/${this.state.user_object.user.sub}`,
             headers: {
               Authorization: token
             }
           })
-    
+
           try {
             api.get('/').then(response => {
                 if (response.data.length === 0) {
@@ -162,9 +164,9 @@ class AccountInformation extends Component {
               Authorization: token
             }
           })
-    
+
           try {
-            api.post(`/user/updateName`).then(response => {
+            api.post(`/`).then(response => {
               console.log(response)
             })
           } catch (err) {
@@ -185,9 +187,9 @@ class AccountInformation extends Component {
               Authorization: token
             }
           })
-    
+
           try {
-            api.post(`/user/updateAboutMe`).then(response => {
+            api.post(`/`).then(response => {
               console.log(response)
             })
           } catch (err) {
@@ -199,7 +201,7 @@ class AccountInformation extends Component {
     deleteUser () {
         var message = "Your account and all of your trips will be deleted! Are you sure you want to delete your account? "
         if (window.confirm(message)) {
-            console.log("confirmed") 
+            console.log("confirmed")
             this.state.user_object.getAccessTokenSilently({audience: "https://hopscotch/api"}).then(res => {
                 const token = `Bearer ${res}`
 
@@ -234,7 +236,7 @@ class AccountInformation extends Component {
               Authorization: token
             }
           })
-    
+
           try {
             api.post(`/api/user/changePassword`).then(response => {
               console.log(response)
@@ -254,8 +256,14 @@ class AccountInformation extends Component {
     }
 
     render() {
+        let loadingSpinner =  <Spinner animation="border" role="status" variant="primary">
+                            <span className="sr-only">Loading...</span>
+                          </Spinner>;
         return (
+            <div>
+                 
             <div className="AccountInfo">
+                {this.state.loading ? <div style={{margin: "0 auto"}}>{loadingSpinner}</div>: 
                 <div className="Profile_Card">
                     <Card >
                         <Image className="circular-pic" src={this.state.userImage || DefaultHead} roundedCircle />
@@ -277,9 +285,9 @@ class AccountInformation extends Component {
                             <Button className="change-pass-btn" variant="primary" onClick={this.handleShow2.bind()}>
                                 Change Password
                             </Button>
-                            
+
                             <Button className="delete-btn" variant="danger" onClick={this.deleteUser.bind()} >Delete Account</Button>
-    
+
 
 
                             {/* Modal 1 for editing account info */}
@@ -356,6 +364,10 @@ class AccountInformation extends Component {
                             </Modal>
                         </Card.Body>
                     </Card>
+    
+                    
+                    </div>
+                    }
                 </div>
             </div>
         );

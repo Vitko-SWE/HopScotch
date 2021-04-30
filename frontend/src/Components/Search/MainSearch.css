@@ -1,0 +1,29 @@
+.title-format {
+    font-size: 400%;
+    padding-top: 50px;
+}
+
+.subtitle-format {
+    padding-bottom: 50px;
+}
+
+.search-bar {
+    padding-top: 50px;
+}
+
+.button-format {
+    padding-left:20px !important;
+    padding-right:20px !important;
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+}
+
+.attraction-titleformat {
+    margin:20px;
+}
+
+.attraction-search-button {
+    margin-top:20px;
+    justify-content: right !important;
+    text-align: right !important;
+}
