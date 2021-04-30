@@ -32,8 +32,8 @@ export default function DisplayFlights(props) {
         accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
         const token = `Bearer ${accessToken}`
         let res = null
-        
-        res = await axios.get(`/api/flights/getFlights/${props.match.params.tripid}`, {
+
+        res = await axios.get(`/api/flights/getflights/${props.match.params.tripid}`, {
           headers: {
             Authorization: token,
           }
@@ -57,7 +57,7 @@ export default function DisplayFlights(props) {
             }
             // JSON.parse(atob(res.data.FlightData))
 
-        
+
 
             console.log(flightObject)
             setFlights(flightObject)

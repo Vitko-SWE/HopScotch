@@ -186,7 +186,6 @@ export default function EditTripView(props) {
         </Card.ImgOverlay>
       </Card>
       {/* <Container fluid style={{width: "70%", height: "10cm"}}>
-
                 <Row style={{marginTop: "1cm"}}>
                     <Col>
                         <Link to={`/editview/vote/${props.match.params.tripid}`}>

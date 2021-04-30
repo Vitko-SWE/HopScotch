@@ -30,16 +30,16 @@ export default function Notifications() {
         setInterval(getNotifications, 60000);
     //   callInit()
     }, [])
-    
 
-   
+
+
 
     const getNotifications = async () => {
         let accessToken = null
         accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
         const token = `Bearer ${accessToken}`
         let res = null
-    
+
         res = await axios.get(`/api/notifications/getNotifications/${user.sub}`, {
           headers: {
             Authorization: token,
@@ -72,7 +72,7 @@ export default function Notifications() {
         }
 
         deleteNotification(index)
-        
+
     }
 
     const deleteNotification = async (index) => {
@@ -82,7 +82,7 @@ export default function Notifications() {
         accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
         const token = `Bearer ${accessToken}`
         let res = null
-    
+
         res = await axios.delete(`/api/notifications/deleteNotification/${notificationId}`, {
           headers: {
             Authorization: token,
@@ -92,16 +92,16 @@ export default function Notifications() {
     }
 
     return (
-        <div className="notification">
+        <div data-testid="testing" className="notification">
             <Badge pill variant="dark">
-              <Dropdown drop="left" >
+              <Dropdown data-testid="dropdown" drop="left" >
                 <Dropdown.Toggle as={IoMdNotificationsOutline} size={20} style={{marginTop: "0.25cm", fill: 'white' }}variant="success" >
                 </Dropdown.Toggle>
                 <span>{notification.length > 0 ? notification.length : <div/>}</span>
                 <Dropdown.Menu>
                 <Dropdown.Header>Notifications</Dropdown.Header>
                 <Dropdown.Divider/>
-                {displayNotification ? notification.map((item, index) => ( 
+                {displayNotification ? notification.map((item, index) => (
                   //   <Toast show={true} onClose={() => handleToastClose(index)}>
                   //   <Toast.Header>
                   //     <img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
