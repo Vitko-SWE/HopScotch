@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Spinner } from 'react-bootstrap';
 import SearchForm from './components/SearchForm'
-import { Spinner } from 'react-bootstrap'
 
 export default function FlightSearch() {
     const [isLoading, setIsLoading] = useState(false);
