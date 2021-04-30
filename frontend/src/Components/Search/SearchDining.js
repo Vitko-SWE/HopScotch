@@ -7,6 +7,7 @@ import { FaYelp } from 'react-icons/fa';
 import { BsSearch } from 'react-icons/bs'
 import Rating from './Rating'
 import SelectTripDropdown from './SelectTripDropdown'
+import ErrorAlert from '../ErrorAlert'
 
 
 
@@ -17,14 +18,14 @@ export default function SearchDining () {
     const trips = useState({items: []});
     const [dining, setDining] = useState("")
     const [location, setLocation] = useState("")
-    const [error, setError] = useState(false)
+    const [message, setMessage] = useState("")
+    const [show, setShow] = useState(false)
 
     
 
     const handleSearch = () => {
         getTrips();
-        setError(false)
-        setError(false)
+        
         getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
             axios.get('/api/search/searchDining', {
                 headers: {
@@ -38,12 +39,14 @@ export default function SearchDining () {
                 
                 if (res.data.length === 0) {
                     // alert("Oops, it looks like we couldn't find anything for this location");
-                    setError(true)
+                    setMessage("Oops, it looks like we couldn't find anything for this location")
+                    setShow(true)
                 }
             }).catch((err) => {
                 console.log(err);
                 // alert("Oops, it looks like we couldn't find anything for this location");
-                setError(true)
+                setMessage("Oops, it looks like we couldn't find anything for this location")
+                setShow(true)
             });
         });
     }
@@ -98,11 +101,7 @@ export default function SearchDining () {
                         </Button>
                     </InputGroup.Append>
                 </InputGroup>
-                {error ? 
-                <Alert variant="danger" onClose={() => setError(false)}dismissible>
-                    Oops, it looks like we couldn't find anything for this location
-                </Alert> : <div></div>}
-
+                <ErrorAlert show={show} variant="danger" text={message} closeFunc={() => setShow(false)}/> 
             </div>
         )
     }

@@ -5,6 +5,7 @@ import { BsSearch } from 'react-icons/bs'
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import HotelSearchResults from './HotelSearchResults';
+import ErrorAlert from '../../../ErrorAlert'
 
 import SearchFilter from '../SearchFilter'
 
@@ -16,6 +17,8 @@ export default function HotelSearch(props) {
   const [hotelLocation, setHotelLocation] = useState("");
   const [hotelSearchResult, setHotelSearchResult] = useState([]);
   const [hotelTrips, setHotelTrips] = useState([]);
+  const [message, setMessage] = useState("")
+  const [show, setShow] = useState(false)
 
   const [filteredResults, setFilteredResults] = useState(hotelSearchResult);
   const [num, setNum] = useState(0);
@@ -60,9 +63,19 @@ export default function HotelSearch(props) {
           location: hotelLocation,
         },
       }).then(async (res) => {
-        await setHotelSearchResult(res.data);
-        await setFilteredResults(res.data);
+
+        if (res.status === 200) {
+          await setHotelSearchResult(res.data);
+          await setFilteredResults(res.data);
+        }
+        else {
+          setMessage("Oops, it looks like we couldn't find anything for this location")
+          setShow(true)
+        }
+
       }).catch((err) => {
+        setMessage("Oops, it looks like we couldn't find anything for this location")
+        setShow(true)
         console.log(err);
       });
     });
@@ -110,6 +123,7 @@ export default function HotelSearch(props) {
         {hotelSearchResult.length > 0 && (
           <SearchFilter ratings filterFunc={handleFilter} />
         )}
+        <ErrorAlert show={show} variant="danger" text={message} closeFunc={() => setShow(false)}/>
         <Container fluid>
           <HotelSearchResults
             hotelSearchResults={filteredResults}
