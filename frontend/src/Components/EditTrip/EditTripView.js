@@ -121,7 +121,7 @@ export default function EditTripView (props) {
     return (
         <div style={{height: 0, paddingBottom: "56.25%", position: "relative"}}>
             <Card className="bg-dark text-white">
-                <Card.Img src={imgUrl} alt="Card image" style={{width: "100%", height: "30em"}}/>
+                <Card.Img src={imgUrl} alt="Card image" style={{width: "100%", height: "100%"}}/>
                 <Card.ImgOverlay>
                     <Card.Title><h1>{tripInfo.Destination}</h1></Card.Title>
                      <Card.Text>
@@ -172,12 +172,12 @@ export default function EditTripView (props) {
                         </Link>
                         <Button onClick={handlePDF} variant="outline-info" size="lg" style={{width: "8cm"}}><strong>Generate PDF</strong></Button>
 
-                        
+
                     </ButtonGroup>
 
                     </Card>
-                    
-                    
+
+
                 </Card.ImgOverlay>
             </Card>
             {/* <Container fluid style={{width: "70%", height: "10cm"}}>
