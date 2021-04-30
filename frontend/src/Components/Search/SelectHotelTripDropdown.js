@@ -61,11 +61,37 @@ export default function SelectTripDropdown(props) {
                 }
             })
 
+            console.log("I am in posting hotell ---------------- ******************************")
+
 
             if (promise.status === 200) {
                 setSuccess(true)
-                alert("The hotel has been added to the selected trip.");
-                postNotification()
+                // alert("The hotel has been added to the selected trip.");
+                let title = "Hotel Update"
+                let body = `A hotel was added to your ${trip.Name} trip.`
+                postNotification(title, body)
+
+                let vote = {
+                    tripid: tripSelected,
+                    userid: user.sub,
+                    featureid: props.hotelOption.place_id,
+                    isflight: 0,
+                    score: 1
+                }
+                
+
+                promise = await axios.post("/api/trips/vote", vote, {
+                    headers: {
+                        Authorization: token
+                    }
+                })
+                
+
+                if (promise.status === 200) {
+                    alert("The hotel has been added to the selected trip.");
+                }
+
+
             }
             else {
                 alert("Ohh boy, looks like we have an error");
@@ -131,15 +157,7 @@ export default function SelectTripDropdown(props) {
 
 
 
-    const postNotification = async() => {
-        // let newNotification = {
-        //     UserId: user.sub,
-        //     NotificationTitle: "Hotel Update",
-        //     NotificationBody: `A new hotel was added to your ${trip.Name} trip.`,
-        //     TripName: trip.Name,
-        //     TripId: trip.TripId,
-        //     NotificationId: uuid()
-        // }
+    const postNotification = async(title, body) => {
 
         let users = await getTripUsers(trip.TripId);
         let accessToken = null
@@ -154,8 +172,8 @@ export default function SelectTripDropdown(props) {
             try {
                 let newNotification = {
                     UserId: users[i].UserId,
-                    NotificationTitle: "Hotel Update",
-                    NotificationBody: `A hotel was added to your ${trip.Name} trip.`,
+                    NotificationTitle: title,
+                    NotificationBody: body,
                     TripName: trip.Name,
                     TripId: trip.TripId,
                     NotificationId: uuid()

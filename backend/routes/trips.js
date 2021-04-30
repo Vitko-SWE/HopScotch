@@ -168,7 +168,7 @@ router.route("/deleteFeature/:tripid/:featureid").post((req, res) => {
       }
     })
   } else {
-    const query = `DELETE FROM Votes WHERE TripId = '${req.params.tripid}' and FeatureId = '${req.params.featureid}';\nDELETE FROM TripFeatures WHERE TripID = '${req.params.tripid}' and FlightId = '${req.params.featureid}';`;
+    const query = `DELETE FROM Votes WHERE TripId = '${req.params.tripid}' and FeatureId = '${req.params.featureid}';\nDELETE FROM TripFeatures WHERE TripID = '${req.params.tripid}' and FeatureId = '${req.params.featureid}';`;
     db.query(query, (err, data) => {
       if (err) {
         console.log(err);
@@ -505,7 +505,7 @@ router.route("/getfeaturespure/:tripid").get((req, res) => {
   });
 });
 
-router.route("/getTripFeatures/:tripid").get((req, res) => {
+router.route("/getTripFeatures/:tripid").get(async (req, res) => {
   const query = `select * from TripFeatures where TripId = '${req.params.tripid}';`;
   db.query(query, (err, data) => {
     if (err) {
@@ -546,7 +546,7 @@ router.route("/getTripFeatures/:tripid").get((req, res) => {
           otherFeatures: otherFeatures
         }
         // console.log(diningOptions)
-        Promise.all(promises).then(() => res.send(features))
+        Promise.allSettled(promises).then(() => res.send(features))
         // res.send(data);
       }
     }
@@ -606,8 +606,6 @@ router.post('/:tripid/pdf', (req, res) => {
       doc.fontSize(16).text(`Destination: ${tripdata.Destination}`);
       doc.fontSize(16).text(`Start Date: ${`${(new Date(tripdata.StartDate)).getMonth() + 1}/${(new Date(tripdata.StartDate)).getDate()}/${(new Date(tripdata.StartDate)).getFullYear()}`}`);
       doc.fontSize(16).text(`End Date: ${`${(new Date(tripdata.EndDate)).getMonth() + 1}/${(new Date(tripdata.EndDate)).getDate()}/${(new Date(tripdata.EndDate)).getFullYear()}`}`);
-      doc.fontSize(16).text(`OutboundFlightId: ${tripdata.OutboundFlightId}`);
-      doc.fontSize(16).text(`InboundFlightId: ${tripdata.InboundFlightId}`);
 
       doc.moveDown();
 

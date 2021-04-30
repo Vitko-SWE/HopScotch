@@ -48,7 +48,7 @@ export default function Budgeting(props) {
         else {
             console.log("Error: Can't fetch features")
         }
-        
+
     } catch (error) {
         console.log(error)
     }
@@ -61,13 +61,13 @@ export default function Budgeting(props) {
         const token = `Bearer ${accessToken}`
         let res = null
 
-    
+
         res = await axios.get(`/api/trips/gettrip/${props.match.params.tripid}`, {
             headers: {
               Authorization: token,
             }
           })
-  
+
         if (res.status === 200) {
           let data = res.data
             setTripInfo(data)
@@ -81,8 +81,8 @@ export default function Budgeting(props) {
     } catch (error) {
         console.log(error)
     }
-    
-    
+
+
   };
 
 
@@ -123,7 +123,7 @@ export default function Budgeting(props) {
     } catch (error) {
       console.log(error)
     }
-    
+
     // getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
     //   axios.get(`/api/trips/getfeaturespure/${props.tripid}`, {
     //     headers: {
@@ -162,7 +162,7 @@ export default function Budgeting(props) {
         const token = `Bearer ${accessToken}`
         let res = null
 
-    
+
         res = await axios.post(`/api/trips/editbudget/${props.match.params.tripid}`, {
                 budget: results.budgetChange.value,
               }, {
@@ -170,7 +170,7 @@ export default function Budgeting(props) {
                   Authorization: token,
                 },
               })
-  
+
           if (res.status === 200) {
             console.log(res);
             history.push(`/editview/budgeting/${props.match.params.tripid}`);
@@ -198,7 +198,7 @@ export default function Budgeting(props) {
       //     alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
       //   });
       // });
-      
+
   };
 
   const handleChangeExpenses = async (e) => {
@@ -223,7 +223,7 @@ export default function Budgeting(props) {
       const token = `Bearer ${accessToken}`
       let res = null
 
-  
+
       res = await axios.post(`/api/features/editprices/${props.match.params.tripid}`, {
                 input: convData,
               }, {
@@ -231,11 +231,11 @@ export default function Budgeting(props) {
                   Authorization: token,
                 },
             })
-          
+
 
       if (res.status === 200) {
         console.log(res);
-        history.push(`/editview/budgeting${props.match.params.tripid}`);
+        history.push(`/editview/budgeting/${props.match.params.tripid}`);
       }
       else {
         alert(`${res.status}: ${res.statusText}\n${res.data}`);
@@ -245,9 +245,9 @@ export default function Budgeting(props) {
         console.log(error)
         setShowAlert(true);
     }
-  
+
     getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
-      axios.post(`/api/features/editprices/${props.tripid}`, {
+      axios.post(`/api/features/editprices/${props.match.params.tripid}`, {
         input: convData,
       }, {
         headers: {
@@ -255,7 +255,7 @@ export default function Budgeting(props) {
         },
       }).then((res) => {
         console.log(res);
-        history.push(`/edittrip/${props.tripid}`);
+        history.push(`/editview/${props.match.params.tripid}`);
       }).catch((err) => {
         alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
       });
@@ -265,8 +265,8 @@ export default function Budgeting(props) {
   const priceCalculator = async () => {
     let features = await updateFeatures()
     let tripInfo = await getTripInfo()
-   
-   
+
+
     let count = 0;
     for (let i = 0; i < features.length; i++) {
       count += features[i].Price;

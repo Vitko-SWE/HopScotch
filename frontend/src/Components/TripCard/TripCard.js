@@ -6,7 +6,8 @@ import pic from '../TripCard/canada_banff.jpg'
 import axios from 'axios'
 import { withAuth0 } from "@auth0/auth0-react";
 import { Link } from 'react-router-dom';
-import { Dropdown, Spinner} from 'react-bootstrap';
+import { CardColumns, Dropdown, Spinner} from 'react-bootstrap';
+import { PlusCircle } from 'react-bootstrap-icons';
 
 class TripCards extends Component {
 
@@ -101,6 +102,7 @@ class TripCards extends Component {
     }
 
     this.setState({loading: false})
+    console.log(this.state.loading);
 
 }
 
@@ -132,9 +134,9 @@ class TripCards extends Component {
   displayOwnedTrips = () => {
     return ((this.state.noTripsOwned && !this.state.loading ? <h1>You do not own any trips at this moment.</h1> :
       <div>
-        <div className="custom_container">
+        <CardColumns>
           {this.state.sepTrips.owned.map((trip, index) => (
-            <Card className="custom_card">
+            <Card>
               <Card.Img style={{"height": "33%"}} variant="top" src={trip.ImgUrl} />
               <Card.Body>
                 <Card.Title>{trip.Name}</Card.Title>
@@ -153,19 +155,18 @@ class TripCards extends Component {
               </Card.Body>
               <Card.Footer>
                 <Link to={`/editview/${trip.TripId}`}><Button className="edit-button"  variant="primary" size="lg" block>Edit</Button></Link>
-                <Button  variant="danger" size="lg" block>Exit Trip</Button>
               </Card.Footer>
             </Card>
           ))}
-        </div>
+        </CardColumns>
       </div> ))
   }
 
   displaySharedTrips = () => {
     return ((this.state.noTripsShared && !this.state.loading ? <h1>You do have any shared trips at this moment.</h1> :
-        <div className="custom_container">
+        <CardColumns>
           {this.state.sepTrips.shared.map((trip, index) => (
-            <Card className="custom_card">
+            <Card>
               <Card.Img style={{"height": "33%"}} variant="top" src={trip.ImgUrl} />
               <Card.Body>
                 <Card.Title>{trip.Name}</Card.Title>
@@ -180,12 +181,11 @@ class TripCards extends Component {
                 </Card.Text>
               </Card.Body>
               <Card.Footer>
-                <Link to={`/edittrip/${trip.TripId}`}><Button className="edit-button"  variant="primary" size="lg" block>Edit</Button></Link>
-                <Button  variant="danger" size="lg" block>Exit Trip</Button>
+                <Link to={`/editview/${trip.TripId}`}><Button className="edit-button"  variant="primary" size="lg" block>Edit</Button></Link>
               </Card.Footer>
             </Card>
           ))}
-        </div>
+        </CardColumns>
 
     ))
   }
@@ -195,9 +195,12 @@ class TripCards extends Component {
                             <span className="sr-only">Loading...</span>
                           </Spinner>;
     return (
-      <div style={{width: "90%", margin: "0 auto"}}>
+      <div>
+        <Link to="/createtrip"><Button style={{ position: "absolute", top: 75, left: 10, zIndex: 9999999 }}>
+          <PlusCircle size={48} />
+        </Button></Link>
         <div>
-          <Dropdown>
+          <Dropdown style={{ position: "absolute", zIndex: 100, right: 10, top: 75 }}>
             <Dropdown.Toggle variant="success" id="dropdown-basic">
               Sort Trips
             </Dropdown.Toggle>
@@ -209,10 +212,12 @@ class TripCards extends Component {
           </Dropdown>
         </div>
         <h1>Trips Owned by You</h1>
-        {this.state.loading ? loadingSpinner : this.displayOwnedTrips()}
+        {/*this.state.loading ? loadingSpinner : this.displayOwnedTrips()*/}
+        {this.displayOwnedTrips()}
         <hr />
         <h1>Trips Shared with You</h1>
-        {this.state.loading ? loadingSpinner : this.displaySharedTrips()}
+        {/*this.state.loading ? loadingSpinner : this.displaySharedTrips()*/}
+        {this.displaySharedTrips()}
       </div>
     );
   }
