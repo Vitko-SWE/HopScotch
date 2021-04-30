@@ -4,6 +4,7 @@ import reportWebVitals from './reportWebVitals';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 import Root from "./Root";
 

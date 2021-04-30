@@ -3,7 +3,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios'
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import {Container, Jumbotron } from "react-bootstrap"
+import {Card, Container, Jumbotron } from "react-bootstrap"
+import planning from "../AgendaView/planning.jpg"
 
 export default function AgendaView(props) {
     const {user, getAccessTokenSilently} = useAuth0();
@@ -20,13 +21,20 @@ export default function AgendaView(props) {
     const [features, setFeatures] = useState([])
     const [tripInfo, setTripInfo] = useState({})
     const [tripFeatures, setTripFeatures] = useState({ dining: [], otherFeatures: [] });
-    
+
 
     useEffect (async () => {
+        // setTimeout(() => {
         await getTripInfo()
         await getFlights()
         await getDiningFeatures()
         await getOtherFeatures()
+            
+        // }, 10000);
+        // await getTripInfo()
+        // await getFlights()
+        // await getDiningFeatures()
+        // await getOtherFeatures()
     }, [])
 
     function onChange (calDate) {
@@ -38,19 +46,29 @@ export default function AgendaView(props) {
             features: [],
             dining: []
         }
-        
+
         // let features = props.features.otherFeatures
+        getTripInfo()
+        getFlights()
+        getDiningFeatures()
+        getOtherFeatures()
 
         for (let i = 0; i < flights.length; i++) {
             for (let j = 0; j < flights[i].segments.length; j++) {
-                let date = new Date(flights[i].segments[j].departure.at)
+                let departureDate = new Date(flights[i].segments[j].departure.at)
+                let arrivalDate = new Date(flights[i].segments[j].arrival.at)
                 console.log("flight date")
-                console.log(date)
+                console.log(departureDate)
+                console.log("+++++++++++")
+                console.log(flights[i].segments[j].departure.at)
+                console.log(flights[i].segments[j].arrival.at)
+                console.log("+++++++++++")
 
 
-                if (date.toDateString() === calDate.toDateString()) {
-                    flights[i].segments[j].departure.at = date.toTimeString()
-                    flights[i].segments[j].arrival.at = date.toTimeString()
+
+                if (departureDate.toDateString() === calDate.toDateString()) {
+                    flights[i].segments[j].departure.at = departureDate.toTimeString()
+                    flights[i].segments[j].arrival.at = arrivalDate.toTimeString()
                     todayAgenda.flights.push(flights[i].segments[j])
                 }
             }
@@ -65,7 +83,7 @@ export default function AgendaView(props) {
                 location: "",
                 time: ""
             }
-           
+
             if (date.toDateString() === calDate.toDateString()) {
                 featureObj.name = features[i].FeatureName
                 featureObj.location = features[i].Location
@@ -74,7 +92,7 @@ export default function AgendaView(props) {
             }
         }
 
-        
+
         for (let i = 0; i < dining.length; i++) {
             let date = dining[i].date
             if (date.toDateString() === calDate.toDateString()) {
@@ -108,7 +126,7 @@ export default function AgendaView(props) {
                   Authorization: token,
                 }
               })
-      
+
               if (res.status === 200) {
                   setTripInfo(res.data)
               }
@@ -118,8 +136,8 @@ export default function AgendaView(props) {
         } catch (error) {
             console.log(error)
         }
-        
-        
+
+
       };
 
     const getFlights = async ()  => {
@@ -127,7 +145,7 @@ export default function AgendaView(props) {
         accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
         const token = `Bearer ${accessToken}`
         let res = null
-        
+
         res = await axios.get(`/api/flights/getFlights/${props.match.params.tripid}`, {
           headers: {
             Authorization: token,
@@ -166,7 +184,7 @@ export default function AgendaView(props) {
             else {
                 console.log("Error: Can't fetch features")
             }
-            
+
         } catch (error) {
             console.log(error)
         }
@@ -178,11 +196,12 @@ export default function AgendaView(props) {
                   Authorization: token,
                 }
               })
-      
+
+
             let diningFeatures = []
 
             if (res.status === 200) {
-    
+
                 for (let i = 0; i < tripFeatures.dining.length; i++) {
                     for (let j = 0; j < res.data.length; j++) {
                         // console.log(props.features.dining[i].id)
@@ -197,28 +216,28 @@ export default function AgendaView(props) {
                                 phone: tripFeatures.dining[i].display_phone,
                                 date: date,
                                 time: time,
-        
+
                             }
-        
+
                             diningFeatures.push(diningObject)
                             break;
                         }
                     }
                 }
-        
+
                 setDining(diningFeatures)
             }
             else {
                 console.log("Error: Can't setup dining features")
             }
-            
+
         } catch (error) {
             console.log(error)
         }
 
-    
-        
-       
+
+
+
 
     }
 
@@ -227,7 +246,7 @@ export default function AgendaView(props) {
         accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
         const token = `Bearer ${accessToken}`
         let res = null
-        
+
         res = await axios.get(`/api/features/getConfirmedOtherFeatures/${props.match.params.tripid}`, {
           headers: {
             Authorization: token,
@@ -235,31 +254,37 @@ export default function AgendaView(props) {
         })
         setFeatures(res.data)
 
-        
+
     }
 
     return (
-        <div >
-            
-            <div className="result-calendar" >
-                <div className="react-calendar" style={{margin: "0 auto", marginTop: "1cm"}}>
-                    <Calendar 
-                        onChange={onChange} 
-                        value={calDate} 
-                        // onClickDay={displayClasses1}
-                    />
-                </div>
-            </div>
-            <div style={{width: "90%", margin: "0 auto", marginTop: "1cm"}}>
+        <div data-testid="testing">
+            {/* <Card> */}
+            <Card className="bg-dark text-white">
+                <Card.Img src={planning} alt="Card image" style={{height: "12cm"}}/>
+                <Card.ImgOverlay>
+                    <div data-testid="calendar" className="result-calendar" >
+                        <div className="react-calendar" style={{margin: "0 auto", marginTop: "1cm"}} >
+                            <Calendar
+                                onChange={onChange}
+                                value={calDate}
+                                // onClickDay={displayClasses1}
+                            />
+                        </div>
+                    </div>
+                </Card.ImgOverlay>
+                </Card>
+
+            <div data-testid="agenda" style={{width: "90%", margin: "0 auto", marginTop: "1cm"}}>
                 <h1>Agenda for {calDate.toDateString()}</h1>
                 <hr/>
-                
-                {showAgenda ? 
+
+                {showAgenda ?
                 <div>
-                    {agenda.flights.length === 0 ? <></>: 
+                    {agenda.flights.length === 0 ? <></>:
                         <Jumbotron fluid>
                             <h1>Destination: {tripInfo.Destination}</h1>
-                            {agenda.flights.map((item, index) => ( 
+                            {agenda.flights.map((item, index) => (
                                 <Container>
                                 <p><b>Departure</b></p>
                                 <p><b>Airport: </b>{item.departure.iataCode}</p>
@@ -283,7 +308,7 @@ export default function AgendaView(props) {
                                 <p><b>Time: </b>{item.time}</p>
                                 </Container>
                             </Jumbotron>
-                            
+
                     ))}
                     {agenda.dining.map((item, index) => (
                             <Jumbotron fluid>
@@ -294,10 +319,10 @@ export default function AgendaView(props) {
                                 <p><b>Phone: </b>{item.phone}</p>
                                 <p><b>Time: </b>{item.time}</p>
                                 </Container>
-                            </Jumbotron> 
+                            </Jumbotron>
                     ))}
                 </div> : <div>No Agenda for Today</div>
-                }        
+                }
             </div>
         </div>
     )

@@ -40,9 +40,15 @@ export default function FlightCard_SegmentStatistics(props) {
             {(isFlightStatisticsLoaded && isThereFlightInfo) && (
                 <div style={{ border: '1px solid black', borderRadius: '5px' }}> 
                     <p>Statistics for {props.carrierCode}{props.flightNumber}:</p>
+<<<<<<< HEAD
                     <p>Percent delayed: {(percentDelayed*100).toFixed(2)}%</p>
                     <p>Percent cancelled: {(percentCancelled*100).toFixed(2)}%</p>
                     <p>Percent diverted: {(percentDiverted*100).toFixed(2)}%</p>
+=======
+                    <p>Percent delayed: {percentDelayed.toFixed(2)}%</p>
+                    <p>Percent cancelled: {percentCancelled.toFixed(2)}%</p>
+                    <p>Percent diverted: {percentDiverted.toFixed(2)}%</p>
+>>>>>>> c610bf56cefb486d1da72fa78a756c9c1f77b9ae
                 </div>
             )}
             {(isFlightStatisticsLoaded && !isThereFlightInfo) && (

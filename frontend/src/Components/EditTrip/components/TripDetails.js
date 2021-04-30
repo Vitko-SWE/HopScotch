@@ -26,6 +26,7 @@ export default function TripDetails(props) {
       ));
 
     useEffect (() => {
+        getTripFeatures();
         updateUserRole()
         updateTripInfo()
         updateTripOwners()
@@ -34,19 +35,47 @@ export default function TripDetails(props) {
     }, [])
 
 
+    const getTripFeatures = () => {
+      getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
+        axios.get(`/api/trips/getTripFeatures/${props.tripid}`, {
+          headers: {
+            Authorization: `Bearer ${res}`,
+          },
+        }).then(async (res) => {
+          var names = [];
+          var addresses = [];
+          res.data.otherFeatures.forEach(element => {
+            console.log("other feature address: " + element.Location)
+            names.push(element.FeatureName)
+            addresses.push(element.Location)
+          });
+          res.data.dining.forEach(element => {
+            console.log("dining address:  " + element.location.address1 + ", " + element.location.city + ", " + element.location.country)
+            names.push(element.name)
+            addresses.push(element.location.address1 + ", " + element.location.city + ", " + element.location.country)
+          });
+          localStorage.setItem('names', names.join("+"))
+          localStorage.setItem('addresses', addresses.join("+"))
+
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    }
+
     const updateUserRole = async () => {
         let accessToken = null
         accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
         const token = `Bearer ${accessToken}`
         let res = null
-    
+
         try {
             res = await axios.get(`/api/trips/getuserrole/${props.tripid}/${user.sub}`, {
                 headers: {
                   Authorization: token,
                 },
               })
-    
+
             if (res.status === 200) {
                 getUserRole(res.data[0].Role);
                 return res.data
@@ -54,7 +83,7 @@ export default function TripDetails(props) {
             else {
                 console.log(`Error: status ${res.status} ${res.statusText}`)
             }
-            
+
         } catch (error) {
             console.log(error)
         }
@@ -66,14 +95,14 @@ export default function TripDetails(props) {
         accessToken = await getAccessTokenSilently({audience: "https://hopscotch/api"})
         const token = `Bearer ${accessToken}`
         let res = null
-    
+
         try {
             res = await axios.get(`/api/trips/gettrip/${props.tripid}`, {
                 headers: {
                   Authorization: token,
                 },
               })
-    
+
             if (res.status === 200) {
                 getTripInfo(res.data);
                 setStartDate(new Date(res.data.StartDate.toString()));
@@ -84,7 +113,7 @@ export default function TripDetails(props) {
             else {
                 console.log(`Error: status ${res.status} ${res.statusText}`)
             }
-            
+
         } catch (error) {
             console.log(error)
         }
@@ -112,7 +141,7 @@ export default function TripDetails(props) {
             }
         } catch (error) {
             console.log(error)
-            
+
         }
 
         // getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
@@ -149,7 +178,7 @@ export default function TripDetails(props) {
             }
         } catch (error) {
             console.log(error)
-            
+
         }
         // getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
         //   axios.get(`/api/trips/gettripusers/${props.tripid}/Editor`, {
@@ -184,7 +213,7 @@ export default function TripDetails(props) {
             }
         } catch (error) {
             console.log(error)
-            
+
         }
         // getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
         //   axios.get(`/api/trips/gettripusers/${props.tripid}/Viewer`, {
@@ -227,7 +256,7 @@ export default function TripDetails(props) {
             }
         } catch (error) {
             console.log(error)
-            
+
         }
         // getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
         //   axios.post(`/api/trips/lockTrip/${props.tripid}`, {
@@ -245,7 +274,7 @@ export default function TripDetails(props) {
         //   });
         // });
       }
-    
+
       const unlockTrip = async () => {
 
         let accessToken = null
@@ -274,7 +303,7 @@ export default function TripDetails(props) {
             }
         } catch (error) {
             console.log(error)
-            
+
         }
         // getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
         //   axios.post(`/api/trips/unlockTrip/${props.tripid}`, {

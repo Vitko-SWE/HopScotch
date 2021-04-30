@@ -65,7 +65,7 @@ export default function SelectTripDropdown(props) {
                     }
                 }).then(res3 => {
                     history.push({
-                        pathname: `/edittrip/${tripSelected}`
+                        pathname: `/editview/${tripSelected}`
                     });
                 }).catch((err) =>{
                     console.log(err);

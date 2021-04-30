@@ -27,7 +27,13 @@ import Budgeting from './Components/EditTrip/components/Budgeting';
 import Vote from './Components/EditTrip/components/Vote'
 import EditTripDetails from './Components/EditTrip/components/EditTripDetails';
 import ErrorAlert from './Components/ErrorAlert';
+
 import { useDarkMode } from './DarkMode';
+
+import DisplayDiningFeatures from './Components/DisplayDiningFeatures/DisplayDiningFeatures';
+import DisplayHotels from './Components/DisplayHotels/DisplayHotels';
+import DisplayAttractions from './Components/DisplayAttractions/DisplayAttractions';
+import DisplayFlights from './Components/DisplayFlights/DisplayFlights';
 
 const ProtectedRoute = ({ component, ...args }) => (
   <Route component={withAuthenticationRequired(component)} {...args} />
@@ -50,11 +56,15 @@ function App() {
           <ProtectedRoute path="/searchDining" component={SearchDining} exact />
           <ProtectedRoute path="/searchHotel" component={SearchHotel} exact />
           {/* <ProtectedRoute path="/DiningResults"  component={DiningResults} exact/> */}
-          <ProtectedRoute path="/edittrip/:tripid" component={EditTrip} exact />
-          <ProtectedRoute path="/editview/:tripid" component={EditTripView} exact />
-          <ProtectedRoute path="/editview/budgeting/:tripid" component={Budgeting} exact />
-          <ProtectedRoute path="/editview/vote/:tripid" component={Vote} exact />
-          <ProtectedRoute path="/editview/editTripDetails/:tripid" component={EditTripDetails} exact />
+          <ProtectedRoute path="/edittrip/:tripid"  component={EditTrip} exact/>
+          <ProtectedRoute path="/editview/:tripid"  component={EditTripView} exact/>
+          <ProtectedRoute path="/editview/budgeting/:tripid"  component={Budgeting} exact/>
+          <ProtectedRoute path="/editview/vote/:tripid"  component={Vote} exact/>
+          <ProtectedRoute path="/editview/diningDetails/:tripid"  component={DisplayDiningFeatures} exact/>
+          <ProtectedRoute path="/editview/hotels/:tripid"  component={DisplayHotels} exact/>
+          <ProtectedRoute path="/editview/attractions/:tripid"  component={DisplayAttractions} exact/>
+          <ProtectedRoute path="/editview/editTripDetails/:tripid"  component={EditTripDetails} exact/>
+          <ProtectedRoute path="/editview/flights/:tripid"  component={DisplayFlights} exact/>
           <ProtectedRoute path="/search/flights" component={FlightSearch} exact />
           <ProtectedRoute path="/search/flights/results" component={FlightSearchResults} exact />
           <ProtectedRoute path="/attractionsearch/" component={AttractionSearch} exact />
