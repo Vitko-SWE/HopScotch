@@ -33,6 +33,7 @@ export default function DisplayFlights(props) {
         const token = `Bearer ${accessToken}`
         let res = null
 
+
         try {
             res = await axios.get(`/api/flights/getFlights/${props.match.params.tripid}`, {
                 headers: {
@@ -80,6 +81,7 @@ export default function DisplayFlights(props) {
         }
         
         res = await axios.get(`/api/flights/getFlights/${props.match.params.tripid}`, {
+
           headers: {
             Authorization: token,
           }
@@ -103,7 +105,7 @@ export default function DisplayFlights(props) {
             }
             // JSON.parse(atob(res.data.FlightData))
 
-        
+
 
             console.log(flightObject)
             setFlights(flightObject)

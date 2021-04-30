@@ -102,6 +102,7 @@ class TripCards extends Component {
     }
 
     this.setState({loading: false})
+    console.log(this.state.loading);
 
 }
 
@@ -154,7 +155,7 @@ class TripCards extends Component {
               </Card.Body>
               <Card.Footer>
                 <Link to={`/editview/${trip.TripId}`}><Button className="edit-button"  variant="primary" size="lg" block>Edit</Button></Link>
-                
+
               </Card.Footer>
             </Card>
           ))}
@@ -212,10 +213,12 @@ class TripCards extends Component {
           </Dropdown>
         </div>
         <h1>Trips Owned by You</h1>
-        {this.state.loading ? loadingSpinner : this.displayOwnedTrips()}
+        {/*this.state.loading ? loadingSpinner : this.displayOwnedTrips()*/}
+        {this.displayOwnedTrips()}
         <hr />
         <h1>Trips Shared with You</h1>
-        {this.state.loading ? loadingSpinner : this.displaySharedTrips()}
+        {/*this.state.loading ? loadingSpinner : this.displaySharedTrips()*/}
+        {this.displaySharedTrips()}
       </div>
     );
   }

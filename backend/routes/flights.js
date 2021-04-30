@@ -3,7 +3,7 @@ const db = require('../db');
 let router = express.Router()
 
 router.route("/getflights/:tripid").get((req, res) => {
-    const query = `select * from Flight where TripId = '${req.params.tripid}' AND (Confirmed = "true");`;
+    const query = `select * from Flight where TripId = '${req.params.tripid}';`;
     db.query(query, (err, data) => {
       if (err) {
         console.log(err);
@@ -18,13 +18,13 @@ router.route("/getflights/:tripid").get((req, res) => {
   });
 
   router.route("/getflightinfo/:carriercode/:flightnumber").get((req, res) => {
-    const query = `select * from FlightInfo where CarrierCode = '${req.params.carriercode}' AND FlightNumber = ${req.params.flightnumber}`;
+    const query = `select ArrivalDelayTime, Cancelled, Diverted from FlightInfo where CarrierCode = '${req.params.carriercode}' AND FlightNumber = ${req.params.flightnumber}`;
     db.query(query, (err, data) => {
       if(err) {
         console.log(err);
         res.send(err);
       }
-      console.log(data.length);
+      console.log(`Getting data for: ${req.params.carriercode}${req.params.flightnumber}`)
       if(data.length === 0)
         res.status(404).send();
       else {

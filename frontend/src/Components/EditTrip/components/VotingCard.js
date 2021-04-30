@@ -14,6 +14,8 @@ export default function VotingCard(props) {
     useEffect(() => {
         if(props.confirmed == "true") {
             setLockout(true)
+        } else {
+            setLockout(false)
         }
     }, [props.confirmed])
 

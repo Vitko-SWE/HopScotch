@@ -9,7 +9,6 @@ export default function FlightSearch() {
         <div>
             {!isLoading ? (
                 <div>
-                    <h1>Flight search goes here...</h1>
                     <SearchForm loadingCallback={setIsLoading}/>
                 </div>
             ) : (
@@ -19,6 +18,7 @@ export default function FlightSearch() {
                         <span className="sr-only">Loading...</span>
                     </Spinner>
                 </div>
+
             )}
         </div>
     )
