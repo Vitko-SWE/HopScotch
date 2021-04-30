@@ -123,11 +123,11 @@ export default function EditTripView (props) {
             <Card className="bg-dark text-white">
                 <Card.Img src={imgUrl} alt="Card image" style={{width: "100%", height: "100%"}}/>
                 <Card.ImgOverlay>
-                    <Card.Title><h1>{tripInfo.Destination}</h1></Card.Title>
-                     <Card.Text>
+                    <Card.Title style={{"text-shadow": "2px 2px 4px #000"}}><h1>{tripInfo.Name}</h1></Card.Title>
+                    <Card.Title style={{"text-shadow": "2px 2px 4px #000"}}><h1>{tripInfo.Destination}</h1></Card.Title>
+                     <Card.Text style={{"text-shadow": "2px 2px 4px #000"}}>
                         <strong>{Math.ceil((new Date(tripInfo.StartDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} Days Left</strong>
                     </Card.Text>
-                    <Card.Text>Last updated 3 mins ago</Card.Text>
                     <Card style={{width: "8cm", backgroundColor: "rgba(0,0,0,1)"}}>
                     <ButtonGroup vertical>
                         <Link to={`/editview/editTripDetails/${props.match.params.tripid}`}>
