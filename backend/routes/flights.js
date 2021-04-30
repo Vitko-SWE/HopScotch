@@ -24,7 +24,7 @@ router.route("/getflights/:tripid").get((req, res) => {
         console.log(err);
         res.send(err);
       }
-      console.log(data.length);
+      console.log(`Getting data for: ${req.params.carriercode}${req.params.flightnumber}`)
       if(data.length === 0)
         res.status(404).send();
       else {

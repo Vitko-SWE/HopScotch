@@ -74,7 +74,7 @@ export default function SearchForm(props) {
                     </Form.Group>
 
                     <Form.Group as={Col} controlId="fsReturnDateGroup">
-                        <Form.Label>Return date (optional):</Form.Label>
+                        <Form.Label>Return date:</Form.Label>
                         <Form.Control type="date" />
                     </Form.Group>
 
