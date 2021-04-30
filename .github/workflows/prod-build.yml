@@ -30,7 +30,7 @@ jobs:
         working-directory: ./repo/backend
         env:
           BACKEND_ENV_ENCODED: ${{ secrets.BACKEND_ENV_ENCODED }}
-        run: echo $BACKEND_ENV_ENCODED | base64 --decode > .env
+        run: echo $BACKEND_ENV_ENCODED | base64 --decode > env
 
       - name: install frontend deps
         run: npm ci
@@ -46,6 +46,7 @@ jobs:
       - run: mkdir -p production
       - run: cp -R ./repo/backend/* ./production
       - run: cp -R ./repo/frontend/build ./production/frontend
+      - run: mv ./production/env ./production/.env
 
       - name: Create prod git repo
         run: git init
