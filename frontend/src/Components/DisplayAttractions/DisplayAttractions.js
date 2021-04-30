@@ -3,11 +3,17 @@ import { useAuth0} from "@auth0/auth0-react";
 import axios from 'axios'
 import { Card, Spinner, Button } from 'react-bootstrap'
 import { FaYelp, FaExternalLinkAlt } from 'react-icons/fa'
+import ErrorAlert from "../ErrorAlert"
 export default function DisplayAttractions(props) {
     const { user, getAccessTokenSilently } = useAuth0();
     const [attraction, setAttractions] = useState([])
     const [loading, setLoading] = useState(true)
     const [date, setDate] = useState(new Date())
+    const [emptyFeature, setEmptyFeature] = useState(false)
+    const [message, setMessage] = useState("")
+    const [show, setShow] = useState(false)
+
+
     const [spinner, setSpinner] = useState((
         <div>
             <p><strong>Loading...</strong></p>
@@ -37,20 +43,31 @@ export default function DisplayAttractions(props) {
             if (res.status === 200) {
                 setAttractions(res.data)
                 setLoading(false)
+
+                if (res.data.length === 0) {
+                    setEmptyFeature(true)
+                    setMessage("It looks like you do not have any attractions at the moment.")
+                    setShow(true)
+                }
             }
             else {
                 console.log("Error: Can't fetch features")
+                setMessage("Error: Can't fetch features")
+                setShow(true)
+
             }
             
         } catch (error) {
             console.log(error)
+            setMessage("Error: Can't fetch features")
+            setShow(true)
         }
 
     }
 
    return (
        <div>
-           {loading ? spinner :
+           {loading ? spinner : emptyFeature ? <ErrorAlert show={show} text={message} variant="danger" closeFunc={() => setShow(false)} />:
             <div>
                 {attraction.length !== 0 && (
                     <div className='card-display'>
@@ -73,8 +90,7 @@ export default function DisplayAttractions(props) {
                                             <FaExternalLinkAlt size={50} style={{fill: 'blue' }} />
                                     </a>
                                     <h3>Booking URL</h3>
-                                    {item.confirmed ? <p style={{color:"green"}}>confirmed</p>: <p style={{color:"red"}}>pending</p>}
-                                    <Button variant="danger">Delete</Button>
+                                    {item.Confirmed == "true" ? <p style={{color:"green"}}>confirmed</p>: <p style={{color:"red"}}>pending</p>}
                                 </Card.Body>
                             </Card>
                         )}

@@ -8,6 +8,10 @@ router.route("/search").get((req, res) => {
     //Calling google places to get the location translated into coordiantes
     //console.log(req.headers.hotel);
     //console.log(req.headers.location);
+    // if (req.body.location === undefined) {
+    //     return res.status(404).send("Error: No location")
+
+    // }
 
     axios.get(`https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${req.headers.location}&types=geocode&key=${process.env.GOOGLE_PLACE_KEY}`)
     .then((res2) => {

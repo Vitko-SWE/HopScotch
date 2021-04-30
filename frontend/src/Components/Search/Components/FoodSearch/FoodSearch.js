@@ -6,6 +6,7 @@ import axios from "axios";
 
 import FoodSearchResults from "./FoodSearchResults"
 import SearchFilter from '../SearchFilter';
+import ErrorAlert from '../../../ErrorAlert'
 
 export default function FoodSearch(props) {
 
@@ -16,6 +17,8 @@ export default function FoodSearch(props) {
     const [foodSearchResult, setFoodSearchResult] = useState([])
     const [filteredResults, setFilteredResults] = useState(foodSearchResult)
     const foodTrips = useState({ items: [] });
+    const [message, setMessage] = useState("")
+    const [show, setShow] = useState(false)
 
     const [num, setNum] = useState(0)
 
@@ -64,11 +67,13 @@ export default function FoodSearch(props) {
                 setFilteredResults(res.data);
 
                 if (res.data.length === 0) {
-                    alert("Oops, it looks like we couldn't find anything for this location");
+                    setMessage("Oops, it looks like we couldn't find anything for this location")
+                    setShow(true)
                 }
             }).catch((err) => {
+                setMessage("Oops, it looks like we couldn't find anything for this location")
+                setShow(true)
                 console.log(err);
-                alert("Oops, it looks like we couldn't find anything for this location");
             });
         });
     };
@@ -123,6 +128,7 @@ export default function FoodSearch(props) {
                 {foodSearchResult.length > 0 && (
                     <SearchFilter relativePrice ratings filterFunc={handleFilter} />
                 )}
+                <ErrorAlert show={show} variant="danger" text={message} closeFunc={() => setShow(false)}/>
 
                 <Container fluid>
                     <FoodSearchResults

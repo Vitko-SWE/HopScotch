@@ -136,7 +136,7 @@ class TripCards extends Component {
         <CardColumns>
           {this.state.sepTrips.owned.map((trip, index) => (
             <Card>
-              <Card.Img style={{"height": "33%"}} variant="top" src={trip.ImgUrl} />
+              <Card.Img style={{"height": "8cm"}} variant="top" src={trip.ImgUrl} />
               <Card.Body>
                 <Card.Title>{trip.Name}</Card.Title>
                 <Card.Text>
@@ -154,7 +154,7 @@ class TripCards extends Component {
               </Card.Body>
               <Card.Footer>
                 <Link to={`/editview/${trip.TripId}`}><Button className="edit-button"  variant="primary" size="lg" block>Edit</Button></Link>
-                <Button  variant="danger" size="lg" block>Exit Trip</Button>
+                
               </Card.Footer>
             </Card>
           ))}
@@ -182,7 +182,6 @@ class TripCards extends Component {
               </Card.Body>
               <Card.Footer>
                 <Link to={`/editview/${trip.TripId}`}><Button className="edit-button"  variant="primary" size="lg" block>Edit</Button></Link>
-                <Button  variant="danger" size="lg" block>Exit Trip</Button>
               </Card.Footer>
             </Card>
           ))}
