@@ -258,8 +258,7 @@ export default function AgendaView(props) {
                 </Card.ImgOverlay>
                 </Card>
 
-
-            <div style={{width: "90%", margin: "0 auto", marginTop: "1cm"}}>
+            <div data-testid="agenda" style={{width: "90%", margin: "0 auto", marginTop: "1cm"}}>
                 <h1>Agenda for {calDate.toDateString()}</h1>
                 <hr/>
 
