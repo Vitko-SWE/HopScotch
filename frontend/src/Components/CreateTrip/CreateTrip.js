@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import "./CreateTrip.css";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { Form, Button, Container, Row, Col, Jumbotron } from "react-bootstrap";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import { Link, useHistory } from "react-router-dom";
@@ -17,14 +17,14 @@ export default function CreateTrip() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const results = e.currentTarget;
-    const emails = results.tripOwners.value.replace(/\s/g,'').split(",");
+    const emails = results.tripOwners.value.replace(/\s/g, '').split(",");
 
     let errors = "";
     if (results.tripOwners.value !== "") {
       let valid = true;
       const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       for (let i = 0; i < emails.length; i++) {
-        if (emails[i] === "" || emails[i] === user.email || !regex.test(emails[i])){
+        if (emails[i] === "" || emails[i] === user.email || !regex.test(emails[i])) {
           valid = false;
         }
       }
@@ -43,7 +43,7 @@ export default function CreateTrip() {
       alert(errors);
     }
     else {
-      getAccessTokenSilently({audience: "https://hopscotch/api"}).then((res) => {
+      getAccessTokenSilently({ audience: "https://hopscotch/api" }).then((res) => {
         axios.post("/api/trips/createtrip", {
           title: results.tripTitle.value,
           origin: results.tripOrigin.value,
@@ -67,7 +67,7 @@ export default function CreateTrip() {
   };
 
   return (
-    <div>
+    <Jumbotron className="m-1">
       <h1>Create Trip</h1>
       <Form onSubmit={handleSubmit}>
         <Container>
@@ -85,14 +85,6 @@ export default function CreateTrip() {
                 <Form.Label>Destination</Form.Label>
                 <Form.Control required />
               </Form.Group>
-              <Form.Group controlId="tripStartDate">
-                <Form.Label>Start Date</Form.Label><br />
-                <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
-              </Form.Group>
-              <Form.Group controlId="tripEndDate">
-                <Form.Label>End Date</Form.Label><br />
-                <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
-              </Form.Group>
             </Col>
             <Col>
               <Form.Group controlId="tripOwners">
@@ -102,6 +94,15 @@ export default function CreateTrip() {
                 </Form.Text>
                 <Form.Control />
               </Form.Group>
+
+              <Form.Group controlId="tripStartDate">
+                <Form.Label>Start Date</Form.Label><br />
+                <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} dateFormat="MM/dd/yyyy" />
+              </Form.Group>
+              <Form.Group controlId="tripEndDate">
+                <Form.Label>End Date</Form.Label><br />
+                <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} dateFormat="MM/dd/yyyy" />
+              </Form.Group>
             </Col>
           </Row>
         </Container>
@@ -109,6 +110,6 @@ export default function CreateTrip() {
         {" "}
         <Link to="/homepage"><Button variant="outline-secondary">Cancel</Button></Link>
       </Form>
-    </div>
+    </Jumbotron>
   );
 };
