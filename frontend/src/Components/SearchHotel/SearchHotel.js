@@ -3,7 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { FormControl, InputGroup, Button, Card, CardColumns } from 'react-bootstrap';
 import { BsSearch } from 'react-icons/bs'
 import axios from 'axios'
-import SelectHotelTripDropdown from './SelectHotelTripDropdown'
+import SelectHotelTripDropdown from '../Search/SelectHotelTripDropdown'
 
 import '../SearchHotel/SearchHotel.css'
 

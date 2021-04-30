@@ -222,6 +222,7 @@ router.route("/flights").get(async (req, res) => {
     const deptDate = req.query.deptDate;
     const retDate = req.query.retDate;
     const numPass = req.query.numPass;
+    
 
     if(originCode == undefined || destCode == undefined ||
         deptDate == undefined || retDate == undefined ||

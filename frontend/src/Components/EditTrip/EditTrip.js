@@ -69,7 +69,7 @@ export default function EditTrip(props) {
         },
       }).then((res) => {
         console.log(res);
-        history.push(`/edittrip/${props.match.params.tripid}`);
+        history.push(`/editview/${props.match.params.tripid}`);
       }).catch((err) => {
         alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
       });
@@ -86,7 +86,7 @@ export default function EditTrip(props) {
         },
       }).then((res) => {
         console.log(res);
-        history.push(`/edittrip/${props.match.params.tripid}`);
+        history.push(`/editview/${props.match.params.tripid}`);
       }).catch((err) => {
         alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
       });
@@ -234,7 +234,7 @@ export default function EditTrip(props) {
           },
         }).then((res) => {
           console.log(res.data);
-          history.push(`/edittrip/${props.match.params.tripid}`);
+          history.push(`/editview/${props.match.params.tripid}`);
         }).catch((err) => {
           alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
         });
@@ -273,7 +273,7 @@ export default function EditTrip(props) {
           },
         }).then((res) => {
           console.log(res.data);
-          history.push(`/edittrip/${props.match.params.tripid}`);
+          history.push(`/editview/${props.match.params.tripid}`);
         }).catch((err) => {
           alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
         });
@@ -312,7 +312,7 @@ export default function EditTrip(props) {
           },
         }).then((res) => {
           console.log(res.data);
-          history.push(`/edittrip/${props.match.params.tripid}`);
+          history.push(`/editview/${props.match.params.tripid}`);
         }).catch((err) => {
           alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
         });
@@ -337,7 +337,7 @@ export default function EditTrip(props) {
             },
           }).then((res) => {
             console.log(res);
-            history.push(`/edittrip/${props.match.params.tripid}`);
+            history.push(`/editview/${props.match.params.tripid}`);
           }).catch((err) => {
             alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
           });
@@ -351,7 +351,7 @@ export default function EditTrip(props) {
             },
           }).then((res) => {
             console.log(res);
-            history.push(`/edittrip/${props.match.params.tripid}`);
+            history.push(`/editview/${props.match.params.tripid}`);
           }).catch((err) => {
             alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
           });
@@ -391,7 +391,7 @@ export default function EditTrip(props) {
           },
         }).then((res) => {
           console.log(res);
-          history.push(`/edittrip/${props.match.params.tripid}`);
+          history.push(`/editview/${props.match.params.tripid}`);
         }).catch((err) => {
           alert(`${err.response.status}: ${err.response.statusText}\n${err.response.data}`);
         });
@@ -440,7 +440,7 @@ export default function EditTrip(props) {
         console.log(err);
       });
     });
-  }
+  };
 
   const handleAgendaView = () => {
     setAgendaView(!agendaView)
@@ -472,7 +472,7 @@ export default function EditTrip(props) {
         console.log(err);
       })
     });
-  }
+  };
 
   return (
     <div>
@@ -687,7 +687,7 @@ export default function EditTrip(props) {
                     </Container>
                     <Button variant="primary" type="submit">Submit</Button>
                     {" "}
-                    <Link to={`/edittrip/${props.match.params.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
+                    <Link to={`/editview/${props.match.params.tripid}`}><Button variant="outline-secondary">Cancel</Button></Link>
                   </Form>
                 </div>
               )}
