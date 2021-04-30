@@ -5,12 +5,14 @@ import { Card, CardColumns } from "react-bootstrap"
 
 import AttractionModal from './AttractionModal'
 import PoiModal from './PoiModal'
+import ErrorAlert from '../../../ErrorAlert';
 
 
 export default function AttractionsSearchResults(props) {
 
   const [attTrips, setAttTrips] = useState([]);
   const { user, getAccessTokenSilently } = useAuth0();
+  const [show, setShow] = useState(true)
 
   useEffect(() => {
     updateAttTrips();
@@ -34,9 +36,11 @@ export default function AttractionsSearchResults(props) {
   return (
     <div>
       {(props.attSearchResults.ta.length === 0 && props.attSearchResults.poi.length === 0 && props.searchedYet === true) && (
-        <div>
-          <h3>There were no matching results.</h3>
-        </div>
+        // <div>
+        //   <h3>There were no matching results.</h3>
+        // </div>
+        // <div closeFunc={() = setShow(true)}/>
+        <ErrorAlert show={show} variant="danger" text="There were no matching results" />
       )}
       {props.attSearchResults.ta.length !== 0 && (
         <div>

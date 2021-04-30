@@ -1,16 +1,20 @@
 import { useState, useEffect} from 'react'
 import { useAuth0} from "@auth0/auth0-react";
 import axios from 'axios'
-import { Card, Spinner, Button } from 'react-bootstrap'
+import { Card, Spinner, Button, Alert } from 'react-bootstrap'
 import Rating from '../Search/Rating'
 import { FaYelp } from 'react-icons/fa';
 // import SelectTripDropdown from '../../SelectTripDropdown';
+import ErrorAlert from "../ErrorAlert"
 
 export default function DisplayDiningFeatures(props) {
     const { user, getAccessTokenSilently } = useAuth0();
     const [dining, setDining] = useState([])
     const [tripFeatures, setTripFeatures] = useState({ dining: [], otherFeatures: [] });
     const [loading, setLoading] = useState(true)
+    const [emptyFeature, setEmptyFeatures] = useState(false)
+    const [show, setShow] = useState(false)
+    const [message, setMessage] = useState("")
     const [spinner, setSpinner] = useState((
         <div>
             <p><strong>Loading...</strong></p>
@@ -43,9 +47,16 @@ export default function DisplayDiningFeatures(props) {
             }
             else {
                 console.log("Error: Can't fetch features")
+                setEmptyFeatures(true)
+                setLoading(false)
+                setShow(true)
             }
             
         } catch (error) {
+            setLoading(false)
+            setEmptyFeatures(true)
+            setShow(true)
+            setMessage("It looks like you do not have any dining features at the moment")
             console.log(error)
         }
 
@@ -53,7 +64,7 @@ export default function DisplayDiningFeatures(props) {
 
    return (
        <div>
-           {loading ? spinner :
+           {loading ? spinner : emptyFeature ? <ErrorAlert show={show} variant="danger" text={message} closeFunc={() => setShow(false)}/>:
             <div>
                 {tripFeatures.dining.length !== 0 && (
                     <div className='card-display'>
@@ -88,7 +99,6 @@ export default function DisplayDiningFeatures(props) {
                                         </a>
                                         {item.confirmed ? <p style={{color:"green"}}>confirmed</p>: <p style={{color:"red"}}>pending</p>}
                                     </Card.Body>
-                                    <Button variant="danger">Delete</Button>
                                 </Card.Body>
                             </Card>
                         )}

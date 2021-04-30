@@ -66,7 +66,26 @@ export default function AttractionModal(props) {
 
             if (promise.status === 200) {
                 postNotification()
-                alert("The tour/activity has been added to the selected trip.")
+
+                let vote = {
+                    tripid: tripSelected,
+                    userid: user.sub,
+                    featureid: props.result.id,
+                    isflight: 0,
+                    score: 1
+                }
+                
+
+                promise = await axios.post("/api/trips/vote", vote, {
+                    headers: {
+                        Authorization: token
+                    }
+                })
+                
+
+                if (promise.status === 200) {
+                    alert("The tour/activity has been added to the selected trip.")
+                }
             }
             else {
                 alert("Looks like there was an error saving your attraction")

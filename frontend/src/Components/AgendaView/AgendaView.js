@@ -24,10 +24,17 @@ export default function AgendaView(props) {
 
 
     useEffect (async () => {
+        // setTimeout(() => {
         await getTripInfo()
         await getFlights()
         await getDiningFeatures()
         await getOtherFeatures()
+            
+        // }, 10000);
+        // await getTripInfo()
+        // await getFlights()
+        // await getDiningFeatures()
+        // await getOtherFeatures()
     }, [])
 
     function onChange (calDate) {
@@ -41,6 +48,10 @@ export default function AgendaView(props) {
         }
 
         // let features = props.features.otherFeatures
+        getTripInfo()
+        getFlights()
+        getDiningFeatures()
+        getOtherFeatures()
 
         for (let i = 0; i < flights.length; i++) {
             for (let j = 0; j < flights[i].segments.length; j++) {
@@ -48,6 +59,11 @@ export default function AgendaView(props) {
                 let arrivalDate = new Date(flights[i].segments[j].arrival.at)
                 console.log("flight date")
                 console.log(departureDate)
+                console.log("+++++++++++")
+                console.log(flights[i].segments[j].departure.at)
+                console.log(flights[i].segments[j].arrival.at)
+                console.log("+++++++++++")
+
 
 
                 if (departureDate.toDateString() === calDate.toDateString()) {
@@ -180,6 +196,7 @@ export default function AgendaView(props) {
                   Authorization: token,
                 }
               })
+
 
             let diningFeatures = []
 

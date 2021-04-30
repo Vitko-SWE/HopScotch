@@ -1,14 +1,18 @@
 import { useState, useEffect} from 'react'
 import { useAuth0} from "@auth0/auth0-react";
 import axios from 'axios'
-import { Card, Spinner, Button } from 'react-bootstrap'
+import { Card, Spinner, Button, Alert } from 'react-bootstrap'
 import { FaYelp, FaExternalLinkAlt } from 'react-icons/fa';
 import hotel_image from "./Hotel_image.jpg"
+import ErrorAlert from "../ErrorAlert"
 
 export default function DisplayHotels(props) {
     const { user, getAccessTokenSilently } = useAuth0();
     const [hotels, setHotels] = useState([])
     const [loading, setLoading] = useState(true)
+    const [emptyFeature, setEmptyFeature] = useState(false)
+    const [message, setMessage] = useState("")
+    const [show, setShow] = useState(false)
     const [spinner, setSpinner] = useState((
         <div>
             <p><strong>Loading...</strong></p>
@@ -35,15 +39,31 @@ export default function DisplayHotels(props) {
                 },
             })
 
+            console.log(res.data)
+
             if (res.status === 200) {
                 setHotels(res.data)
                 setLoading(false)
+
+                if (res.data.length === 0) {
+                    setEmptyFeature(true)
+                    setMessage("It looks like you do not have any hotels at the moment.")
+                    setShow(true)
+                }
             }
             else {
                 console.log("Error: Can't fetch features")
+                setLoading(false)
+                setEmptyFeature(true)
+                setMessage("Oops there was an error getting your dining features")
+                setShow(true)
             }
             
         } catch (error) {
+            setEmptyFeature(true)
+            setMessage("Oops there was an error getting your hotels")
+            setLoading(false)
+            setShow(true)
             console.log(error)
         }
 
@@ -51,7 +71,7 @@ export default function DisplayHotels(props) {
 
    return (
        <div>
-           {loading ? spinner :
+           {loading ? spinner : emptyFeature ? <ErrorAlert show={show} variant="danger" text={message} closeFunc={() => setShow(false)}/> :
             <div>
                 {hotels.length !== 0 && (
                     <div className='card-display'>
@@ -78,9 +98,8 @@ export default function DisplayHotels(props) {
                                         </a>
                                         <h3>Booking URL</h3>
 
-                                        {item.confirmed ? <p style={{color:"green"}}>confirmed</p>: <p style={{color:"red"}}>pending</p>}
+                                        {item.Confirmed == "true" ? <p style={{color:"green"}}>confirmed</p>: <p style={{color:"red"}}>pending</p>}
                                     </Card.Body>
-                                    <Button variant="danger">Delete</Button>
                                 </Card.Body>
                             </Card>
                         )}
